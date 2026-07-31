@@ -1,6 +1,6 @@
 {
-    "name": "darkirby/symfo-base",
-    "description": "Template to quick start any Symfony project",
+    "name": "darkirby/mugit",
+    "description": "Very lightweight docker image and UI to store and share git repo on a server",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",

@@ -29,7 +29,7 @@ jobs:
     - name: Setup mysql 8.0
       run: |
         sudo systemctl start mysql.service
-        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/symfo-base_db?serverVersion=8.0.44"' > .env.test.local
+        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/mugit_db?serverVersion=8.0.44"' > .env.test.local
 
     - name: Setup php 8.4
       uses: shivammathur/setup-php@v2
@@ -178,7 +178,7 @@ jobs:
       with:
         auth: ${{ secrets.GIST_KEY }}
         gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
-        filename: symfo-base-coverage.json
+        filename: mugit-coverage.json
         label: coverage
         message: ${{ needs.test.outputs.coverage }}%
         valColorRange: ${{ needs.test.outputs.coverage }}
@@ -191,7 +191,7 @@ jobs:
       with:
         auth: ${{ secrets.GIST_KEY }}
         gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
-        filename: symfo-base-version.json
+        filename: mugit-version.json
         label: version
         message: ${{ inputs.version }}
         color: blue
