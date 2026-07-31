@@ -1,0 +1,124 @@
+const Encore = require('@symfony/webpack-encore');
+const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config();
+const app_name = process.env.APP_NAME || ''; // Default to an empty string if not defined
+
+// Manually configure the runtime environment if not already configured yet by the "encore" command.
+// It's useful when you use tools that rely on webpack.config.js file.
+if (!Encore.isRuntimeEnvironmentConfigured()) {
+    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
+}
+
+Encore
+    // directory where compiled assets will be stored
+    .setOutputPath('public/build/')
+    // public path used by the web server to access the output path
+    .setPublicPath(Encore.isProduction() ? '/' + app_name + '/build' : '/build')
+    // only needed for CDN's or subdirectory deploy
+    .setManifestKeyPrefix('build/')
+    // copy images files to the build
+    .copyFiles({
+        from: './assets/images',
+        // target path, relative to the output dir (+ versioning in prod)
+        to: 'images/[path][name]' + (Encore.isProduction() ? '-[hash:8]' : '') + '.[ext]',
+        // only copy files matching this pattern
+        pattern: /\.(png|jpg|jpeg|svg)$/
+    })
+
+    /*
+     * ENTRY CONFIG
+     *
+     * Each entry will result in one JavaScript file (e.g. app.js)
+     * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
+     */
+    .addEntry('app', './assets/app.js')
+
+    // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
+    .splitEntryChunks()
+
+    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
+    .enableStimulusBridge('./assets/controllers.json')
+
+    // will require an extra script tag for runtime.js
+    // but, you probably want this, unless you're building a single-page app
+    .enableSingleRuntimeChunk()
+
+    /*
+     * FEATURE CONFIG
+     *
+     * Enable & configure other features below. For a full
+     * list of features, see:
+     * https://symfony.com/doc/current/frontend.html#adding-more-features
+     */
+    .cleanupOutputBeforeBuild()
+
+    // Displays build status system notifications to the user
+    .enableBuildNotifications()
+
+    .enableSourceMaps(!Encore.isProduction())
+    // enables hashed filenames (e.g. app.abc123.css)
+    .enableVersioning(Encore.isProduction())
+
+    // configure Babel
+    // .configureBabel((config) => {
+    //     config.plugins.push('@babel/a-babel-plugin');
+    // })
+
+    // enables and configure @babel/preset-env polyfills
+    .configureBabelPresetEnv((config) => {
+        config.useBuiltIns = 'usage';
+        config.corejs = '3.38';
+    })
+
+    // enables Sass/SCSS support
+    .enableSassLoader(function(options) {
+        options.sassOptions = {
+             quietDeps: true,
+           silenceDeprecations: ['global-builtin', 'import']
+        };
+    })
+    .enablePostCssLoader((options) => {
+        options.postcssOptions = {
+            plugins: {
+                // add browserslist config to package.json (see below)
+                autoprefixer: {}
+            }
+        };
+    })
+
+    // add https support (port option useless as the manifest will not be updated accordingly)
+    .configureDevServerOptions(options => {
+        options.allowedHosts = 'all';
+        options.liveReload = true;
+        options.static = {
+            watch: false
+        };
+        options.watchFiles = {
+            paths: ['templates/**/*'],
+        };
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.config/symfony-cli/certs/default.p12'),
+            },
+        }
+        // options.port = 'auto'
+    })
+
+    // uncomment if you use TypeScript
+    //.enableTypeScriptLoader()
+
+    // uncomment if you use React
+    //.enableReactPreset()
+
+    // uncomment to get integrity="..." attributes on your script & link tags
+    // requires WebpackEncoreBundle 1.4 or higher
+    //.enableIntegrityHashes(Encore.isProduction())
+
+    // uncomment if you're having problems with a jQuery plugin
+    //.autoProvidejQuery()
+    ;
+
+module.exports = Encore.getWebpackConfig();

@@ -1,0 +1,16 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    file_name_pattern: '*.twig'
+    globals: 
+        env:
+            app:
+                name: '%app.name%'
+                env: '%app.env%'
+            versioning:
+                version: '%versioning.version%'
+                version_hash: '%versioning.version_hash%'
+                release_date: '%versioning.release_date%'
+
+when@test:
+    twig:
+        strict_variables: true
