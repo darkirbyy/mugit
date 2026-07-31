@@ -6,9 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class DefaultController extends AbstractController
+#[Route('', name: 'home_')]
+class HomeController extends AbstractController
 {
-    #[Route('/', name: 'default')]
+    #[Route('/', name: 'index')]
     public function index(): Response
     {
         return $this->render('default/index.html.twig', []);

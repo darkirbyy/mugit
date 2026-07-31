@@ -121,11 +121,9 @@ jobs:
         path: |
           bin/
           config/
-          migrations/
           public/
           src/
           templates/
-          translations/
           vendor/
           composer.json
           .env
