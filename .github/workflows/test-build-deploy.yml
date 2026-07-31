@@ -26,11 +26,6 @@ jobs:
     - name: Checkout code in the runner
       uses: actions/checkout@v6
 
-    - name: Setup mysql 8.0
-      run: |
-        sudo systemctl start mysql.service
-        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/mugit_db?serverVersion=8.0.44"' > .env.test.local
-
     - name: Setup php 8.4
       uses: shivammathur/setup-php@v2
       with:

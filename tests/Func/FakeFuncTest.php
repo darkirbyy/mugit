@@ -7,11 +7,9 @@ namespace App\Tests\Func;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
 final class FakeFuncTest extends WebTestCase
 {
-    use ResetDatabase;
     use Factories;
 
     #[PU\Test]

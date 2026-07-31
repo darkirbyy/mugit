@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -10,18 +9,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class DefaultController extends AbstractController
 {
     #[Route('/', name: 'default')]
-    public function index(Connection $connection): Response
+    public function index(): Response
     {
-        try {
-            $connection->getDatabase();
-            $db_test = true;
-        } catch (\Exception $e) {
-            $db_test = false;
-        }
-
-        return $this->render('default/index.html.twig', [
-            'db_test' => $db_test,
-        ]);
+        return $this->render('default/index.html.twig', []);
     }
 
     #[Route('/turbo', name: 'turbo')]
