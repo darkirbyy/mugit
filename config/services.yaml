@@ -9,6 +9,7 @@
 parameters:
     app.name: '%env(string:APP_NAME)%'
     app.env: '%env(string:APP_ENV)%'
+    app.hub_url: '%env(string:HUB_BASE_URL)%'
 
 imports:
     - { resource: 'version.yaml' }
@@ -22,5 +23,15 @@ services:
         resource: '../src/'
 
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
+    
+    App\Security\AccessDeniedHandler:
+        arguments:
+            $hubUrl: '%app.hub_url%'
+
+    App\Security\KeycloakLogoutListener:
+        arguments:
+            $hubUrl: '%app.hub_url%'
+        tags:
+            - { name: kernel.event_listener, event: 'Symfony\Component\Security\Http\Event\LogoutEvent', priority: -30 }
 
 

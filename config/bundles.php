@@ -17,4 +17,5 @@ return [
     Bizkit\VersioningBundle\BizkitVersioningBundle::class => ['all' => true],
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
+    Mainick\KeycloakClientBundle\MainickKeycloakClientBundle::class => ['all' => true],
 ];
