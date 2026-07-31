@@ -1,0 +1,18 @@
+FROM alpine:3.24
+
+ARG MUGIT_UID=1000
+ARG MUGIT_GID=1000
+
+RUN apk update && \
+    apk add --no-cache tzdata openssh-server git && \
+    rm -rf /var/cache/apk/*
+
+RUN ssh-keygen -A
+
+RUN addgroup --gid ${MUGIT_GID} git && \
+    adduser --uid ${MUGIT_UID} --ingroup git --home /home/git --shell /usr/bin/git-shell --disabled-password git && \
+    passwd -u git
+
+WORKDIR /home/git
+    
+ENTRYPOINT ["/entrypoint.sh"]
