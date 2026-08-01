@@ -5,31 +5,31 @@ services:
       dockerfile: ./dockerfile
       network: host
       args:
-        MUGIT_UID: ${MUGIT_UID}
-        MUGIT_GID: ${MUGIT_GID}
+        MUGIT_UID: ${MUGIT_UID:-1000}
+        MUGIT_GID: ${MUGIT_GID:-1000}
     image: alpine:3.24-custom
     container_name: mugit
     restart: unless-stopped
     environment:
-      - TZ=${TIMEZONE}
+      - TZ=${TIMEZONE:-Etc/UTC}
     ports:
-      - ${MUGIT_PORT}:22
+      - ${MUGIT_PORT:-22}:22
     volumes:
-      - ${MUGIT_DIR}:/home/git:rw
+      - ${MUGIT_DIR:-./var/dev/data}:/home/git:rw
       - ./entrypoint.sh:/entrypoint.sh:rw
       - ./sshd_config.conf:/etc/ssh/sshd_config.d/sshd_config.conf:ro
       - ./gitconfig:/etc/gitconfig:ro
       - ./git-shell-commands:/home/git/git-shell-commands:ro
       - ./api.sh:/usr/local/bin/api:ro
-    # networks:
-    #   web-network:
-    #     ipv4_address: 172.18.0.60
+    networks:
+      web-network:
+        ipv4_address: 172.18.0.60
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 22"]
       interval: 30s
       timeout: 5s
       retries: 3
 
-# networks:
-#   web-network:
-#     external: true
+networks:
+  web-network:
+    external: ${MUGIT_EXTERNAL_NETWORK:-false}
