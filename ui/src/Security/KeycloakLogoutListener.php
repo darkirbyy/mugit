@@ -7,13 +7,14 @@ namespace App\Security;
 use Mainick\KeycloakClientBundle\Interface\IamClientInterface;
 use Mainick\KeycloakClientBundle\Token\KeycloakResourceOwner;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 final readonly class KeycloakLogoutListener
 {
     public function __construct(
-        private string $hubUrl,
+        #[Autowire('%app.hub_url%')] private string $hubUrl,
         private LoggerInterface $keycloakClientLogger,
         private IamClientInterface $iamClient,
     ) {

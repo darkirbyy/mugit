@@ -10,6 +10,11 @@ parameters:
     app.name: '%env(string:APP_NAME)%'
     app.env: '%env(string:APP_ENV)%'
     app.hub_url: '%env(string:HUB_BASE_URL)%'
+    app.core_host_addr: '%env(string:CORE_HOST_ADDR)%'
+    app.core_host_port: '%env(int:CORE_HOST_PORT)%'
+    app.core_host_pubkey: '%env(string:CORE_HOST_PUBKEY)%'
+    app.core_api_user: '%env(string:CORE_API_USER)%'
+    app.core_api_key: '%env(string:CORE_API_KEY)%'
 
 imports:
     - { resource: 'version.yaml' }
@@ -24,13 +29,7 @@ services:
 
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
     
-    App\Security\AccessDeniedHandler:
-        arguments:
-            $hubUrl: '%app.hub_url%'
-
     App\Security\KeycloakLogoutListener:
-        arguments:
-            $hubUrl: '%app.hub_url%'
         tags:
             - { name: kernel.event_listener, event: 'Symfony\Component\Security\Http\Event\LogoutEvent', priority: -30 }
 
