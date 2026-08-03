@@ -18,6 +18,7 @@ echo "Updating the core version..."
 docker compose down
 
 # Checkout the version given in argument
+git fetch origin --tags
 git checkout "v$1"
 
 # Reuild and restart the container
