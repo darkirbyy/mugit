@@ -12,17 +12,18 @@ services:
     restart: unless-stopped
     environment:
       - TZ=${TIMEZONE:-Etc/UTC}
+      - UI_ADDR=${CORE_NETWORK_UI_ADDR:-localhost}
     ports:
       - ${CORE_PORT:-22}:22
     volumes:
       - ${CORE_DATA:-./data/dev}:/home/git:rw
-      - ./config/no-interactive-login:/home/git/git-shell-commands/no-interactive-login:ro
+      - ./config/no-interactive-login:/home/git/git-shell-commands/no-interactive-login:rw
       - ./config/entrypoint.sh:/entrypoint.sh:ro
-      - ./config/sshd_config.conf:/etc/ssh/sshd_config.d/sshd_config.conf:ro
+      - ./config/sshd_custom.conf:/etc/ssh/sshd_config.d/10_sshd_custom.conf:ro
       - ./config/gitconfig:/etc/gitconfig:ro
-      - ./keys/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
-      - ./keys/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:ro
-      - ./keys/ssh_root_ed25519_key.pub:/root/.ssh/authorized_keys:ro
+      - ./keys/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:rw
+      - ./keys/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:rw
+      - ./keys/ssh_root_ed25519_key.pub:/root/.ssh/authorized_keys:rw
       - ./api.sh:/root/api.sh:ro
     networks:
       web-network:
@@ -35,4 +36,4 @@ services:
 
 networks:
   web-network:
-    external: ${CORE_EXTERNAL_NETWORK:-false}
+    external: ${CORE_NETWORK_EXTERNAL:-false}
