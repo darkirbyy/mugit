@@ -158,7 +158,7 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SERV_KEYS }}
         ARGS: "--recursive --delete --links --owner --group --perms --compress --checksum"
         EXCLUDE: "/var/, /.env.local, /.env.${{ inputs.environment }}.local"
-        SOURCE: "build/ui/"
+        SOURCE: "build/"
         REMOTE_HOST: ${{ secrets.SERV_ADDR }}
         REMOTE_USER: ${{ secrets.SERV_USER }}
         REMOTE_PORT: ${{ secrets.SERV_PORT }}
