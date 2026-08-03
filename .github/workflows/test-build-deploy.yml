@@ -171,6 +171,7 @@ jobs:
           touch ${{ secrets.SERV_PATH }}/.env.local.php && chmod 664 ${{ secrets.SERV_PATH }}/.env.local.php
           sudo /usr/bin/docker exec -u php-fpm php-fpm symfony-upgrade-app ${{ secrets.SERV_PATH }} ${{ inputs.environment }}
           sudo /usr/bin/docker exec -u php-fpm php-fpm opcache-clear-app ${{ secrets.SERV_PATH }} ${{ inputs.environment }}
+          sudo ${{ secrets.SERV_UPDATE_LOCATION }}/update.sh ${{ inputs.version }}
    
     - name: Update coverage badge
       if: inputs.environment == 'prod'
