@@ -51,17 +51,15 @@ class CoreSSH
     public function exec(string $command): array
     {
         if(!$this->authenticate()){
-            return ['output' => [], 'error' => [], 'exitCode' => 1] ;
+            return ['output' => [], 'exitCode' => 1] ;
         }
 
         $stdout = $this->ssh->exec('api ' . $command);
-        $stderr = $this->ssh->getStdError();
         $exitStatus = $this->ssh->getExitStatus();
 
         $output = array_filter(explode("\n", $stdout));
-        $error = array_filter(explode("\n", $stderr));
         $exitCode = $exitStatus !== false ? $exitStatus : 1;
 
-        return ['output' => $output, 'error' => $error, 'exitCode' => $exitCode] ;
+        return ['output' => $output, 'exitCode' => $exitCode] ;
     }
 }

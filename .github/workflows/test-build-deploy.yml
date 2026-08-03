@@ -5,7 +5,7 @@ on:
   workflow_call:
     inputs:
       environment:
-        description: 'The deployment environment (stag or prod)'
+        description: 'The deployment environment (prod only)'
         required: true
         type: string
       version:
@@ -36,13 +36,15 @@ jobs:
       id: composer-cache
       uses: actions/cache@v5
       with:
-        path: vendor
+        path: ui/vendor
         key: ${{ runner.os }}-php-test-${{ hashFiles('composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-test-
 
     - name: Install php TEST dependencies
-      run: composer install --no-scripts --no-interaction --no-progress --prefer-dist
+      run: |
+        cd ui
+        composer install --no-scripts --no-interaction --no-progress --prefer-dist
        
     - name: Setup Node.js 22.x
       uses: actions/setup-node@v6
@@ -53,19 +55,21 @@ jobs:
       id: npm-cache
       uses: actions/cache@v5
       with:
-        path: node_modules
+        path: ui/node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
 
     - name: Install node dependencies and build assets
       run: |
+        cd ui
         npm install
         npm run build
 
     - name: Run all test suites and check coverage
       id: phpunit
       run: |
+        cd ui
         php vendor/bin/phpunit 
         php vendor/bin/coverage-check var/coverage/clover.xml ${{ vars.MIN_COVERAGE }}
         coverage=$(php vendor/bin/coverage-check var/coverage/clover.xml 1 --only-percentage | grep -Eo '[0-9.]+%' | sed 's/%//')
@@ -86,13 +90,15 @@ jobs:
       id: composer-cache
       uses: actions/cache@v5
       with:
-        path: vendor
+        path: ui/vendor
         key: ${{ runner.os }}-php-build-${{ hashFiles('composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-build-
 
     - name: Install php BUILD dependencies
-      run: composer install --no-scripts --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+      run: |
+        cd ui
+        composer install --no-scripts --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
 
     - name: Setup Node.js 22.x
       uses: actions/setup-node@v6
@@ -103,13 +109,14 @@ jobs:
       id: npm-cache
       uses: actions/cache@v5
       with:
-        path: node_modules
+        path: ui/node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
 
     - name: Install node dependencies and build assets
       run: | 
+        cd ui
         npm install
         npm run build
 
@@ -119,15 +126,15 @@ jobs:
         name: build-${{ inputs.version }}
         include-hidden-files: true
         path: |
-          bin/
-          config/
-          public/
-          src/
-          templates/
-          vendor/
-          composer.json
-          .env
-          .env.${{ inputs.environment }}
+          ui/bin/
+          ui/config/
+          ui/public/
+          ui/src/
+          ui/templates/
+          ui/vendor/
+          ui/composer.json
+          ui/.env
+          ui/.env.${{ inputs.environment }}
 
   deploy:
     needs: [test,build]
@@ -151,7 +158,7 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SERV_KEYS }}
         ARGS: "--recursive --delete --links --owner --group --perms --compress --checksum"
         EXCLUDE: "/var/, /.env.local, /.env.${{ inputs.environment }}.local"
-        SOURCE: "build/"
+        SOURCE: "build/ui/"
         REMOTE_HOST: ${{ secrets.SERV_ADDR }}
         REMOTE_USER: ${{ secrets.SERV_USER }}
         REMOTE_PORT: ${{ secrets.SERV_PORT }}

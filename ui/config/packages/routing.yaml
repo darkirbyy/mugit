@@ -8,5 +8,3 @@ when@prod: &routing-prod
     framework:
         router:
             strict_requirements: null
-
-when@stag: *routing-prod

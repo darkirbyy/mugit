@@ -30,8 +30,6 @@ jobs:
             echo "environment=${{ inputs.environment }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "environment=prod" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
-            echo "environment=stag" >> $GITHUB_OUTPUT
           else
             echo "Unknown branch: ${{ github.ref }}"
             exit 1

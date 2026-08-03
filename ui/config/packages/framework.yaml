@@ -35,5 +35,3 @@ when@prod: &framework-prod
     framework:
         session:
             cookie_path: '/%app.name%'
-
-when@stag: *framework-prod

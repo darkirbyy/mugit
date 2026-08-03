@@ -53,5 +53,3 @@ when@prod: &monolog-prod
                 channels: [deprecation]
                 path: php://stderr
                 formatter: monolog.formatter.json
-
-when@stag: *monolog-prod
