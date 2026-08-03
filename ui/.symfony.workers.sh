@@ -1,6 +1,5 @@
 #!/bin/bash
 
-MUGIT_DEFAULT_PORT=22
 WEBPACK_DEFAULT_PORT=8080
 
 find_next_available_port() {
@@ -26,15 +25,9 @@ if [ -f ".env" ]; then
     source ".env"
 else 
     echo "No '.env' file detected."
-    export TIMEZONE=$(cat /etc/timezone 2> /dev/null || echo "")  
-    export MUGIT_UID=$(id -u)
-    export MUGIT_GID=$(id -g)
-    export MUGIT_DIR="./var/dev/data"
-    export MUGIT_PORT=$(find_next_available_port $MUGIT_DEFAULT_PORT)
-    export MUGIT_EXTERNAL_NETWORK=false
 fi
-echo "Starting docker Core container on port $MUGIT_PORT"
-mkdir -p $MUGIT_DIR
+echo "Starting docker Core container on port $CORE_PORT"
+mkdir -p $CORE_DATA
 docker compose up -d
 cd ../ui
 

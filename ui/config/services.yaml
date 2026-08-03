@@ -13,8 +13,7 @@ parameters:
     app.core_host_addr: '%env(string:CORE_HOST_ADDR)%'
     app.core_host_port: '%env(int:CORE_HOST_PORT)%'
     app.core_host_pubkey: '%env(string:CORE_HOST_PUBKEY)%'
-    app.core_api_user: '%env(string:CORE_API_USER)%'
-    app.core_api_key: '%env(string:CORE_API_KEY)%'
+    app.core_root_prikey: '%env(string:CORE_ROOT_PRIKEY)%'
 
 imports:
     - { resource: 'version.yaml' }

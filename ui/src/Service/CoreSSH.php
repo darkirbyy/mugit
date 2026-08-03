@@ -17,8 +17,7 @@ class CoreSSH
         #[Autowire('%app.core_host_addr%')] private string $coreHostAddr,
         #[Autowire('%app.core_host_port%')] private int $coreHostPort,
         #[Autowire('%app.core_host_pubkey%')] private string $coreHostPubkey,
-        #[Autowire('%app.core_api_user%')] private string $coreApiUser,
-        #[Autowire('%app.core_api_key%')] private string $coreApiKey,
+        #[Autowire('%app.core_root_prikey%')] private string $coreRootPrikey,
         private LoggerInterface $logger,
     ) {
         $this->ssh = null;
@@ -37,8 +36,8 @@ class CoreSSH
             return false;
         }
 
-        $key = PublicKeyLoader::load($this->coreApiKey);
-        if (!$this->ssh->login($this->coreApiUser, $key)) {
+        $key = PublicKeyLoader::load($this->coreRootPrikey);
+        if (!$this->ssh->login('root', $key)) {
             $this->logger->warning('Failed to authenticate to core through SSH : invalid user or private key.');
             return false;
         }
@@ -54,7 +53,7 @@ class CoreSSH
             return ['output' => [], 'exitCode' => 1] ;
         }
 
-        $stdout = $this->ssh->exec('api ' . $command);
+        $stdout = $this->ssh->exec('./api.sh ' . $command);
         $exitStatus = $this->ssh->getExitStatus();
 
         $output = array_filter(explode("\n", $stdout));

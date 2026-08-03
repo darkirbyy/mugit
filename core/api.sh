@@ -120,7 +120,7 @@ elif [ $command = "repo" ]; then
 
         uid=$(id -u git)
         gid=$(id -g git)
-        output=$(git init --bare $path && chown -R $GIT_UID:$GIT_GID $path 2>&1)
+        output=$(git init --bare $path 2>&1 && chown -R $GIT_UID:$GIT_GID $path 2>&1)
         if [ $? = 0 ]; then
             echo "Created empty repository '$name'."
             exit 0

@@ -5,22 +5,25 @@ services:
       dockerfile: ./dockerfile
       network: host
       args:
-        MUGIT_UID: ${MUGIT_UID:-1000}
-        MUGIT_GID: ${MUGIT_GID:-1000}
+        CORE_UID: ${CORE_UID:-1000}
+        CORE_GID: ${CORE_GID:-1000}
     image: alpine:3.24-custom
     container_name: mugit
     restart: unless-stopped
     environment:
       - TZ=${TIMEZONE:-Etc/UTC}
     ports:
-      - ${MUGIT_PORT:-22}:22
+      - ${CORE_PORT:-22}:22
     volumes:
-      - ${MUGIT_DIR:-./var/dev/data}:/home/git:rw
-      - ./entrypoint.sh:/entrypoint.sh:rw
-      - ./sshd_config.conf:/etc/ssh/sshd_config.d/sshd_config.conf:ro
-      - ./gitconfig:/etc/gitconfig:ro
-      - ./git-shell-commands:/home/git/git-shell-commands:ro
-      - ./api.sh:/usr/local/bin/api:ro
+      - ${CORE_DATA:-./data/dev}:/home/git:rw
+      - ./config/no-interactive-login:/home/git/git-shell-commands/no-interactive-login:ro
+      - ./config/entrypoint.sh:/entrypoint.sh:ro
+      - ./config/sshd_config.conf:/etc/ssh/sshd_config.d/sshd_config.conf:ro
+      - ./config/gitconfig:/etc/gitconfig:ro
+      - ./keys/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
+      - ./keys/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:ro
+      - ./keys/ssh_root_ed25519_key.pub:/root/.ssh/authorized_keys:ro
+      - ./api.sh:/root/api.sh:ro
     networks:
       web-network:
         ipv4_address: 172.18.0.60
@@ -32,4 +35,4 @@ services:
 
 networks:
   web-network:
-    external: ${MUGIT_EXTERNAL_NETWORK:-false}
+    external: ${CORE_EXTERNAL_NETWORK:-false}
