@@ -12,10 +12,9 @@ Very lightweight docker image and UI to store and share git repo on a server
   - **PHP**: 8.4 (compatible with Symfony 7.4)
   - **Composer**: >= 2.8 for dependency management
 - Front-end:
-  - **Node.js**: 22.x
+  - **Node.js**: >= 22.x
   - **npm**: >= 10.x for dependency management
-  - **Sass**: >= 1.82
-  - **Webpack Encore**: 5.x
+  - **Webpack Encore**: 7.x
 - **git** for source and version control
 - **symfony CLI** for main commands
 - **GitHub** to share and deploy

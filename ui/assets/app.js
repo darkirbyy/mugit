@@ -1,5 +1,5 @@
-// start the Stimulus application
-import './bootstrap';
+// Bootstrap the Stimulus application
+import './stimulus_bootstrap';
 
-// any CSS you import will output into a single css file (app.css in this case)
+// Import CSS
 import './styles/global.css';
