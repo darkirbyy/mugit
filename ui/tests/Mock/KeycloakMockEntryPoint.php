@@ -20,17 +20,20 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
     public function __construct(
         private AuthenticationEntryPointInterface $inner,
         private TokenStorageInterface $tokenStorage,
-        private KeycloakMockUserProvider $keycloakMockUserProvider,
+        private KeycloakMockUserCreate $keycloakMockUserCreate,
         #[Autowire('%mock.keycloak_enable%')] private bool $mockKeycloakEnable,
-        #[Autowire('%mock.keycloak_admin%')] private bool $mockKeycloakAdmin,
     ) {}
 
     public function start(Request $request, ?AuthenticationException $authException = null): RedirectResponse
     {
         if ($this->mockKeycloakEnable) {
-            $user = $this->keycloakMockUserProvider->createUser($this->mockKeycloakAdmin);
+            $isAdmin = $request->getSession()->get('is-admin', true);
+            $user = $this->keycloakMockUserCreate->createUser($isAdmin);
+            
             $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
             $this->tokenStorage->setToken($token);
+            
+            $request->getSession()->set('is-admin', $isAdmin);
             $request->getSession()->set('_security_main', serialize($token));
             $request->getSession()->save();
 

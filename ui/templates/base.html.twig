@@ -32,11 +32,20 @@
         {%- endfor -%}
       </div>
     {% endif %}
+    {% if (env.app.env == 'dev' or env.app.env == 'test') and (env.mock.keycloak_enable) %}
+      <div class="border">
+        <a href="{{ path('home_switch') }}">PASSER EN ROLE {{ app.user.isAdmin ? 'USER' : 'ADMIN' }}</a>
+      </div>
+    {% endif %}
 
     {# Skip to content link for screen reader #}
     <div class="app-navbar-bg-color ps-3 app-skip-link">
       <a class="icon-link visually-hidden-focusable" href="#main-content">{{ 'aria.skipToContent'|trans }}</a>
     </div>
+
+    <header>
+      {{ app.user.id }} - {{ app.user.username }} - <img src="{{ app.user.toArray.picture }}" style="display: inline; width: 50px;" /> - {{app.user.roles|reduce((carry, value, key) => carry  ~ value ~ ', ')}}
+    </header>
     {% block body %}
       {# The MAIN block must be redefined on each page, including the flash block with the bood wrapper #}
       <main class="flex-grow-1" role="main" id="main-content">

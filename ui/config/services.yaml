@@ -16,7 +16,6 @@ parameters:
     core.host_pubkey: '%env(string:CORE_HOST_PUBKEY)%'
     core.root_prikey: '%env(string:CORE_ROOT_PRIKEY)%'
     mock.keycloak_enable: '%env(bool:MOCK_KEYCLOAK_ENABLE)%'
-    mock.keycloak_admin: '%env(bool:MOCK_KEYCLOAK_ADMIN)%'
 
 imports:
     - { resource: 'version.yaml' }
@@ -44,6 +43,10 @@ when@dev: &services_dev
             autoconfigure: true
 
         App\Tests\Mock\KeycloakMockUserProvider:
+            autowire: true
+            autoconfigure: true
+
+        App\Tests\Mock\KeycloakMockUserCreate:
             autowire: true
             autoconfigure: true
 

@@ -10,6 +10,8 @@ twig:
                 enable_prefetch: '%turbo.enable_prefetch%'
             hub:
                 base_url: '%hub.base_url%'
+            mock:
+                keycloak_enable: '%mock.keycloak_enable%'
             versioning:
                 version: '%versioning.version%'
                 version_hash: '%versioning.version_hash%'
