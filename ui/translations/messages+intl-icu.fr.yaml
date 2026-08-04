@@ -1,0 +1,30 @@
+##################################
+# Page-specific translations #####
+##################################
+
+home:
+  title: Accueil
+
+error:
+  title: Erreur {code}
+  message:
+    notFound: Cette page n'existe pas.
+    forbidden: Cette page n'est pas accessible.
+    other: Le serveur a rencontré un problème, merci de réessayer plus tard.
+    
+##################################
+# Common translations ############
+##################################
+
+layout:
+  name: μGit
+  env:
+    dev: dev
+    test: test
+    stag: qualif
+    prod: prod
+
+aria:
+  skipToContent: Aller au contenu
+  mainNavigation: Navigation principale
+  toggleNavigation: Basculer la navigation

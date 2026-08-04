@@ -30,8 +30,10 @@ when@test:
             storage_factory_id: session.storage.factory.mock_file
         csrf_protection:
             stateless_token_ids:
+        error_controller: App\Controller\ErrorController::show
 
 when@prod: &framework-prod
     framework:
+        error_controller: App\Controller\ErrorController::show
         session:
             cookie_path: '/%app.name%'

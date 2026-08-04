@@ -9,6 +9,7 @@
 parameters:
     app.name: '%env(string:APP_NAME)%'
     app.env: '%env(string:APP_ENV)%'
+    app.enable_prefetch: '%env(bool:ENABLE_PREFETCH)%'
     app.hub_url: '%env(string:HUB_BASE_URL)%'
     app.core_host_addr: '%env(string:CORE_HOST_ADDR)%'
     app.core_host_port: '%env(int:CORE_HOST_PORT)%'

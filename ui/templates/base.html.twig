@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% if (turbo_force_reload|default(false)) == true %}
+      <meta name="turbo-visit-control" content="reload" />
+    {% endif %}
+    <meta name="turbo-prefetch" content="{{ env.app.enable_prefetch ? 'true' : 'false' }}" />
+
     <link rel="icon" href="{{ asset('build/images/favicon.png') }}" />
+
     {% block stylesheets %}
       {{ encore_entry_link_tags('app') }}
     {% endblock %}
@@ -12,14 +18,35 @@
       {{ encore_entry_script_tags('app') }}
     {% endblock %}
     <title>
-      {% block title %}
-        Welcome!
-      {% endblock %}
+      {{ title ~ ' - ' ~ ('layout.name'|trans) }}
     </title>
   </head>
-  <body>
-    {% block body %}
+  <body class="d-flex flex-column min-vh-100">
+    {# Bar not visible in prod env #}
+    {% if env.app.env != 'prod' %}
+      <div class="container-fluid p-0 m-0 text-center fw-bold d-flex justify-content-around app-env-{{ env.app.env }}">
+        {%- for i in 1..10 -%}
+          <div>
+            {{ ('layout.env.' ~ env.app.env)|trans|upper }}
+          </div>
+        {%- endfor -%}
+      </div>
+    {% endif %}
 
+    {# Skip to content link for screen reader #}
+    <div class="app-navbar-bg-color ps-3 app-skip-link">
+      <a class="icon-link visually-hidden-focusable" href="#main-content">{{ 'aria.skipToContent'|trans }}</a>
+    </div>
+    {% block body %}
+      {# The MAIN block must be redefined on each page, including the flash block with the bood wrapper #}
+      <main class="flex-grow-1" role="main" id="main-content">
+        {% block main %}
+          {# {{ block('flash', 'theme/flash.html.twig') }} #}
+          <div class="text-center">
+            Some content !
+          </div>
+        {% endblock %}
+      </main>
     {% endblock %}
   </body>
 </html>

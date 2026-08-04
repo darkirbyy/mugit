@@ -1,11 +1,11 @@
 framework:
-    enabled_locales: ['fr', 'en']
+    enabled_locales: ['fr']
     set_locale_from_accept_language: true
     set_content_language_from_locale: true
     translator:
         default_path: '%kernel.project_dir%/translations'
         fallbacks:
-            - en
+            - fr
         providers:
 
 when@test:

@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class FakeFuncTest extends WebTestCase
 {
-
     #[PU\Test]
     public function fake(): void
     {

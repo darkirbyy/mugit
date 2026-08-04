@@ -131,6 +131,7 @@ jobs:
           ui/public/
           ui/src/
           ui/templates/
+          ui/translations/
           ui/vendor/
           ui/composer.json
           ui/.env

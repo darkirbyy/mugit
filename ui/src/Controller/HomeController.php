@@ -15,6 +15,6 @@ class HomeController extends AbstractController
     {
         ['output' => $lines] = $coreSSH->exec('repo list');
 
-        return $this->render('default/index.html.twig', ['lines' => $lines]);
+        return $this->render('home/index.html.twig', ['lines' => $lines]);
     }
 }

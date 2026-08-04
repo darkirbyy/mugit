@@ -6,6 +6,8 @@ twig:
             app:
                 name: '%app.name%'
                 env: '%app.env%'
+                enable_prefetch: '%app.enable_prefetch%'
+                hub_url: '%app.hub_url%'
             versioning:
                 version: '%versioning.version%'
                 version_hash: '%versioning.version_hash%'
