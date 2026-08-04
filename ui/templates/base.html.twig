@@ -21,10 +21,10 @@
       {{ title ~ ' - ' ~ ('layout.name'|trans) }}
     </title>
   </head>
-  <body class="d-flex flex-column min-vh-100">
-    {# Bar not visible in prod env #}
+  <body class="flex flex-col min-h-screen text-zinc-900 bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100"  data-controller="switch-theme">
+    {# Bar to show the environment, not visible in prod #}
     {% if env.app.env != 'prod' %}
-      <div class="container-fluid p-0 m-0 text-center fw-bold d-flex justify-content-around app-env-{{ env.app.env }}">
+      <div class="flex justify-around p-0 m-0 text-center font-bold app-env-{{ env.app.env }}">
         {%- for i in 1..10 -%}
           <div>
             {{ ('layout.env.' ~ env.app.env)|trans|upper }}
@@ -32,30 +32,37 @@
         {%- endfor -%}
       </div>
     {% endif %}
-    {% if (env.app.env == 'dev' or env.app.env == 'test') and (env.mock.keycloak_enable) %}
-      <div class="border">
+
+    {# Button to switch role, onyl visible in dev/test and if keycloak is mocked #}
+    {% if (env.app.env == 'dev' or env.app.env == 'test') and env.mock.keycloak_enable %}
+      <div class="text-right font-semibold">
         <a href="{{ path('home_switch') }}">PASSER EN ROLE {{ app.user.isAdmin ? 'USER' : 'ADMIN' }}</a>
       </div>
     {% endif %}
 
     {# Skip to content link for screen reader #}
-    <div class="app-navbar-bg-color ps-3 app-skip-link">
+    {# <div class="app-navbar-bg-color ps-3 app-skip-link">
       <a class="icon-link visually-hidden-focusable" href="#main-content">{{ 'aria.skipToContent'|trans }}</a>
-    </div>
+    </div> #}
 
-    <header>
-      {{ app.user.id }} - {{ app.user.username }} - <img src="{{ app.user.toArray.picture }}" style="display: inline; width: 50px;" /> - {{app.user.roles|reduce((carry, value, key) => carry  ~ value ~ ', ')}}
+    <header class="text-left">
+      {{ app.user.id }} - {{ app.user.username }} - <img src="{{ app.user.toArray.picture }}" style="display: inline; width: 50px;" /> - {{
+        app.user.roles|reduce((carry, value, key) => carry ~ value ~ ', ')
+      }}
     </header>
-    {% block body %}
-      {# The MAIN block must be redefined on each page, including the flash block with the bood wrapper #}
-      <main class="flex-grow-1" role="main" id="main-content">
-        {% block main %}
-          {# {{ block('flash', 'theme/flash.html.twig') }} #}
-          <div class="text-center">
-            Some content !
-          </div>
-        {% endblock %}
-      </main>
-    {% endblock %}
+
+    {# The MAIN block must be redefined on each page, including the flash block with the bood wrapper #}
+    <main class="grow" id="main-content">
+      {% block main %}
+        {# {{ block('flash', 'theme/flash.html.twig') }} #}
+        <div class="text-center">
+          Some content !
+        </div>
+      {% endblock %}
+    </main>
+
+    <footer class="text-center font-light italic">
+      Made with Symfony + Tailwind CSS | Mise à jour le + version
+    </footer>
   </body>
 </html>
