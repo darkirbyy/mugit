@@ -39,6 +39,6 @@ lint_and_add() {
 
 lint_and_add '^(src|tests)/.+\.php$' "composer lint-php"
 lint_and_add '^templates/.+\.twig$' "composer lint-twig"
-lint_and_add '^assets/styles/.+\.scss$' "npm run lint-scss-file"
+lint_and_add '^assets/styles/.+\.css$' "npm run lint-css-file"
 lint_and_add '^assets/controllers/.+\.js$' "npm run lint-js-file"
 

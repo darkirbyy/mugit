@@ -17,6 +17,14 @@ return (new PhpCsFixer\Config())
         'function_declaration' => [
             'closure_fn_spacing' => 'none'
         ],
+        'increment_style' => ['style' => 'post'],
+        'operator_linebreak' => [
+            'position' => 'end', 
+            'only_booleans' => true
+        ],
+        'types_spaces' => [
+            'space' => 'single',
+        ]
     ])
     ->setFinder($finder)
     ->setCacheFile("var/cache/linter/.php-cs-fixer.cache")

@@ -11,21 +11,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(): Response
+    public function index(CoreSSH $coreSSH): Response
     {
-        return $this->render('default/index.html.twig', []);
-    }
+        ['output' => $lines] = $coreSSH->exec('repo list');
 
-    #[Route('/turbo', name: 'turbo')]
-    public function turbo(): Response
-    {
-        return $this->render('default/turbo.html.twig', []);
-    }
-
-    #[Route('/test', name: 'test')]
-    public function test(CoreSSH $coreSSH): Response
-    {
-        ['output' =>  $lines] = $coreSSH->exec('repo list');
-        return $this->render('default/test.html.twig', ['lines' => $lines]);
+        return $this->render('default/index.html.twig', ['lines' => $lines]);
     }
 }

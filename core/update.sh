@@ -13,6 +13,7 @@ if  ! echo "$1" | grep -Eq "^[0-9]+\.[0-9]+\.[0-9]+$"; then
 fi
 
 echo "Updating the core version..."
+cd $(dirname $0)
 
 # Stop the current mugit core container
 docker compose down

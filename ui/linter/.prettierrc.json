@@ -41,9 +41,9 @@
       }
     },
     {
-      "files": "../assets/styles/**/*.scss",
+      "files": "../assets/styles/**/*.css",
       "options": {
-        "parser": "scss",
+        "parser": "css",
         "printWidth": 80,
         "tabWidth": 2,
         "singleQuote": true,

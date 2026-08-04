@@ -89,9 +89,9 @@
         ],
         "lint-php": "vendor/bin/php-cs-fixer fix --config=linter/.php-cs-fixer.dist.php",
         "lint-twig": "vendor/bin/twig-cs-fixer lint --fix --config=linter/.twig-cs-fixer.dist.php",
-        "lint-scss": "npm run lint-scss-file \"assets/styles/**/*.scss\"",
+        "lint-css": "npm run lint-css-file \"assets/styles/**/*.css\"",
         "lint-js": "npm run lint-js-file \"assets/controllers/**/*.js\"",
-        "lint-all": ["@lint-php", "@lint-twig", "@lint-scss",  "@lint-js"],
+        "lint-all": ["@lint-php", "@lint-twig", "@lint-css",  "@lint-js"],
 
         "tests-unit": "symfony php bin/phpunit --testsuite unit",
         "tests-inte": "symfony php bin/phpunit --testsuite inte",
@@ -110,7 +110,7 @@
     "require-dev": {
         "esi/phpunit-coverage-check": "^3.0",
         "friendsofphp/php-cs-fixer": "^3.65",
-        "phpunit/phpunit": "^12.5",
+        "phpunit/phpunit": "^13.2",
         "symfony/browser-kit": "7.4.*",
         "symfony/css-selector": "7.4.*",
         "symfony/debug-bundle": "7.4.*",
@@ -118,7 +118,6 @@
         "symfony/phpunit-bridge": "^7.4",
         "symfony/stopwatch": "7.4.*",
         "symfony/web-profiler-bundle": "7.4.*",
-        "vincentlanglet/twig-cs-fixer": "^3.4",
-        "zenstruck/foundry": "^2.8"
+        "vincentlanglet/twig-cs-fixer": "^4.0"
     }
 }

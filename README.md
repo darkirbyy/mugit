@@ -34,10 +34,10 @@ To prettify all files, run `npm run pretty-all`.
 
 - **php-cs-fixer**: for PHP files in `src` and `tests` directories
 - **twig-cs-fixer**: for twig files in `templates` directory
-- **stylelint**: for CSS/SCSS files in `assets/styles` directory
+- **stylelint**: for CSS files in `assets/styles` directory
 - **eslint**: for JS files in `assets/controllers` directory
 
-To lint all files from one type, run `composer lint-[php|twig|scss|js]`.  
+To lint all files from one type, run `composer lint-[php|twig|css|js]`.  
 To lint all files, run `composer lint-all`.
 
 ## Install

@@ -73,20 +73,20 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader(function(options) {
-        options.sassOptions = {
-             quietDeps: true,
-           silenceDeprecations: ['global-builtin', 'import']
-        };
-    })
-    .enablePostCssLoader((options) => {
-        options.postcssOptions = {
-            plugins: {
-                // add browserslist config to package.json (see below)
-                autoprefixer: {}
-            }
-        };
-    })
+    // .enableSassLoader(function(options) {
+    //     options.sassOptions = {
+    //          quietDeps: true,
+    //        silenceDeprecations: ['global-builtin', 'import']
+    //     };
+    // })
+    // .enablePostCssLoader((options) => {
+    //     options.postcssOptions = {
+    //         plugins: {
+    //             // add browserslist config to package.json (see below)
+    //             autoprefixer: {}
+    //         }
+    //     };
+    // })
 
     // add https support (port option useless as the manifest will not be updated accordingly)
     .configureDevServerOptions(options => {
@@ -106,19 +106,6 @@ Encore
         }
         // options.port = 'auto'
     })
-
-    // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
-
-    // uncomment if you use React
-    //.enableReactPreset()
-
-    // uncomment to get integrity="..." attributes on your script & link tags
-    // requires WebpackEncoreBundle 1.4 or higher
-    //.enableIntegrityHashes(Encore.isProduction())
-
-    // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
     ;
 
 module.exports = Encore.getWebpackConfig();

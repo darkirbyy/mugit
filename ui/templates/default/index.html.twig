@@ -1,21 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-  Hello World!
+  Accueil - Mugit
 {% endblock %}
 
 {% block body %}
-  <h1>Hello World!</h1>
-  <ul>
-    <li>✅ Server</li>
-    <li class="sass">SASS</li>
-    <li data-controller="test">❌ Stimulus</li>
-    <li>
-      <turbo-frame id="content-frame" src="{{ path('home_turbo') }}">
-        ❌ Turbo
-      </turbo-frame>
-    </li>
+  <h1>Hello from Mugit!</h1>
+ Lines :<ul>
+    {% for line in lines %}
+      <li>{{ line }}</li>
+    {% endfor %}
   </ul>
-
-  <a href="{{ path('home_test') }}">Test</a>
 {% endblock %}
