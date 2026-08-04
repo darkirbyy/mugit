@@ -2,11 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>
-      {% block title %}
-        Welcome!
-      {% endblock %}
-    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="{{ asset('build/images/favicon.png') }}" />
     {% block stylesheets %}
       {{ encore_entry_link_tags('app') }}
@@ -15,6 +11,11 @@
     {% block javascripts %}
       {{ encore_entry_script_tags('app') }}
     {% endblock %}
+    <title>
+      {% block title %}
+        Welcome!
+      {% endblock %}
+    </title>
   </head>
   <body>
     {% block body %}

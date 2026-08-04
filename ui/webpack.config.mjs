@@ -66,14 +66,7 @@ Encore
     //     config.plugins.push(['polyfill-corejs3', { method: 'usage-global', version: '3.49' }]);
     // })
 
-    // .enablePostCssLoader((options) => {
-    //     options.postcssOptions = {
-    //         plugins: {
-    //             // add browserslist config to package.json (see below)
-    //             autoprefixer: {}
-    //         }
-    //     };
-    // })
+    .enablePostCssLoader()
 
     // Lightning CSS, fast Rust-based minifier
     .configureCssMinimizerPlugin((options, MinimizerPlugin) => {
@@ -96,6 +89,10 @@ Encore
                 pfx: path.join(process.env.HOME, '.config/symfony-cli/certs/default.p12'),
             },
         }
+    })
+
+    .configureWatchOptions((watchOptions) => {
+        watchOptions.ignored = '**/public';
     })
     ;
 
