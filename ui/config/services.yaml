@@ -9,12 +9,14 @@
 parameters:
     app.name: '%env(string:APP_NAME)%'
     app.env: '%env(string:APP_ENV)%'
-    app.enable_prefetch: '%env(bool:ENABLE_PREFETCH)%'
-    app.hub_url: '%env(string:HUB_BASE_URL)%'
-    app.core_host_addr: '%env(string:CORE_HOST_ADDR)%'
-    app.core_host_port: '%env(int:CORE_HOST_PORT)%'
-    app.core_host_pubkey: '%env(string:CORE_HOST_PUBKEY)%'
-    app.core_root_prikey: '%env(string:CORE_ROOT_PRIKEY)%'
+    turbo.enable_prefetch: '%env(bool:TURBO_PREFETCH_ENABLE)%'
+    hub.base_url: '%env(string:HUB_BASE_URL)%'
+    core.host_addr: '%env(string:CORE_HOST_ADDR)%'
+    core.host_port: '%env(int:CORE_HOST_PORT)%'
+    core.host_pubkey: '%env(string:CORE_HOST_PUBKEY)%'
+    core.root_prikey: '%env(string:CORE_ROOT_PRIKEY)%'
+    mock.keycloak_enable: '%env(bool:MOCK_KEYCLOAK_ENABLE)%'
+    mock.keycloak_admin: '%env(bool:MOCK_KEYCLOAK_ADMIN)%'
 
 imports:
     - { resource: 'version.yaml' }
@@ -34,3 +36,15 @@ services:
             - { name: kernel.event_listener, event: 'Symfony\Component\Security\Http\Event\LogoutEvent', priority: -30 }
 
 
+when@dev: &services_dev
+    services:
+        App\Tests\Mock\KeycloakMockEntryPoint:
+            decorates: 'Mainick\KeycloakClientBundle\Security\EntryPoint\KeycloakAuthenticationEntryPoint'
+            autowire: true
+            autoconfigure: true
+
+        App\Tests\Mock\KeycloakMockUserProvider:
+            autowire: true
+            autoconfigure: true
+
+when@test: *services_dev

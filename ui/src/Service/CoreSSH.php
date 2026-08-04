@@ -14,10 +14,10 @@ class CoreSSH
     private ?SSH2 $ssh;
 
     public function __construct(
-        #[Autowire('%app.core_host_addr%')] private string $coreHostAddr,
-        #[Autowire('%app.core_host_port%')] private int $coreHostPort,
-        #[Autowire('%app.core_host_pubkey%')] private string $coreHostPubkey,
-        #[Autowire('%app.core_root_prikey%')] private string $coreRootPrikey,
+        #[Autowire('%core.host_addr%')] private string $coreHostAddr,
+        #[Autowire('%core.host_port%')] private int $coreHostPort,
+        #[Autowire('%core.host_pubkey%')] private string $coreHostPubkey,
+        #[Autowire('%core.root_prikey%')] private string $coreRootPrikey,
         private LoggerInterface $logger,
     ) {
         $this->ssh = null;

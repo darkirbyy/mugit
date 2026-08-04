@@ -1,5 +1,4 @@
 config/reference.php
-.vscode
 
 ###> symfony/framework-bundle ###
 /.env.local

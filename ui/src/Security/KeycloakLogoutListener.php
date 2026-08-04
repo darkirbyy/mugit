@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 final readonly class KeycloakLogoutListener
 {
-    public function __construct(#[Autowire('%app.hub_url%')] private string $hubUrl, private LoggerInterface $keycloakClientLogger, private IamClientInterface $iamClient) {}
+    public function __construct(#[Autowire('%hub.base_url%')] private string $hubBaseUrl, private LoggerInterface $keycloakClientLogger, private IamClientInterface $iamClient) {}
 
     /**
      * Event to fix the URL computed in LogoutAuthListener.php from mainick/keycloak-bundle.
@@ -34,7 +34,7 @@ final readonly class KeycloakLogoutListener
             'access_token' => $accessToken,
             'state' => $accessToken->getValues()['session_state'],
             'id_token_hint' => $accessToken->getValues()['id_token'],
-            'post_logout_redirect_uri' => $this->hubUrl,
+            'post_logout_redirect_uri' => $this->hubBaseUrl,
         ]);
         $this->keycloakClientLogger->info('KeycloakLogoutListener::__invoke', [
             'logoutUrl' => $logoutUrl,

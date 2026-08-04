@@ -6,7 +6,7 @@
     {% if (turbo_force_reload|default(false)) == true %}
       <meta name="turbo-visit-control" content="reload" />
     {% endif %}
-    <meta name="turbo-prefetch" content="{{ env.app.enable_prefetch ? 'true' : 'false' }}" />
+    <meta name="turbo-prefetch" content="{{ env.turbo.enable_prefetch ? 'true' : 'false' }}" />
 
     <link rel="icon" href="{{ asset('build/images/favicon.png') }}" />
 

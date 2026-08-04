@@ -14,12 +14,12 @@ use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
-    public function __construct(#[Autowire('%app.hub_url%')] private string $hubUrl, private Security $security) {}
+    public function __construct(#[Autowire('%hub.base_url%')] private string $hubBaseUrl, private Security $security) {}
 
     public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
     {
         $user = $this->security->getUser();
 
-        return is_null($user) ? new RedirectResponse($this->hubUrl) : null;
+        return is_null($user) ? new RedirectResponse($this->hubBaseUrl) : null;
     }
 }
