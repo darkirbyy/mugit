@@ -102,6 +102,6 @@ Encore
     .configureWatchOptions((watchOptions) => {
         watchOptions.ignored = '**/public';
     })
-    ;
+;
 
 export default await Encore.getWebpackConfig();

@@ -21,7 +21,7 @@
       {{ title ~ ' - ' ~ ('layout.name'|trans) }}
     </title>
   </head>
-  <body class="flex flex-col min-h-screen text-zinc-900 bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100"  data-controller="switch-theme">
+  <body class="flex flex-col min-h-screen text-zinc-900 bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100" data-controller="switch-theme">
     {# Bar to show the environment, not visible in prod #}
     {% if env.app.env != 'prod' %}
       <div class="flex justify-around p-0 m-0 text-center font-bold app-env-{{ env.app.env }}">
@@ -45,11 +45,22 @@
       <a class="icon-link visually-hidden-focusable" href="#main-content">{{ 'aria.skipToContent'|trans }}</a>
     </div> #}
 
-    <header class="text-left">
+    <header>
+      <div>
+        <button>Switch theme</button>
+        <ul>
+          <li><span class="ri-sun-fill" aria-hidden="true"></span>Light</li>
+          <li><span class="ri-moon-fill" aria-hidden="true"></span>Dark</li>
+          <li><span class="ri-home-gear-fill" aria-hidden="true"></span>System</li>
+        </ul>
+      </div>
+    </header>
+
+    <div class="text-left">
       {{ app.user.id }} - {{ app.user.username }} - <img src="{{ app.user.toArray.picture }}" style="display: inline; width: 50px;" /> - {{
         app.user.roles|reduce((carry, value, key) => carry ~ value ~ ', ')
       }}
-    </header>
+    </div>
 
     {# The MAIN block must be redefined on each page, including the flash block with the bood wrapper #}
     <main class="grow" id="main-content">
