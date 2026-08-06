@@ -18,6 +18,15 @@ error:
 
 layout:
   name: μGit
+  footer:
+    madeWith: Réalisé avec
+    and: et
+    version: Version
+    releaseDate: Mise à jour le
+  theme:
+    light: Clair
+    dark: Sombre
+    auto: Système
   env:
     dev: dev
     test: test
@@ -26,5 +35,4 @@ layout:
 
 aria:
   skipToContent: Aller au contenu
-  mainNavigation: Navigation principale
-  toggleNavigation: Basculer la navigation
+  switchTheme: Changer de thème

@@ -43,5 +43,8 @@
     },
     "allowScripts": {
         "core-js": false
+    },
+    "dependencies": {
+        "flowbite": "^4.0.2"
     }
 }
