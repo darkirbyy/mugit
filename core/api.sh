@@ -19,58 +19,58 @@ COMMENT_HELP="The comments can only use letters, digits, spaces and the symbols 
 # Syntax : check_command "$command" "$values" "$type" "$help"
 check_command(){
     if [ -e $1 ]; then
-        echo "Missing $3. $4"
+        >&2 echo "Missing $3. $4" 
         exit 1
     fi
 
     if echo $2 | grep -vq "$1"; then
-        echo "Unkown $3 '$1'. $4"
-        exit 1
+        >&2 echo "Unkown $3 '$1'. $4" 
+        exit 2
     fi
 }
 
 # Syntax : check_argument "$argument" "$regex" "$usage" "$help"
 check_argument(){
     if [ -e $1 ]; then
-        echo "Missing argument(s). $3"
-        exit 1
+        >&2 echo "Missing argument(s). $3" 
+        exit 3
     fi
 
     if echo $1 | grep -vqE "$2"; then
-        echo "Invalid argument(s). $4"
-        exit 1
+        >&2 echo "Invalid argument(s). $4" 
+        exit 4
     fi
 }
 
 # Syntax : check_option "$argument" "$regex" "$help"
 check_option(){
     if echo $1 | grep -vqE "$2"; then
-        echo "Invalid option(s). $3"
-        exit 1
+        >&2 echo "Invalid option(s). $3" 
+        exit 5
     fi
 }
 
 # Syntax : check_path "$path" "$inverted" "$help"
 check_path(){
     if [ $2 -d $1 ]; then
-        echo "$3"
-        exit 1
+        >&2 echo "$3" 
+        exit $([ "$2" = "!" ] && echo "6" || echo "7")
     fi
 }
 
 # Syntax : check_key "$uuid" "$key" "$inverted" "$help"
 check_key(){
     if [ $3 $(grep -F "$2 $1:" "$SSH_FILE" | wc -l) = 0 ]; then
-        echo "$4"
-        exit 1
+        >&2 echo "$4" 
+        exit $([ "$3" = "!" ] && echo "8" || echo "9")
     fi
 }
 
 # Syntax : report_error "$error" "$message"
 report_error(){
-    echo "$2 Error :"
-    echo "$1"
-    exit 1
+    >&2 echo "$2 Error :" 
+    >&2 echo "$1" 
+    exit 10
 }
 
 command=$1

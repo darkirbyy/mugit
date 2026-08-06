@@ -65,3 +65,7 @@ To start all tests, run `composer tests-all`.
 
 A workflow to test, build and deploy the application is preconfigured.  
 The workflow can be triggered manually in GitHub Actions or automatically when pushing to main (for prod).
+
+## TODO
+
+add hint about sparse checkout in README.
