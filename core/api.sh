@@ -91,7 +91,7 @@ elif [ $command = "repo" ]; then
     if [ $subcommand = "help" ]; then
         echo "Manage repositories. Available sub-commands:"
         echo "  repo help                               print this help"
-        echo "  repo list                               list all existing repositories, sorted alphabetically and without '.git' suffix"
+        echo "  repo list                               list all existing repositories and their size in Ko without '.git' suffix and sorted alphabetically"
         echo "  repo create <name>                      create a new repository if not already exists"
         echo "  repo rename <old-name> <new-name>       rename an existing repository"
         echo "  repo delete <name>                      delete an existing repository"
@@ -101,7 +101,7 @@ elif [ $command = "repo" ]; then
     fi
 
     if [ $subcommand = "list" ]; then
-        output=$(find $GIT_DIR -maxdepth 1 -name '*.git' -exec basename {} \; | cut -d. -f1 | sort 2>&1)
+        output=$(du -d 1 $GIT_DIR | grep -E '\.git$' | sed -E 's#([0-9]+).*/([a-zA-Z0-9_-]+)\.git#\2 \1#g' | sort 2>&1)
         if [ $? = 0 ]; then
             echo "$output"
             exit 0
@@ -181,7 +181,7 @@ elif [ $command = "user" ]; then
         echo "Manage users and their public SSH keys. Available sub-commands:"
         echo "  user help                               print this help"
         echo "  user list                               list all user uuids having at least one registered key"
-        echo "  user key-list <uuid>                    list all registered keys for the given user"
+        echo "  user key-list <uuid>                    list all registered keys and their timestamp for the given user"
         echo "  user key-add <uuid> <key> [comment]     register a new key for the given user, with an optional comment"
         echo "  user key-remove <uuid> <key>            remove an existing key for the given user"
         echo "  user delete <uuid>                      delete all keys for the given user, cutting effectively all its access"
@@ -201,10 +201,10 @@ elif [ $command = "user" ]; then
     elif [ $subcommand = "key-list" ]; then
         shift
         uuid=$1
-        check_argument "$uuid" "$UUID_REGEX" "Usage is 'user key-remove <uuid> <key>'" "$UUID_HELP"
+        check_argument "$uuid" "$UUID_REGEX" "Usage is 'user key-list <uuid>'" "$UUID_HELP"
         
         key_regex_adapt=$(echo "$KEY_REGEX" | tr -d '^$')
-        output=$(cat "$SSH_FILE" | grep -E "ssh-ed25519 $key_regex_adapt $uuid:" | cut -d' ' -f2- | sed -E "s#$uuid:##" 2>&1)
+        output=$(cat "$SSH_FILE" | grep -E "ssh-ed25519 $key_regex_adapt $uuid:" | cut -d' ' -f2- | sed -E "s#$uuid:##" | tr ':' ' ' 2>&1)
         if [ $? = 0 ] || [ $? = 1 ]; then
             echo "$output"
             exit 0
@@ -220,8 +220,9 @@ elif [ $command = "user" ]; then
         check_key "$uuid" "$key" "!" "The key '$key' already exists for the user '$uuid'."
         comment=$(echo $3 | tr -s ' ')
         check_option "$comment" "$COMMENT_REGEX" "$COMMENT_HELP"
+        timestamp=$(date +%s)
 
-        output=$(echo "ssh-ed25519 $key $uuid:$comment" >> "$SSH_FILE" 2>&1)
+        output=$(echo "ssh-ed25519 $key $uuid:$timestamp:$comment" >> "$SSH_FILE" 2>&1)
          if [ $? = 0 ]; then
             echo "Added key '$key' for the user '$uuid'."
             exit 0

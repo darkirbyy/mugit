@@ -19,6 +19,16 @@ class HomeController extends AbstractController
     public function index(CoreSSH $coreSSH): Response
     {
         ['output' => $lines] = $coreSSH->exec('repo list');
+        $lines = array_map(function ($line) {
+            $exploded = explode(' ', $line);
+            $size = intval($exploded[1]);
+            $unit = 'Ko';
+            if ($size > 1024) {
+                $size /= $size;
+                $unit = 'Mo';
+            }
+            return 'Name: ' . $exploded[0] . ' - Size: ' . $size . $unit;
+        }, $lines);
 
         return $this->render('home/index.html.twig', ['lines' => $lines]);
     }
@@ -31,7 +41,7 @@ class HomeController extends AbstractController
     {
         $isAdmin = $this->getUser()->getIsAdmin();
         $security->logout(false);
-        
+
         $request->getSession()->set('is-admin', !$isAdmin);
         $request->getSession()->save();
 

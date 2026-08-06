@@ -20,7 +20,7 @@ To achieve that, here is the APIv1 between the CORE and the UI.
 ### Repo sub-command
 
 - `repo help` : print the repo sub-command help
-- `repo list` : list each repository on a new line, without the `git` suffix, sorted alphabetically
+- `repo list` : list each repository name (without the `git` suffix), with its size (in Kb) on a new line, sorted alphabetically
 - `repo create <name>` : create a new repository named `<name>` if not already exists
 - `repo rename <old-name> <new-name>` : rename an existing repository named `<old-name>` to `<new-name>` if not already exists
 - `repo delete <name>` : delete an existing repository named `<name>`
@@ -29,8 +29,8 @@ To achieve that, here is the APIv1 between the CORE and the UI.
 
 - `user help` : print the user sub-command help
 - `user list` : list the UUID of each user having at least one key registered on a new line
-- `user key-list <uuid>` : list each registered key for the user `<uuid>` on a new line
-- `user key-add <uuid> <key> [comment]` : register a new key `<key>` for the user `<uuid>`, with an optional comment `[comment]`
+- `user key-list <uuid>` : list each registered key with its timestamp (in UTC) and potential comment for the user `<uuid>` on a new line
+- `user key-add <uuid> <key> [comment]` : register a new key `<key>` for the user `<uuid>`, adding the current timestamp and with an optional comment `[comment]`
 - `user key-remove <uuid> <key>` : remove an existing key `<key>` for the user `<uuid>`
 - `user delete <uuid>` : delete all registered keys of the user `<uuid>`
 
