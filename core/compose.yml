@@ -13,6 +13,7 @@ services:
     environment:
       - TZ=${TIMEZONE:-Etc/UTC}
       - UI_ADDR=${CORE_NETWORK_UI_ADDR:-localhost}
+      - REPO_MAX_SIZE_MO=${CORE_REPO_MAX_SIZE_MO:-500}
     ports:
       - ${CORE_PORT:-22}:22
     volumes:
@@ -21,6 +22,7 @@ services:
       - ./config/entrypoint.sh:/entrypoint.sh:ro
       - ./config/sshd_custom.conf:/etc/ssh/sshd_config.d/10_sshd_custom.conf:ro
       - ./config/gitconfig:/etc/gitconfig:ro
+      - ./config/pre-receive:/etc/git/hooks/pre-receive:ro
       - ./keys/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:rw
       - ./keys/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:rw
       - ./keys/ssh_root_ed25519_key.pub:/root/.ssh/authorized_keys:rw

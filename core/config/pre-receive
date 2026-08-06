@@ -1,0 +1,12 @@
+#!/bin/sh
+source /etc/git/hooks.conf
+
+repo_max_size=$(($REPO_MAX_SIZE_MO * 1024 * 1024))
+repo_size=$(du -sb . | cut -f1)
+
+if [ "$repo_size" -gt "$repo_max_size" ]; then
+    echo "Error: quota exceeded for this repository (max $REPO_MAX_SIZE_MO Mo)."
+    exit 1
+fi
+
+exit 0

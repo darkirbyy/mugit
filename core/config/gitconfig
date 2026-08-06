@@ -1,2 +1,15 @@
 [init]
     defaultBranch = main
+
+[core]
+    hooksPath = /etc/git/hooks
+    compression = 7 
+
+[receive]
+    fsckObjects = true
+
+[transfer]
+    fsckObjects = true
+
+[gc]
+    auto = 1000
