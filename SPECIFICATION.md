@@ -6,7 +6,7 @@ To achieve that, here is the APIv1 between the CORE and the UI.
 ## General consideration
 
 - Each line MUST end with '\n'.  
-- Exit code MUST be 0 on success, anything between 1 and TODO on error (see [Exit code](#exit-code)).  
+- Exit code MUST be 0 on success, anything between 1 and 10 on error (see [Exit code](#exit-code)).  
 - Errors MUST be printed on stderr ; success response MUST be printed on stdout.
 - Valid names for the repositories : MUST start with a letter ; MUST only contains letters, digits, symbols '-' and '_'.
 - Valid UUIDs for the users : MUST use the standard format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' where x is a digit or a letter between 'a' and 'f'.  
@@ -20,7 +20,7 @@ To achieve that, here is the APIv1 between the CORE and the UI.
 ### Repo sub-command
 
 - `repo help` : print the repo sub-command help
-- `repo list` : list each repository name (without the `git` suffix), with its size (in Kb) on a new line, sorted alphabetically
+- `repo list` : list each repository name (without the `git` suffix), with its size (in Kio) on a new line, sorted alphabetically
 - `repo create <name>` : create a new repository named `<name>` if not already exists
 - `repo rename <old-name> <new-name>` : rename an existing repository named `<old-name>` to `<new-name>` if not already exists
 - `repo delete <name>` : delete an existing repository named `<name>`

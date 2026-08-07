@@ -84,11 +84,11 @@
     </header>
 
     {# DEBUG : TODO remove #}
-    <div class="text-left">
+    {# <div class="text-left">
       {{ app.user.id }} - {{ app.user.username }} - <img src="{{ app.user.toArray.picture }}" style="display: inline; width: 50px;" /> - {{
         app.user.roles|reduce((carry, value, key) => carry ~ value ~ ', ')
       }}
-    </div>
+    </div> #}
 
     {# The MAIN block must be redefined on each page, including the flash block with the bood wrapper #}
     <main class="grow" id="main-content">

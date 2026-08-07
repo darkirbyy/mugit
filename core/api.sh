@@ -91,7 +91,7 @@ elif [ $command = "repo" ]; then
     if [ $subcommand = "help" ]; then
         echo "Manage repositories. Available sub-commands:"
         echo "  repo help                               print this help"
-        echo "  repo list                               list all existing repositories and their size in Ko without '.git' suffix and sorted alphabetically"
+        echo "  repo list                               list all existing repositories and their size in Kio without '.git' suffix and sorted alphabetically"
         echo "  repo create <name>                      create a new repository if not already exists"
         echo "  repo rename <old-name> <new-name>       rename an existing repository"
         echo "  repo delete <name>                      delete an existing repository"

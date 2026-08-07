@@ -6,7 +6,9 @@ namespace App\DTO;
 
 class RepoInfo
 {
-    const UNITS = ['Ko', 'Mo', 'Go', 'To'];
+    // todo : use env var for the HOST ?
+    const string HOST = 'localhost';
+    const array UNITS = ['Kio', 'Mio', 'Gio', 'Tio'];
 
     public function __construct(private string $name, private int $size) {}
 
@@ -17,8 +19,7 @@ class RepoInfo
 
     public function getCloneUrl(): string
     {
-        //todo : add default_uri, how ?
-        return ':' . $this->name . 'git';
+        return 'git@' . self::HOST . ':' . $this->name . '.git';
     }
 
     public function getSize(): int
@@ -35,6 +36,6 @@ class RepoInfo
             $unitIndex++;
         }
 
-        return round($size,2) . self::UNITS[$unitIndex];
+        return round($size, 2) . self::UNITS[$unitIndex];
     }
 }

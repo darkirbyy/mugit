@@ -13,7 +13,7 @@ services:
     environment:
       - TZ=${TIMEZONE:-Etc/UTC}
       - UI_ADDR=${CORE_NETWORK_UI_ADDR:-localhost}
-      - REPO_MAX_SIZE_MO=${CORE_REPO_MAX_SIZE_MO:-500}
+      - REPO_MAX_SIZE_MIO=${CORE_REPO_MAX_SIZE_MIO:-500}
     ports:
       - ${CORE_PORT:-22}:22
     volumes:
