@@ -16,6 +16,9 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
     public function __construct(#[Autowire('%hub.base_url%')] private string $hubBaseUrl, private Security $security) {}
 
+    /**
+     * Redirect to the hub if already connected but without a proper role for this app.
+     */
     public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
     {
         $user = $this->security->getUser();
