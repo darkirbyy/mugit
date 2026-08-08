@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\CoreSSH;
+use App\Service\CoreInteract;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +16,9 @@ class HomeController extends AbstractController
      * Welcome page of the application
      */
     #[Route('/', name: 'index')]
-    public function index(CoreSSH $coreSSH): Response
+    public function index(CoreInteract $coreInteract): Response
     {
-        $repoInfoList = $coreSSH->getRepoInfoList();
+        $repoInfoList = $coreInteract->repoList();
         return $this->render('home/index.html.twig', ['repoInfoList' => $repoInfoList]);
     }
 

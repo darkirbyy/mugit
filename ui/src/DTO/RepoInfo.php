@@ -10,24 +10,14 @@ class RepoInfo
     const string HOST = 'localhost';
     const array UNITS = ['Kio', 'Mio', 'Gio', 'Tio'];
 
-    public function __construct(private string $name, private int $size) {}
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    public function __construct(public string $name, public int $size) {}
 
     public function getCloneUrl(): string
     {
         return 'git@' . self::HOST . ':' . $this->name . '.git';
     }
 
-    public function getSize(): int
-    {
-        return $this->size;
-    }
-
-    public function getSizeHumanReadable(): string
+    public function getHumanReadableSize(): string
     {
         $size = $this->size;
         $unitIndex = 0;

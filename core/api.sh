@@ -6,14 +6,14 @@ GIT_GID=$(id -g git)
 GIT_DIR="/home/git"
 SSH_FILE="$GIT_DIR/.ssh/authorized_keys"
 NAME_REGEX="^[a-zA-Z]([a-zA-Z0-9_-])*$"
-NAME_HELP="The names must start by a letter, and can only use letters, digits, and the symbols '-' or '_'."
+NAME_HELP="The names must start with a letter, and can only use letters, digits, and the symbols '-' or '_'."
 UUID_REGEX="^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$"
-UUID_HELP="The uuids must be written in standard format : 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'."
+UUID_HELP="The uuids must use the standard format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' where x is a digit or a letter between 'a' and 'f'."
 KEY_REGEX="^[a-zA-Z0-9/+=\\]+$"
 KEY_HELP="The keys must be generated with the ed25519 algorithm. To be parsed correctly, they must given 
-  without the 'ssh-ed25519' prefix nor the optional comment suffix and enclosed into simple quote."
+  without the 'ssh-ed25519' prefix nor the optional comment suffix and enclosed in simple quote."
 COMMENT_REGEX="^[a-zA-Z0-9_@ -]*$"
-COMMENT_HELP="The comments can only use letters, digits, spaces and the symbols '-', '_', '@'."
+COMMENT_HELP="The comments can only use letters, digits, spaces and the symbols '-', '_' or '@'."
 
 # Define common function
 # Syntax : check_command "$command" "$values" "$type" "$help"
@@ -90,11 +90,11 @@ elif [ $command = "repo" ]; then
 
     if [ $subcommand = "help" ]; then
         echo "Manage repositories. Available sub-commands:"
-        echo "  repo help                               print this help"
-        echo "  repo list                               list all existing repositories and their size in Kio without '.git' suffix and sorted alphabetically"
-        echo "  repo create <name>                      create a new repository if not already exists"
-        echo "  repo rename <old-name> <new-name>       rename an existing repository"
-        echo "  repo delete <name>                      delete an existing repository"
+        echo " - repo help                               print this help"
+        echo " - repo list                               list all repositories names (without the git suffix) and sizes (in Kio), sorted alphabetically"
+        echo " - repo create <name>                      create a new repository named <name> if not already exists"
+        echo " - repo rename <old-name> <new-name>       rename an existing repository named <old-name> to <new-name> if not already exists"
+        echo " - repo delete <name>                      delete an existing repository named <name>"
         echo ""
         echo "$NAME_HELP"
         exit 0
@@ -179,12 +179,12 @@ elif [ $command = "user" ]; then
 
     if [ $subcommand = "help" ]; then
         echo "Manage users and their public SSH keys. Available sub-commands:"
-        echo "  user help                               print this help"
-        echo "  user list                               list all user uuids having at least one registered key"
-        echo "  user key-list <uuid>                    list all registered keys and their timestamp for the given user"
-        echo "  user key-add <uuid> <key> [comment]     register a new key for the given user, with an optional comment"
-        echo "  user key-remove <uuid> <key>            remove an existing key for the given user"
-        echo "  user delete <uuid>                      delete all keys for the given user, cutting effectively all its access"
+        echo " - user help                               print this help"
+        echo " - user list                               list alls uuids of users having at least one key registered"
+        echo " - user key-list <uuid>                    list all registered keys, timestamps (in UTC) and potential comments for the user <uuid>"
+        echo " - user key-add <uuid> <key> [comment]     register a new key <key> for the user <uuid> with an optional comment [comment]"
+        echo " - user key-remove <uuid> <key>            remove an existing key <key> for the user <uuid>"
+        echo " - user delete <uuid>                      delete all registered keys of the user <uuid>"
         echo ""
         echo "$UUID_HELP"
         echo "$KEY_HELP"

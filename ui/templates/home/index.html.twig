@@ -5,7 +5,7 @@
 {% block main %}
   <h1 class="text-3xl font-bold">Hello from μGit + Tailwind CSS!</h1>Lines :<ul>
     {% for repoInfo in repoInfoList %}
-      <li>{{ repoInfo.name }} - {{ repoInfo.cloneUrl }} - {{repoInfo.sizeHumanReadable}}</li>
+      <li>{{ repoInfo.name }} - {{ repoInfo.cloneUrl }} - {{ repoInfo.humanReadableSize }}</li>
     {% endfor %}
   </ul>
 {% endblock %}
