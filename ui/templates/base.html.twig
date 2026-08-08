@@ -105,28 +105,27 @@
               </button>
               <div
                 id="switch-theme"
-                class="z-10 hidden min-w-30 rounded border border-zinc-500 bg-zinc-300 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950"
+                class="z-10 hidden min-w-40 rounded border border-zinc-500 bg-zinc-300 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950"
                 data-controller="switch-theme"
+                data-switch-theme-class-active-value="bg-zinc-400 dark:bg-zinc-800"
+                data-switch-theme-class-inactive-value="hover:bg-zinc-400 dark:hover:bg-zinc-800"
               >
                 <ul aria-labelledby="switch-theme-button" class="p-1">
-                  <li>
-                    <button
-                      class="inline-block w-full rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800"
-                      data-switch-theme-target="light"
-                    >
-                      <span class="ri-sun-fill my-0.5 pr-1" aria-hidden="true"></span>{{ 'layout.navbar.theme.light'|trans }}
-                    </button>
-                  </li>
-                  <li>
-                    <button class="inline-block w-full rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800" data-switch-theme-target="dark">
-                      <span class="ri-moon-fill my-0.5 pr-1" aria-hidden="true"></span>{{ 'layout.navbar.theme.dark'|trans }}
-                    </button>
-                  </li>
-                  <li>
-                    <button class="inline-block w-full rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800" data-switch-theme-target="auto">
-                      <span class="ri-home-gear-fill my-0.5 pr-1" aria-hidden="true"></span>{{ 'layout.navbar.theme.auto'|trans }}
-                    </button>
-                  </li>
+                  {% for theme, icon in { light: 'sun', dark: 'moon', auto: 'settings' } %}
+                    <li>
+                      <button
+                        class="inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800"
+                        data-switch-theme-target="button {{ theme }}"
+                      >
+                        <div>
+                          <span class="ri-{{ icon }}-line my-0.5 pr-2" aria-hidden="true"></span>{{ ('layout.navbar.theme.' ~ theme)|trans }}
+                        </div>
+                        <div class="hidden">
+                          <span class="ri-check-line" aria-hidden="true"></span>
+                        </div>
+                      </button>
+                    </li>
+                  {% endfor %}
                 </ul>
               </div>
             </li>
