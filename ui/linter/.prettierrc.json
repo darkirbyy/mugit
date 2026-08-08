@@ -6,7 +6,7 @@
   "trailingComma": "es5",
   "bracketSpacing": true,
   "arrowParens": "always",
-  "plugins": ["@zackad/prettier-plugin-twig", "@prettier/plugin-php"],
+  "plugins": ["@zackad/prettier-plugin-twig", "@prettier/plugin-php", "prettier-plugin-tailwindcss"],
   "overrides": [
     {
       "files": ["../src/**/*.php", "../tests/**/*.php"],

@@ -11,6 +11,7 @@ parameters:
     app.env: '%env(string:APP_ENV)%'
     turbo.enable_prefetch: '%env(bool:TURBO_PREFETCH_ENABLE)%'
     hub.base_url: '%env(string:HUB_BASE_URL)%'
+    iam.base_url: '%env(string:IAM_BASE_URL)%'
     core.host_addr: '%env(string:CORE_HOST_ADDR)%'
     core.host_port: '%env(int:CORE_HOST_PORT)%'
     core.host_pubkey: '%env(string:CORE_HOST_PUBKEY)%'

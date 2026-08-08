@@ -18,21 +18,30 @@ error:
 
 layout:
   name: μGit
+  navbar:
+    admin: Admin
+    mySSHKeys: Mes clés SSH
+    appearance: Apparance
+    myAccount: Mon compte
+    backToHub: Retour au Hub
+    signOut: Se déconnecter
+    theme:
+      light: Clair
+      dark: Sombre
+      auto: Système
   footer:
     madeWith: Réalisé avec
     and: et
     version: Version
     releaseDate: Mise à jour le
-  theme:
-    light: Clair
-    dark: Sombre
-    auto: Système
-  env:
-    dev: dev
-    test: test
-    stag: qualif
-    prod: prod
+  debug:
+    switchRole: Passer en role
+    env:
+      dev: dev
+      test: test
+      stag: qualif
+      prod: prod
 
 aria:
   skipToContent: Aller au contenu
-  switchTheme: Changer de thème
+  toggleNavigation: Basculer la navigation

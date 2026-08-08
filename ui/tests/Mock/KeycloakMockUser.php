@@ -25,7 +25,7 @@ class KeycloakMockUser implements UserInterface, ResourceOwnerInterface
 
     public function getEmail(): ?string
     {
-        return null;
+        return $this->username . '@example.com';
     }
 
     public function getName(): ?string
@@ -51,8 +51,9 @@ class KeycloakMockUser implements UserInterface, ResourceOwnerInterface
     public function toArray(): array
     {
         return [
-            'sub' => $this->uuid->toString(),
-            'preferred_username' => $this->username,
+            'sub' => $this->getId(),
+            'preferred_username' => $this->getUsername(),
+            'email' => $this->getEmail(),
             'picture' => $this->avatarPath,
         ];
     }
@@ -67,10 +68,11 @@ class KeycloakMockUser implements UserInterface, ResourceOwnerInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return $this->getUsername();
     }
 
-    public function getIsAdmin(): bool{
+    public function getIsAdmin(): bool
+    {
         return $this->isAdmin;
     }
 }
