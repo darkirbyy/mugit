@@ -1,0 +1,7 @@
+<turbo-frame id="tb-repo-list">
+  <ul>
+    {% for repoInfo in repoInfoList %}
+      <li>{{ repoInfo.name }} - {{ repoInfo.cloneUrl }} - {{ repoInfo.humanReadableSize }}</li>
+    {% endfor %}
+  </ul>
+</turbo-frame>

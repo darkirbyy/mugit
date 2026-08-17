@@ -1,0 +1,53 @@
+{% macro spinner() %}
+  <div class="relative top-1/2 left-1/2 size-8 -translate-x-1/2" aria-label="{{ 'aria.loading'|trans }}">
+    <div class="size-8 p-0.5 text-zinc-500">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"
+        ></path>
+      </svg>
+    </div>
+    <div class="absolute top-0 left-0 size-8 motion-safe:animate-spin">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 3C16.9706 3 21 7.02944 21 12H19C19 8.13401 15.866 5 12 5V3Z"></path>
+      </svg>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro alert(type, id, message, retry = null, close = true) %}
+  {% set typeToVars = {
+    info: { icon: 'information', color: 'bg-sky-200 dark:bg-sky-950' },
+    success: { icon: 'shield-check', color: 'bg-green-200 dark:bg-green-950' },
+    warning: { icon: 'alert', color: 'bg-amber-200 dark:bg-amber-950' },
+    error: { icon: 'spam', color: 'bg-red-200 dark:bg-red-950' }
+  } %}
+  {% set vars = attribute(typeToVars, type) %}
+  <div data-controller="alert-dismiss">
+    <div id="{{ id }}" class="rounded border border-zinc-500/50 {{ vars.color }} mb-4 flex items-center p-2 text-sm duration-0" data-alert-dismiss-target="alert" role="alert">
+      <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
+        <span class="ri-{{ vars.icon }}-line text-lg" aria-hidden="true"></span>
+        <span class="font-bold">{{ ('layout.alert.' ~ type)|trans }}</span>
+      </div>
+      <div class="mx-2">
+        {{ message }}
+        {% if retry is not null %}
+          <a class="font-bold underline hover:no-underline" data-alert-dismiss-target="retry" href="{{ retry }}">{{ 'layout.alert.tryAgain'|trans }}</a>.
+        {% endif %}
+      </div>
+      {% if close %}
+        <button
+          type="button"
+          class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
+          data-dismiss-target="#{{ id }}"
+          aria-label="{{ 'aria.alert.close'|trans }}"
+        >
+          <span class="ri-close-line text-lg" aria-hidden="true"></span>
+        </button>
+      {% endif %}
+    </div>
+    <div class="hidden" data-alert-dismiss-target="spinner">
+      {{ _self.spinner() }}
+    </div>
+  </div>
+{% endmacro %}

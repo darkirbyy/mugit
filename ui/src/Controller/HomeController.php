@@ -18,8 +18,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(CoreInteract $coreInteract): Response
     {
-        $repoInfoList = $coreInteract->repoList();
-        return $this->render('home/index.html.twig', ['repoInfoList' => $repoInfoList]);
+       return $this->redirectToRoute('repo_index');
     }
 
     /**

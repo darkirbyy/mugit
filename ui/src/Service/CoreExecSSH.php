@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\DTO\CoreError;
 use App\DTO\CoreOutput;
 use Override;
 use phpseclib3\Crypt\PublicKeyLoader;
@@ -27,9 +28,11 @@ class CoreExecSSH implements CoreExecInterface
     }
 
     #[Override]
-    public function exec(string $command): CoreOutput
+    public function exec(string $command): CoreError|CoreOutput
     {
-        $this->authenticate();
+        if(!$this->authenticate()){
+            return new CoreError('failedToConnect');
+        }
 
         $output = $this->ssh->exec('./api.sh ' . $command);
         $exitStatus = $this->ssh->getExitStatus();
@@ -44,26 +47,31 @@ class CoreExecSSH implements CoreExecInterface
      * Authenticate to the Core through SSH.
      * 
      * @throws UnableToConnectException when the fingerprint or the credentials are invalids
-     * @return void
+     * @return bool                     true if authenticated successfully, false otherwise
      */
-    private function authenticate(): void
+    private function authenticate(): bool
     {
         if (!is_null($this->ssh) && $this->ssh instanceof SSH2 && $this->ssh->isAuthenticated()) {
             $this->logger->info('Already authenticated to core through SSH.');
 
-            return;
+            return true;
         }
-        // todo don't throw exception and return false ?
+        
         $this->ssh = new SSH2($this->coreHostAddr, $this->coreHostPort);
         if ($this->ssh->getServerPublicHostKey() != $this->coreHostPubkey) {
-            throw new UnableToConnectException('Failed to connect to core through SSH : invalid public key.');
+            $this->logger->error('Failed to connect to core through SSH : invalid public key.');
+
+            return false;
         }
 
         $key = PublicKeyLoader::load($this->coreRootPrikey);
         if (!$this->ssh->login('root', $key)) {
-            throw new UnableToConnectException('Failed to authenticate to core through SSH : invalid user or private key.');
+            $this->logger->error('Failed to authenticate to core through SSH : invalid user or private key.');
+            return false;
         }
 
         $this->logger->info('Successfully authenticated to core through SSH.');
+
+        return true;
     }
 }

@@ -173,10 +173,10 @@
       </navbar>
     </header>
 
-    {# The MAIN block must be redefined on each page, including the flash block with the bood wrapper #}
-    <main class="grow" id="main-content">
+    <main class="mx-auto w-full grow p-4 md:w-2xl lg:w-4xl xl:w-6xl" id="main-content">
+      <h1 class="mt-2 mb-8 text-3xl font-bold">{{ title_h1|default(title) }}</h1>
+      {# The MAIN block must be redefined on each page #}
       {% block main %}
-        {# {{ block('flash', 'theme/flash.html.twig') }} #}
         <div class="text-center">
           Some content !
         </div>

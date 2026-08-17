@@ -2,8 +2,11 @@
 # Page-specific translations #####
 ##################################
 
-home:
-  title: Accueil
+repo:
+  title: Tous les dépots
+  error: 
+    connectionFailed: impossible de se connecter au serveur git.
+    listFailed: impossible d'obtenir la liste des dépôts.
 
 error:
   title: Erreur {code}
@@ -29,6 +32,13 @@ layout:
       light: Clair
       dark: Sombre
       auto: Système
+  alert:
+    info: Information
+    success: Succès
+    warning: Attention
+    error: Erreur
+    tryAgain: Réessayer
+    close: Fermer
   footer:
     madeWith: Réalisé avec
     and: et
@@ -45,3 +55,4 @@ layout:
 aria:
   skipToContent: Aller au contenu
   toggleNavigation: Basculer la navigation
+  loading: Chargement en cours

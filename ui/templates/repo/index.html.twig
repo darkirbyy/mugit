@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% import 'theme/macro.html.twig' as m %}
+
+{% set title = 'repo.title'|trans %}
+
+{% block main %}
+  <turbo-frame role="none" id="tb-repo-list" src="{{ path('repo_list') }}">
+    {{ m.spinner() }}
+  </turbo-frame>
+{% endblock %}

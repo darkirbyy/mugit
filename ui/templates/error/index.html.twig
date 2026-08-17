@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'error.title'|trans({ code: error_code }) %}
+
+{% block main %}
+  <p>
+    {{ ('error.message.' ~ error_key)|trans }}
+  </p>
+  <p>
+    <a href="{{ path('home_index') }}" class="font-bold underline hover:no-underline">Retour à l'accueil</a>
+  </p>
+{% endblock %}
