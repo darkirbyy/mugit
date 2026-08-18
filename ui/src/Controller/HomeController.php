@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Service\CoreInteract;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +15,7 @@ class HomeController extends AbstractController
      * Welcome page of the application
      */
     #[Route('/', name: 'index')]
-    public function index(CoreInteract $coreInteract): Response
+    public function index(): Response
     {
        return $this->redirectToRoute('repo_index');
     }

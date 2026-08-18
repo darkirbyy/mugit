@@ -11,6 +11,8 @@ repo:
     name: Nom
     humanReadableSize: Taille
     cloneURL: URL
+    rename: Renommer
+    delete: Supprimer
     copyURLToClipboard: Copier l'URL dans le presse-papier
   error: 
     connectionFailed: impossible de se connecter au serveur git.

@@ -69,3 +69,49 @@
     </div>
   </div>
 {% endmacro %}
+
+{% macro dropdown_start(id, attr = null) %}
+  {{- _self.tag_open('div') -}}
+  id="{{ id }}" class="z-10 hidden rounded border border-zinc-500 bg-zinc-300 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950 {{ attr.class|default('') }}"
+  {{- html_attr(attr|default([])|filter((v, k) => k != 'class')) -}}
+  >
+  {{- _self.tag_open('ul') -}} class="p-1">
+{% endmacro %}
+
+{% macro dropdown_end() %}
+  {{- _self.tag_close('ul') -}}
+  {{- _self.tag_close('div') -}}
+{% endmacro %}
+
+{% macro dropdown_item(text, tag, iconStart = null, iconEnd = null, attr = null, extra = null) %}
+  <li>
+    {{ _self.tag_open(tag) -}}
+    class="inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800 {{ attr.class|default('') }}"
+    {{ html_attr(attr|default([])|filter((v, k) => k != 'class')) }}
+    ><div>
+      {% if iconStart is not null %}
+        <span class="{{ iconStart }} my-0.5 pr-2" aria-hidden="true"></span>
+      {% endif %}
+      {{ text|trans }}
+    </div>
+    {% if iconEnd is not null %}
+      <div>
+        <span class="{{ iconEnd }}" aria-hidden="true"></span>
+      </div>
+    {% endif %}
+    {{ _self.tag_close(tag) -}}>
+    {{ extra|default('')|raw }}
+  </li>
+{% endmacro %}
+
+{% macro dropdown_separator() %}
+  <li><hr class="-mx-1 my-1 border-zinc-500" /></li>
+{% endmacro %}
+
+{% macro tag_open(tag) %}
+  {{ ('<' ~ tag)|raw }}
+{% endmacro %}
+
+{% macro tag_close(tag) %}
+  {{ ('</' ~ tag)|raw }}
+{% endmacro %}
