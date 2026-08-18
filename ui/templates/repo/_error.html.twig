@@ -1,6 +1,0 @@
-{% import 'theme/macro.html.twig' as m %}
-
-<turbo-frame id="turboframe-repo-list">
-  {% set message = ('repo.error.' ~ coreError.messageKey)|trans|capitalize %}
-  {{ m.alert('error', 'repo-list-' ~ coreError.messageKey, message) }}
-</turbo-frame>

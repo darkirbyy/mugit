@@ -1,0 +1,9 @@
+{% import 'theme/macro.html.twig' as m %}
+
+<turbo-frame id="turboframe-repo-rename">
+  <form action="{{ path(app.current_route, app.current_route_parameters) }}" method="post">
+    <label for="form-repo-create-name">Nouveau nom</label>
+    <input type="text" name="new-name" id="form-repo-create-new-name" />
+    <input type="submit" value="ok" />
+  </form>
+</turbo-frame>

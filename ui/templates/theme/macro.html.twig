@@ -44,7 +44,7 @@
           type="button"
           class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
           data-dismiss-target="#{{ id }}"
-          aria-label="{{ 'aria.alert.close'|trans }}"
+          aria-label="{{ 'layout.alert.close'|trans }}"
         >
           <span class="ri-close-line text-lg" aria-hidden="true"></span>
         </button>
@@ -79,8 +79,8 @@
 {% endmacro %}
 
 {% macro dropdown_end() %}
-  {{- _self.tag_close('ul') -}}
-  {{- _self.tag_close('div') -}}
+  {{- _self.tag_close('ul') -}}>
+  {{- _self.tag_close('div') -}}>
 {% endmacro %}
 
 {% macro dropdown_item(text, tag, iconStart = null, iconEnd = null, attr = null, extra = null) %}

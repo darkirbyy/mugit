@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\DTO\CoreError;
+use App\DTO\RepoRenameInput;
 use App\Service\CoreInteract;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/repo', name: 'repo_')]
 class RepoController extends AbstractController
@@ -22,7 +24,7 @@ class RepoController extends AbstractController
     }
 
     /**
-     * List of all repositories
+     * List all repositories
      */
     #[Route('/list', name: 'list')]
     public function list(Request $request, CoreInteract $coreInteract): Response
@@ -31,10 +33,34 @@ class RepoController extends AbstractController
             return $this->redirectToRoute('repo_index');
         }
 
-        $repoInfoList = $coreInteract->repoList();
-        if ($repoInfoList instanceof CoreError) {
-            return $this->render('repo/_error.html.twig', ['coreError' => $repoInfoList]);
+        $repoListOutput = $coreInteract->repoList();
+        return $this->render('repo/_list.html.twig', ['repoListOutput' => $repoListOutput]);
+    }
+
+    /**
+     * Rename one repository
+     */
+    #[Route('/rename/{oldName}', name: 'rename', requirements: ['oldName' => '^[a-zA-Z]([a-zA-Z0-9_-])*$'])]
+    public function rename(string $oldName, Request $request, ValidatorInterface $validator, CoreInteract $coreInteract): Response
+    {
+        if (!$request->headers->has('Turbo-Frame')) {
+            return $this->redirectToRoute('repo_index');
         }
-        return $this->render('repo/_list.html.twig', ['repoInfoList' => $repoInfoList]);
+
+        $repoRenameOutput = null;
+        if ($request->getMethod() == 'POST') {
+            $newName =  $request->getPayload()->get('new-name');
+            $repoRenameInput = new RepoRenameInput($oldName, $newName);
+
+            $errors = $validator->validate($repoRenameInput);
+            $repoRenameOutput = count($errors) == 0 ?  $coreInteract->repoRename($repoRenameInput) : new CoreError('renameInvalid');
+
+            if ($repoRenameOutput === true) {
+                // todo : add flash ?
+                return $this->redirectToRoute('repo_index');
+            }
+        }
+
+        return $this->render('repo/_rename.html.twig', ['repoRenameOutput' => $repoRenameOutput]);
     }
 }

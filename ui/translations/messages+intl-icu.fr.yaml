@@ -7,16 +7,19 @@ repo:
   list:
     createNew: Créer un nouveau dépôt
     refresh: Rafraichir
-    edit: Editer
     name: Nom
     humanReadableSize: Taille
     cloneURL: URL
+    edit: Editer
     rename: Renommer
     delete: Supprimer
     copyURLToClipboard: Copier l'URL dans le presse-papier
   error: 
-    connectionFailed: impossible de se connecter au serveur git.
-    listFailed: impossible d'obtenir la liste des dépôts.
+    connectionFailed: échec lors de la connexion au serveur git.
+    listFailed: échec lors du calcul de la liste des dépôts.
+    renameInvalid: le nouveau nom n'est pas valide.
+    renameAlreadyExist: le nouveau nom n'est est déjà utilisé.
+    renameFailed: échec lors du renommage de ce dépôt.
 
 error:
   title: Erreur {code}
@@ -67,3 +70,4 @@ aria:
   skipToContent: Aller au contenu
   toggleNavigation: Basculer la navigation
   loading: Chargement en cours
+  avatar: Avatar de {name}

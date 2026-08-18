@@ -1,52 +1,69 @@
 {% import 'theme/macro.html.twig' as m %}
 
 <turbo-frame id="turboframe-repo-list">
-  <div class="relative overflow-x-auto rounded border border-zinc-500 shadow-xs">
-    <div class="flex flex-col border-b border-zinc-500 bg-zinc-200 px-2 py-2 lg:flex-row lg:items-center lg:justify-between dark:bg-zinc-900">
-      <div></div>
-      <div class="flex shrink-0 flex-col gap-2 md:flex-row md:items-center lg:justify-end">
-        {{ m.button('repo.list.createNew', 'ri-add-large-line', false) }}
-        {{ m.button('repo.list.refresh', 'ri-reset-left-line', false, { 'data-controller': 'reload-frame' }) }}
+  {% if constant('class', repoListOutput) == 'App\DTO\CoreError' %}
+    {% set message = ('repo.error.' ~ repoListOutput.messageKey)|trans|capitalize %}
+    {{ m.alert('error', 'repo-list-' ~ repoListOutput.messageKey, message) }}
+  {% else %}
+    <div class="relative overflow-x-auto rounded border border-zinc-500 shadow-xs">
+      <div class="flex flex-col border-b border-zinc-500 bg-zinc-200 px-2 py-2 lg:flex-row lg:items-center lg:justify-between dark:bg-zinc-900">
+        <div></div>
+        <div class="flex shrink-0 flex-col gap-2 md:flex-row md:items-center lg:justify-end">
+          {{ m.button('repo.list.createNew', 'ri-add-large-line', false) }}
+          {{ m.button('repo.list.refresh', 'ri-reset-left-line', false, { 'data-controller': 'reload-frame' }) }}
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table
+          class="w-full text-left"
+          data-controller="copy-clipboard"
+          data-copy-clipboard-class-checked-value="ri-check-double-line text-green-700 dark:text-green-300"
+          data-copy-clipboard-class-unchecked-value="ri-file-copy-line"
+        >
+          <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
+            <tr>
+              <th scope="col" class="px-4 pr-2">{{ 'repo.list.name'|trans }}</th>
+              <th scope="col" class="px-4 py-2">{{ 'repo.list.humanReadableSize'|trans }}</th>
+              <th scope="col" class="px-4 py-2">{{ 'repo.list.cloneURL'|trans }}</th>
+              <th scope="col" class="w-8 px-2 py-2" aria-label="{{ 'repo.list.edit'|trans }}"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for repoInfo in repoListOutput.repoInfoList %}
+              <tr class="border-zinc-500 bg-zinc-200 dark:bg-zinc-900 {{ not loop.last ? ' border-b' }}">
+                <th class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfo.name }}</th>
+                <td class="px-4 py-2">{{ repoInfo.humanReadableSize }}</td>
+                <td class="px-4 py-2" data-copy-clipboard-target="cell">
+                  <span class="mr-1">{{ repoInfo.cloneURL }}</span>
+                  {{ m.button('repo.list.copyURLToClipboard', 'ri-file-copy-line', true) }}
+                </td>
+                <td class="px-2 py-2 text-left">
+                  {% set dropdownId = 'dropdown-repo-' ~ loop.index0 %}
+                  {{ m.button('repo.list.edit', 'ri-more-2-line', true, { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="overflow-x-auto">
-      <table
-        class="w-full text-left"
-        data-controller="copy-clipboard"
-        data-copy-clipboard-class-checked-value="ri-check-double-line text-green-700 dark:text-green-300"
-        data-copy-clipboard-class-unchecked-value="ri-file-copy-line"
-      >
-        <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
-          <tr>
-            <th scope="col" class="w-8 px-2 py-2"></th>
-            <th scope="col" class="py-2 pr-2">{{ 'repo.list.name'|trans }}</th>
-            <th scope="col" class="px-2 py-2">{{ 'repo.list.humanReadableSize'|trans }}</th>
-            <th scope="col" class="px-2 py-2">{{ 'repo.list.cloneURL'|trans }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for repoInfo in repoInfoList %}
-            <tr class="border-zinc-500 bg-zinc-200 dark:bg-zinc-900 {{ not loop.last ? ' border-b' }}">
-              <td class="px-2 py-2 text-left">
-                {% set dropdownId = 'dropdown-repo-list-' ~ loop.index0 %}
-                {{ m.button('repo.list.edit', 'ri-more-2-line', true, { 'data-dropdown-toggle': dropdownId }) }}
-                <div id="{{ dropdownId }}" class="z-10 hidden rounded border border-zinc-500 bg-zinc-300 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950">
-                  <ul class="p-1">
-                    <li>{{'repo.list.rename'|trans}}</li>
-                    <li>{{'repo.list.delete'|trans}}</li>
-                  </ul>
-                </div>
-              </td>
-              <th class="py-2 pr-2 font-medium whitespace-nowrap">{{ repoInfo.name }}</th>
-              <td class="px-2 py-2">{{ repoInfo.humanReadableSize }}</td>
-              <td class="px-2 py-2" data-copy-clipboard-target="cell">
-                <span class="mr-1">{{ repoInfo.cloneURL }}</span>
-                {{ m.button('repo.list.copyURLToClipboard', 'ri-file-copy-line', true) }}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div>
+      {% for repoInfo in repoListOutput.repoInfoList %}
+        {% set dropdownId = 'dropdown-repo-' ~ loop.index0 %}
+
+        {{ m.dropdown_start(dropdownId, { class: 'min-w-40' }) }}
+        {% set extra %}
+          {{ m.dropdown_start(dropdownId ~ '-rename', { class: 'min-w-40' }) }}
+          <turbo-frame role="none" id="turboframe-repo-rename" loading="lazy" src="{{ path('repo_rename', { oldName: repoInfo.name }) }}">
+            {{ m.spinner() }}
+          </turbo-frame>
+          {{ m.dropdown_end() }}
+        {% endset %}
+        {% set attr = { 'data-dropdown-toggle': dropdownId ~ '-rename', 'data-dropdown-placement': 'left-start' } %}
+        {{ m.dropdown_item('repo.list.rename', 'button', 'ri-pencil-line', 'ri-arrow-right-s-line', attr, extra) }}
+        {{ m.dropdown_item('repo.list.delete', 'button', 'ri-delete-bin-line', 'ri-arrow-right-s-line', { class: 'text-red-900 dark:text-red-400' }) }}
+        {{ m.dropdown_end() }}
+      {% endfor %}
     </div>
-  </div>
+  {% endif %}
 </turbo-frame>
