@@ -48,17 +48,17 @@
     </div>
 
     {# HEADER: contains the navbar #}
-    <header class="flex items-center justify-between border-b border-zinc-500 bg-zinc-300 px-1 py-1 dark:bg-zinc-950">
+    <header class="flex items-center justify-between border-b border-zinc-500 bg-zinc-200 px-1 py-1 dark:bg-zinc-950">
       {# Header left part #}
       <ul>
         <li>
-          <a href="{{ path('home_index') }}" class="m-0.5 rounded px-2 py-1 font-bold hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800">{{ 'layout.name'|trans }}</a>
+          <a href="{{ path('home_index') }}" class="m-0.5 rounded px-2 py-1 font-bold hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800">{{ 'layout.name'|trans }}</a>
         </li>
       </ul>
       {# Header right part #}
       <navbar>
         <button
-          class="m-0.5 rounded px-2 py-1 hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800"
+          class="m-0.5 rounded px-2 py-1 hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800"
           data-dropdown-toggle="dropdown-navbar-menu"
           data-dropdown-placement="bottom-end"
           aria-label="{{ 'aria.toggleNavigation'|trans }}"
@@ -74,7 +74,7 @@
         </button>
 
         {# Menu dropdown #}
-        {{ m.dropdown_start('dropdown-navbar-menu', { class: 'min-w-60' }) }}
+        {{ m.dropdown_start('dropdown-navbar-menu', { class: ['min-w-60'] }) }}
         <li>
           <div class="flex flex-row items-center gap-3 p-2">
             <div>
@@ -98,10 +98,10 @@
         {% set extra %}
           {# Switch theme sub-dropdown #}
           {% set attr2 = {
-            class: 'min-w-40',
+            class: ['min-w-40'],
             'data-controller': 'switch-theme',
-            'data-switch-theme-class-active-value': 'bg-zinc-400 dark:bg-zinc-800',
-            'data-switch-theme-class-inactive-value': 'hover:bg-zinc-400 dark:hover:bg-zinc-800'
+            'data-switch-theme-class-active-value': 'bg-zinc-400 dark:bg-zinc-700',
+            'data-switch-theme-class-inactive-value': 'hover:bg-zinc-300 dark:hover:bg-zinc-800'
           } %}
           {{ m.dropdown_start('dropdown-switch-theme', attr2) }}
           {% for theme, icon in { light: 'ri-sun-line', dark: 'ri-moon-line', auto: 'ri-settings-line' } %}
@@ -113,7 +113,7 @@
         {{ m.dropdown_separator() }}
         {{ m.dropdown_item('layout.navbar.myAccount', 'a', 'ri-user-line', 'ri-external-link-line', { href: env.iam.base_url, 'data-turbo-prefetch': false }) }}
         {{ m.dropdown_item('layout.navbar.backToHub', 'a', 'ri-home-4-line', 'ri-external-link-line', { href: env.hub.base_url, 'data-turbo-prefetch': false }) }}
-        {% set attr = { href: env.hub.base_url, 'data-turbo-prefetch': false, 'data-turbo': false, class: 'text-red-900 dark:text-red-400' } %}
+        {% set attr = { href: env.hub.base_url, 'data-turbo-prefetch': false, 'data-turbo': false, class: ['text-red-900', 'dark:text-red-400'] } %}
         {{ m.dropdown_item('layout.navbar.signOut', 'a', 'ri-logout-circle-r-line', 'ri-external-link-line', attr) }}
         {{ m.dropdown_end() }}
       </navbar>
@@ -125,10 +125,7 @@
       <h1 class="mt-2 mb-8 text-3xl font-bold">{{ heading|default(title) }}</h1>
       {# The block 'main' must be redefined on each page #}
       {% block main %}
-        <div class="text-center">
-          {# todo : trigger error if displayed ? #}
-          Some content !
-        </div>
+
       {% endblock %}
       {# Spinner template #}
       <template id="template-spinner">
@@ -137,7 +134,7 @@
     </main>
 
     {# FOOTER: framework and versioning #}
-    <footer class="mt-2 flex gap-6 border-t border-zinc-500 bg-zinc-300 p-3 text-sm font-light text-zinc-800 italic dark:bg-zinc-950 dark:text-zinc-300">
+    <footer class="mt-2 flex gap-6 border-t border-zinc-500 bg-zinc-200 p-3 text-sm font-light text-zinc-800 italic dark:bg-zinc-950 dark:text-zinc-300">
       <div class="grow text-right">
         {{ 'layout.footer.madeWith'|trans }}
         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="mr-0.5 inline pb-0.5" width="1rem" height="1rem" viewBox="0 0 24 24">

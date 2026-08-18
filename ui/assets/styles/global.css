@@ -7,6 +7,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+}
+
 .app-env-dev {
   color: #031124;
   background: repeating-linear-gradient(45deg, #718de7, #718de7 10px, #93ace2 10px, #93ace2 20px);

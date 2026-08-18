@@ -1,25 +1,40 @@
-{% macro button(text, icon = null, iconOnly = false, attr = null) %}
-  <button
-    class="rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-400 hover:opacity-100 dark:hover:bg-zinc-800 {{ attr.class|default('') }}"
-    aria-label="{{ text|trans }}"
-    {{ html_attr(attr|default([])|filter((v, k) => k != 'class')) }}
-  >
+{# HELP : text is the key before translation, mode must be 'normal', 'tooltip' or 'icon', attr.class must be an array #}
+{% macro button(text, icon = null, mode = 'normal', attr = null) %}
+  {% set attr = { class: [] }|merge(attr|default([])) %}
+  {% set class = 'rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-800'|split(' ') %}
+
+  {% if mode == 'tooltip' %}
+    {% set class2 = 'absolute z-30 hidden rounded text-sm border border-zinc-500 bg-zinc-300 p-2'|split(' ')|map(c => 'after:' ~ c) %}
+    {% set class = class|merge(class2)|merge(['hover:after:block', 'dark:after:bg-zinc-800']) %}
+    {% set attr = attr|html_attr_merge({ 'data-tooltip': text|trans }) %}
+  {% endif %}
+  {% if mode == 'icon' or mode == 'tooltip' %}
+    {% set attr = attr|html_attr_merge({ 'aria-label': text|trans }) %}
+  {% endif %}
+  {% set attr = attr|html_attr_merge({ class: class }) %}
+
+  <button {{ html_attr(attr) }}>
     {% if icon is not null %}
       <span class="{{ icon }}" aria-hidden="true"></span>
     {% endif %}
-    {% if not iconOnly %}
+    {% if mode == 'normal' %}
       <span class="ml-1">{{ text|trans }}</span>
     {% endif %}
   </button>
 {% endmacro %}
 
+{# HELP : text is the key before translation, attr.class must be an array #}
 {% macro link(text, path, attr = null) %}
-  <a href="{{ path }}" class="font-bold underline opacity-75 hover:opacity-100 {{ attr.class|default('') }}" {{ html_attr(attr|default([])|filter((v, k) => k != 'class')) }}>
-    {{ text|trans }}
-  </a>
+  {% set attr = { class: [] }|merge(attr|default([])) %}
+  {% set class = 'font-bold underline opacity-75 hover:opacity-100'|split(' ') %}
+
+  {% set attr = attr|html_attr_merge({ class: class }) %}
+
+  <a href="{{ path }}" {{ html_attr(attr) }}>{{ text|trans }}</a>
 {% endmacro %}
 
-{% macro alert(type, id, message, retry = true, close = true) %}
+{# HELP : text is the key before translation, type can be 'info', 'success', 'warning' or 'error' #}
+{% macro alert(text, id, type, retry = true, close = true) %}
   {% set typeToVars = {
     info: { icon: 'information', color: 'bg-sky-200 dark:bg-sky-950' },
     success: { icon: 'shield-check', color: 'bg-green-200 dark:bg-green-950' },
@@ -34,7 +49,7 @@
         <span class="font-bold">{{ ('layout.alert.' ~ type)|trans }}</span>
       </div>
       <div class="mx-2">
-        {{ message }}
+        {{ text|trans }}
         {% if retry is not null %}
           {{ _self.link('layout.alert.tryAgain', '#', { 'data-controller': 'reload-frame' }) }}
         {% endif %}
@@ -43,7 +58,7 @@
         <button
           type="button"
           class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
-          data-dismiss-target="#{{ id }}"
+          data-dismiss-target="#alert-{{ id }}"
           aria-label="{{ 'layout.alert.close'|trans }}"
         >
           <span class="ri-close-line text-lg" aria-hidden="true"></span>
@@ -53,42 +68,27 @@
   </div>
 {% endmacro %}
 
-{% macro spinner() %}
-  <div class="relative top-1/2 left-1/2 size-8 -translate-x-1/2" aria-label="{{ 'aria.loading'|trans }}">
-    <div class="size-8 p-0.5 text-zinc-500">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path
-          d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"
-        ></path>
-      </svg>
-    </div>
-    <div class="absolute top-0 left-0 size-8 motion-safe:animate-spin">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 3C16.9706 3 21 7.02944 21 12H19C19 8.13401 15.866 5 12 5V3Z"></path>
-      </svg>
-    </div>
-  </div>
-{% endmacro %}
-
 {% macro dropdown_start(id, attr = null) %}
-  {{- _self.tag_open('div') -}}
-  id="{{ id }}" class="z-10 hidden rounded border border-zinc-500 bg-zinc-300 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950 {{ attr.class|default('') }}"
-  {{- html_attr(attr|default([])|filter((v, k) => k != 'class')) -}}
-  >
-  {{- _self.tag_open('ul') -}} class="p-1">
+  {% set attr = { class: [] }|merge(attr|default([])) %}
+  {% set class = 'z-10 hidden rounded border border-zinc-500 bg-zinc-200 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950'|split(' ') %}
+  {% set attr = attr|html_attr_merge({ class: class }) %}
+
+  {{ _self.tag_open('div') }} id="{{ id }}" {{ html_attr(attr) }}>
+  {{ _self.tag_open('ul') }} class="p-1">
 {% endmacro %}
 
 {% macro dropdown_end() %}
-  {{- _self.tag_close('ul') -}}>
-  {{- _self.tag_close('div') -}}>
+  {{ _self.tag_close('ul') }}>
+  {{ _self.tag_close('div') }}>
 {% endmacro %}
 
 {% macro dropdown_item(text, tag, iconStart = null, iconEnd = null, attr = null, extra = null) %}
+  {% set attr = { class: [] }|merge(attr|default([])) %}
+  {% set class = 'inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800'|split(' ') %}
+  {% set attr = attr|html_attr_merge({ class: class }) %}
+
   <li>
-    {{ _self.tag_open(tag) -}}
-    class="inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800 {{ attr.class|default('') }}"
-    {{ html_attr(attr|default([])|filter((v, k) => k != 'class')) }}
-    ><div>
+    {{ _self.tag_open(tag) }} {{ html_attr(attr) }}><div>
       {% if iconStart is not null %}
         <span class="{{ iconStart }} my-0.5 pr-2" aria-hidden="true"></span>
       {% endif %}
@@ -114,4 +114,21 @@
 
 {% macro tag_close(tag) %}
   {{ ('</' ~ tag)|raw }}
+{% endmacro %}
+
+{% macro spinner() %}
+  <div class="relative top-1/2 left-1/2 size-8 -translate-x-1/2" aria-label="{{ 'aria.loading'|trans }}">
+    <div class="size-8 p-0.5 text-zinc-500">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"
+        ></path>
+      </svg>
+    </div>
+    <div class="absolute top-0 left-0 size-8 motion-safe:animate-spin">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 3C16.9706 3 21 7.02944 21 12H19C19 8.13401 15.866 5 12 5V3Z"></path>
+      </svg>
+    </div>
+  </div>
 {% endmacro %}
