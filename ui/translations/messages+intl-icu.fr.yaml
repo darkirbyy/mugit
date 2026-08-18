@@ -7,15 +7,18 @@ repo:
   list:
     createNew: Créer un nouveau dépôt
     refresh: Rafraichir
+    edit: Editer
     name: Nom
     humanReadableSize: Taille
-    cloneURL: Clone
+    cloneURL: URL
+    copyURLToClipboard: Copier l'URL dans le presse-papier
   error: 
     connectionFailed: impossible de se connecter au serveur git.
     listFailed: impossible d'obtenir la liste des dépôts.
 
 error:
   title: Erreur {code}
+  backToHome: Retour à l'accueil
   message:
     notFound: Cette page n'existe pas.
     forbidden: Cette page n'est pas accessible.
@@ -62,5 +65,3 @@ aria:
   skipToContent: Aller au contenu
   toggleNavigation: Basculer la navigation
   loading: Chargement en cours
-  copyURLToClipboard: Copier l'URL dans le presse-papier
-  edit: Editer

@@ -4,9 +4,6 @@ import { Controller } from '@hotwired/stimulus';
  * Stimulus controller that MUST be placed on a button to reload the closest turbo-frame
  */
 export default class extends Controller {
-  static values = {
-    spinnerHtml: String,
-  };
   initialize() {}
 
   connect() {
@@ -20,9 +17,9 @@ export default class extends Controller {
       }
 
       // add spinner as a child
-      let div = document.createElement('div');
-      div.innerHTML = this.spinnerHtmlValue;
-      frame.appendChild(div);
+      const templateSpinner = document.getElementById('template-spinner');
+      const instanceSpinner = templateSpinner.content.cloneNode(true);
+      frame.appendChild(instanceSpinner);
 
       // trigger reload
       frame.reload();

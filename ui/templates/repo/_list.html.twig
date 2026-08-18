@@ -1,22 +1,12 @@
 {% import 'theme/macro.html.twig' as m %}
 
-<turbo-frame id="tb-repo-list">
+<turbo-frame id="turboframe-repo-list">
   <div class="relative overflow-x-auto rounded border border-zinc-500 shadow-xs">
     <div class="flex flex-col border-b border-zinc-500 bg-zinc-200 px-2 py-2 lg:flex-row lg:items-center lg:justify-between dark:bg-zinc-900">
       <div></div>
-      <div class="flex shrink-0 flex-col md:flex-row md:items-center lg:justify-end">
-        <button class="rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-400 hover:opacity-100 dark:hover:bg-zinc-800">
-          <span class="ri-add-large-line" aria-hidden="true"></span><span class="ml-1">{{ 'repo.list.createNew'|trans }}</span>
-        </button>
-        <a
-          href="#"
-          class="ml-1 rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-400 hover:opacity-100 dark:hover:bg-zinc-800"
-          aria-label="{{ 'aria.refreshList'|trans }}"
-          data-controller="reload-frame"
-          data-reload-frame-spinner-html-value="{{ m.spinner()|e('html') }}"
-        >
-          <span class="ri-reset-left-line" aria-hidden="true"></span><span class="ml-1">{{ 'repo.list.refresh'|trans }}</span>
-        </a>
+      <div class="flex shrink-0 flex-col gap-2 md:flex-row md:items-center lg:justify-end">
+        {{ m.button('repo.list.createNew', 'ri-add-large-line', false) }}
+        {{ m.button('repo.list.refresh', 'ri-reset-left-line', false, { 'data-controller': 'reload-frame'}) }}
       </div>
     </div>
     <div class="overflow-x-auto">
@@ -37,21 +27,12 @@
         <tbody>
           {% for repoInfo in repoInfoList %}
             <tr class="border-zinc-500 bg-zinc-200 dark:bg-zinc-900 {{ not loop.last ? ' border-b' }}">
-              <td class="px-2 py-2 text-left">
-                <button class="rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-400 hover:opacity-100 dark:hover:bg-zinc-800" aria-label="{{ 'aria.edit'|trans }}">
-                  <span class="ri-more-2-line" aria-hidden="true"></span>
-                </button>
-              </td>
+              <td class="px-2 py-2 text-left">{{ m.button('repo.list.edit', 'ri-more-2-line', true) }}</td>
               <th class="py-2 pr-2 font-medium whitespace-nowrap">{{ repoInfo.name }}</th>
               <td class="px-2 py-2">{{ repoInfo.humanReadableSize }}</td>
               <td class="px-2 py-2" data-copy-clipboard-target="cell">
-                <span>{{ repoInfo.cloneURL }}</span>
-                <button
-                  class="mx-1 rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-400 hover:opacity-100 dark:hover:bg-zinc-800"
-                  aria-label="{{ 'aria.copyURLToClipboard'|trans }}"
-                >
-                  <span class="ri-file-copy-line" aria-hidden="true"></span>
-                </button>
+                <span class="mr-1">{{ repoInfo.cloneURL }}</span>
+                {{ m.button('repo.list.copyURLToClipboard', 'ri-file-copy-line', true) }}
               </td>
             </tr>
           {% endfor %}

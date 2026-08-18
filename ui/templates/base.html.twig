@@ -57,8 +57,7 @@
       <navbar>
         <button
           class="m-0.5 rounded px-2 py-1 hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800"
-          id="main-menu-button"
-          data-dropdown-toggle="main-menu"
+          data-dropdown-toggle="dropdown-navbar-menu"
           data-dropdown-placement="bottom-end"
           aria-label="{{ 'aria.toggleNavigation'|trans }}"
         >
@@ -66,7 +65,7 @@
             <span class="font-bold">{{ app.user.username }}</span><img class="mb-0.5 ml-1.5 inline w-6 rounded-full border border-zinc-500" src="{{ app.user.toArray.picture }}" />
           </div>
         </button>
-        <div id="main-menu" class="z-10 hidden min-w-60 rounded border border-zinc-500 bg-zinc-300 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950">
+        <div id="dropdown-navbar-menu" class="z-10 hidden min-w-60 rounded border border-zinc-500 bg-zinc-300 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950">
           <ul class="p-1">
             <li>
               <div class="flex flex-row items-center gap-3 p-2">
@@ -94,8 +93,7 @@
             <li>
               <button
                 class="inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-400 dark:hover:bg-zinc-800"
-                id="switch-theme-button"
-                data-dropdown-toggle="switch-theme"
+                data-dropdown-toggle="dropdown-switch-theme"
                 data-dropdown-placement="left-start"
               >
                 <div>
@@ -106,7 +104,7 @@
                 </div>
               </button>
               <div
-                id="switch-theme"
+                id="dropdown-switch-theme"
                 class="z-10 hidden min-w-40 rounded border border-zinc-500 bg-zinc-300 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950"
                 data-controller="switch-theme"
                 data-switch-theme-class-active-value="bg-zinc-400 dark:bg-zinc-800"
@@ -176,13 +174,18 @@
     </header>
 
     <main class="mx-auto w-full grow p-4 md:w-2xl lg:w-4xl xl:w-6xl" id="main-content">
-      <h1 class="mt-2 mb-8 text-3xl font-bold">{{ title_h1|default(title) }}</h1>
+      {# Heading : same as title if not defined #}
+      <h1 class="mt-2 mb-8 text-3xl font-bold">{{ heading|default(title) }}</h1>
       {# The MAIN block must be redefined on each page #}
       {% block main %}
         <div class="text-center">
           Some content !
         </div>
       {% endblock %}
+      {# Spinner template #}
+      <template id="template-spinner">
+        {{ m.spinner() }}
+      </template>
     </main>
 
     {# Footer with framework and versioning #}

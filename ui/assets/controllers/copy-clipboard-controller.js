@@ -17,6 +17,7 @@ export default class extends Controller {
 
   connect() {
     this.cellTargets.forEach((cell) => {
+      // todo : use something more robust than these query selectors
       const cloneURL = cell.querySelector('span');
       const button = cell.querySelector('button');
       const icon = cell.querySelector('button span');
