@@ -15,7 +15,7 @@
   </div>
 {% endmacro %}
 
-{% macro alert(type, id, message, retry = null, close = true) %}
+{% macro alert(type, id, message, retry = true, close = true) %}
   {% set typeToVars = {
     info: { icon: 'information', color: 'bg-sky-200 dark:bg-sky-950' },
     success: { icon: 'shield-check', color: 'bg-green-200 dark:bg-green-950' },
@@ -23,8 +23,8 @@
     error: { icon: 'spam', color: 'bg-red-200 dark:bg-red-950' }
   } %}
   {% set vars = attribute(typeToVars, type) %}
-  <div data-controller="alert-dismiss">
-    <div id="{{ id }}" class="rounded border border-zinc-500/50 {{ vars.color }} mb-4 flex items-center p-2 text-sm duration-0" data-alert-dismiss-target="alert" role="alert">
+  <div>
+    <div id="{{ id }}" class="rounded border border-zinc-500/50 {{ vars.color }} mb-4 flex items-center p-2 text-sm duration-0" role="alert">
       <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
         <span class="ri-{{ vars.icon }}-line text-lg" aria-hidden="true"></span>
         <span class="font-bold">{{ ('layout.alert.' ~ type)|trans }}</span>
@@ -32,7 +32,9 @@
       <div class="mx-2">
         {{ message }}
         {% if retry is not null %}
-          <a class="font-bold underline hover:no-underline" data-alert-dismiss-target="retry" href="{{ retry }}">{{ 'layout.alert.tryAgain'|trans }}</a>.
+          <a class="font-bold underline opacity-75 hover:opacity-100" href="#" data-controller="reload-frame" data-reload-frame-spinner-html-value="{{ _self.spinner()|e('html') }}">
+            {{ 'layout.alert.tryAgain'|trans }}
+          </a>.
         {% endif %}
       </div>
       {% if close %}
@@ -45,9 +47,6 @@
           <span class="ri-close-line text-lg" aria-hidden="true"></span>
         </button>
       {% endif %}
-    </div>
-    <div class="hidden" data-alert-dismiss-target="spinner">
-      {{ _self.spinner() }}
     </div>
   </div>
 {% endmacro %}

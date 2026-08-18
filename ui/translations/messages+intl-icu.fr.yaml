@@ -4,6 +4,12 @@
 
 repo:
   title: Tous les dépots
+  list:
+    createNew: Créer un nouveau dépôt
+    refresh: Rafraichir
+    name: Nom
+    humanReadableSize: Taille
+    cloneURL: Clone
   error: 
     connectionFailed: impossible de se connecter au serveur git.
     listFailed: impossible d'obtenir la liste des dépôts.
@@ -56,3 +62,5 @@ aria:
   skipToContent: Aller au contenu
   toggleNavigation: Basculer la navigation
   loading: Chargement en cours
+  copyURLToClipboard: Copier l'URL dans le presse-papier
+  edit: Editer

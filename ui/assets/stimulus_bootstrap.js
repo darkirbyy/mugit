@@ -10,5 +10,16 @@ export const app = startStimulusApp(
     }
   )
 );
-// register any custom, 3rd party controllers here
-// app.register('some_controller_name', SomeImportedController);
+
+// Follow the "redirect" action in Turbo Streams
+Turbo.StreamActions.redirect = function () {
+  Turbo.visit(this.target);
+};
+
+// Display the error page if a turbo-frame is missing (DEV only)
+if (process.env.NODE_ENV === 'development') {
+  document.addEventListener('turbo:frame-missing', (event) => {
+    event.preventDefault();
+    event.detail.visit(event.detail.response);
+  });
+}
