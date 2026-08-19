@@ -5,15 +5,9 @@ import { Controller } from '@hotwired/stimulus';
  */
 export default class extends Controller {
   static targets = ['button', 'content'];
-  static values = {
-    classOpen: String,
-    classUnopen: String,
-  };
 
   initialize() {
     this.open = false;
-    this.classOpen = this.classOpenValue.split(' ');
-    this.classUnopen = this.classUnopenValue.split(' ');
     // todo : use something more robust than lastChildElement and query selector
     this.icon = this.buttonTarget.lastElementChild.querySelector('span');
   }
@@ -22,8 +16,13 @@ export default class extends Controller {
     this.buttonTarget.addEventListener('click', () => {
       this.open = !this.open;
       this.contentTarget.classList.toggle('hidden', !this.open);
-      this.classOpen.forEach((className) => this.icon.classList.toggle(className, this.open));
-      this.classUnopen.forEach((className) => this.icon.classList.toggle(className, !this.open));
+      this.buttonTarget.classList.toggle('dark:bg-zinc-800', this.open);
+      this.buttonTarget.classList.toggle('bg-zinc-300', this.open);
+      this.buttonTarget.classList.toggle('rounded-t', this.open);
+      this.buttonTarget.classList.toggle('rounded-br', this.open);
+      this.buttonTarget.classList.toggle('rounded', !this.open);
+      this.icon.classList.toggle('ri-arrow-down-s-line', this.open);
+      this.icon.classList.toggle('ri-arrow-right-s-line', !this.open);
     });
   }
 }

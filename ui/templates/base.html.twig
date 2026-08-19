@@ -43,7 +43,7 @@
     {% endif %}
 
     {# ACCESSIBILITY: Skip to content link for screen reader #}
-    <div class="absolute z-40 mx-auto mt-2 w-full -translate-y-10 text-center transition duration-200 motion-reduce:duration-0 focus-within:translate-y-0">
+    <div class="absolute z-40 mx-auto mt-2 w-full -translate-y-10 text-center transition duration-200 focus-within:translate-y-0 motion-reduce:duration-0">
       <a class="rounded border border-zinc-500 bg-zinc-100 px-2 py-1 dark:bg-zinc-900" href="#main-content" data-turbo="false">{{ 'aria.skipToContent'|trans }}</a>
     </div>
 
@@ -95,11 +95,7 @@
         {{ m.dropdown_separator() }}
         {{ m.dropdown_item('a', 'layout.navbar.mySSHKeys', 'ri-key-2-line', { href: '#' }) }}
         {% set extra %}
-          <ul
-            data-controller="switch-theme"
-            data-switch-theme-class-active-value="bg-zinc-300 dark:bg-zinc-800"
-            data-switch-theme-class-inactive-value="hover:bg-zinc-300 dark:hover:bg-zinc-800"
-          >
+          <ul data-controller="switch-theme">
             {% for theme, icon in { light: 'ri-sun-line', dark: 'ri-moon-line', auto: 'ri-settings-line' } %}
               {{ m.dropdown_item('button', 'layout.navbar.theme.' ~ theme, icon, { 'data-switch-theme-target': 'button ' ~ theme }, 'ri-check-line') }}
             {% endfor %}

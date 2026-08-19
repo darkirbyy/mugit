@@ -6,17 +6,15 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
   static targets = ['cell'];
   static values = {
-    classChecked: String,
-    classUnchecked: String,
     copiedText: String,
   };
 
   initialize() {
-    this.classChecked = this.classCheckedValue.split(' ');
-    this.classUnchecked = this.classUncheckedValue.split(' ');
     this.copiedText = this.copiedTextValue;
-    this.uncopiedText =
-      this.cellTargets.length > 0 ? this.cellTargets[0].querySelector('button').getAttribute('data-tooltip') : '';
+    this.uncopiedText = '';
+    if (this.cellTargets.length > 0) {
+      this.uncopiedText = this.cellTargets[0].querySelector('button').getAttribute('data-tooltip');
+    }
   }
 
   connect() {
@@ -36,8 +34,10 @@ export default class extends Controller {
   }
 
   updateIcon(button, icon, checked) {
-    this.classChecked.forEach((className) => icon.classList.toggle(className, checked));
-    this.classUnchecked.forEach((className) => icon.classList.toggle(className, !checked));
+    icon.classList.toggle('ri-check-double-line', checked);
+    icon.classList.toggle('text-green-700', checked);
+    icon.classList.toggle('dark:text-green-300', checked);
+    icon.classList.toggle('ri-file-copy-line', !checked);
     button.setAttribute('data-tooltip', checked ? this.copiedText : this.uncopiedText);
   }
 }

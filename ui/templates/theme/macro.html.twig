@@ -79,7 +79,7 @@
   {% set attr = attr|html_attr_merge({ class: class }) %}
 
   {{ _self.tag_open('div') }} id="{{ id }}" {{ html_attr(attr) }}>
-  {{ _self.tag_open('ul') }} class="p-1">
+  {{ _self.tag_open('ul') }} class="px-1 py-0.5">
 {% endmacro %}
 
 {# HELP : #}
@@ -99,7 +99,7 @@
   {% set attr = attr|html_attr_merge({ class: class }) %}
 
   {% if extra is null or extra starts with 'ri-' %}
-    <li>
+    <li class="py-0.5">
       {% if tag == 'button' %}
         <button {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, extra) }}</button>
       {% else %}
@@ -107,10 +107,10 @@
       {% endif %}
     </li>
   {% else %}
-    <li data-controller="dropdown" data-dropdown-class-open-value="ri-arrow-down-s-line" data-dropdown-class-unopen-value="ri-arrow-right-s-line">
+    <li class="py-0.5" data-controller="dropdown">
       <button {{ html_attr(attr) }} data-dropdown-target="button">{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
       <div class="hidden" data-dropdown-target="content">
-        <div class="my-1 ml-1 border-l-4 border-zinc-500/50 pl-2">
+        <div class="mb-0.5 border-l-6 border-zinc-300 pt-0.5 pl-1 dark:border-zinc-800">
           {{ extra|raw }}
         </div>
       </div>
@@ -135,7 +135,7 @@
 
 {# HELP : #}
 {% macro dropdown_separator() %}
-  <li><hr class="-mx-1 my-1 border-zinc-500" /></li>
+  <li><hr class="-mx-1 my-0.5 border-zinc-500" /></li>
 {% endmacro %}
 
 {# HELP : #}
@@ -149,7 +149,7 @@
 {% endmacro %}
 
 {# HELP : #}
-{% macro spinner(number = 1, bordered = false, gridClass = 'p-2 gap-2 grid-cols-1', itemClass = 'h-6', ) %}
+{% macro spinner(number = 1, bordered = false, gridClass = 'p-1 gap-1 grid-cols-1', itemClass = 'h-8') %}
   <div class="grid {{ gridClass }} {{ bordered ? 'border-zinc-500/25 rounded border' }} motion-safe:animate-pulse" aria-label="{{ 'aria.loading'|trans }}">
     {% for n in 1..number %}
       <div class="{{ itemClass }} rounded bg-zinc-500/25"></div>
