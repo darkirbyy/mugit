@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -20,7 +21,7 @@ class RepoController extends AbstractController
     /**
      * Index page of the repositories
      */
-    #[Route('/', name: 'index')]
+    #[Route('/', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render('repo/index.html.twig');
@@ -29,7 +30,7 @@ class RepoController extends AbstractController
     /**
      * List all repositories
      */
-    #[Route('/list', name: 'list')]
+    #[Route('/list', name: 'list', methods: ['GET'])]
     public function list(Request $request, CoreInteract $coreInteract): Response
     {
         if (!$request->headers->has('Turbo-Frame')) {
@@ -43,7 +44,8 @@ class RepoController extends AbstractController
     /**
      * Rename one repository
      */
-    #[Route('/rename/{oldName}', name: 'rename', requirements: ['oldName' => '^[a-zA-Z]([a-zA-Z0-9_-])*$'])]
+    #[IsCsrfTokenValid('submit', methods: ['POST'])]
+    #[Route('/rename/{oldName}', name: 'rename', methods: ['GET', 'POST'], requirements: ['oldName' => '^[a-zA-Z]([a-zA-Z0-9_-])*$'])]
     public function rename(string $oldName, Request $request, ValidatorInterface $validator, CoreInteract $coreInteract): Response
     {
         if (!$request->headers->has('Turbo-Frame')) {
@@ -70,8 +72,9 @@ class RepoController extends AbstractController
     /**
      * Delete one repository
      */
-    #[Route('/delete/{name}', name: 'delete', requirements: ['name' => '^[a-zA-Z]([a-zA-Z0-9_-])*$'])]
     #[IsGranted('ROLE_ADMIN')]
+    #[IsCsrfTokenValid('submit', methods: ['POST'])]
+    #[Route('/delete/{name}', name: 'delete', methods: ['GET', 'POST'], requirements: ['name' => '^[a-zA-Z]([a-zA-Z0-9_-])*$'])]
     public function delete(string $name, Request $request, ValidatorInterface $validator, CoreInteract $coreInteract): Response
     {
         if (!$request->headers->has('Turbo-Frame')) {

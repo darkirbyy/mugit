@@ -13,15 +13,10 @@ framework:
         cookie_path: /
         cookie_lifetime: 0 # until browser is closed
 
-    form:
-        csrf_protection:
-            token_id: submit
-
     csrf_protection:
         check_header: true
         stateless_token_ids:
             - submit
-            - delete
 
 when@test:
     framework:

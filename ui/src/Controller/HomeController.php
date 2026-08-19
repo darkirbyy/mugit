@@ -14,7 +14,7 @@ class HomeController extends AbstractController
     /**
      * Welcome page of the application
      */
-    #[Route('/', name: 'index')]
+    #[Route('/', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
        return $this->redirectToRoute('repo_index');
@@ -23,7 +23,7 @@ class HomeController extends AbstractController
     /**
      * Route to switch from standard user to admin user, ONLY available in dev/test environment and if keycloak is mocked
      */
-    #[Route('/switch', name: 'switch', env: ['dev', 'test'], condition: "true == '%mock.keycloak_enable%'")]
+    #[Route('/switch', name: 'switch', methods: ['GET'], env: ['dev', 'test'], condition: "true == '%mock.keycloak_enable%'")]
     public function switch(Security $security, Request $request): Response
     {
         $isAdmin = $this->getUser()->getIsAdmin();

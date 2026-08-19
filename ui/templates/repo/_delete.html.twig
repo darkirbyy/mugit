@@ -3,5 +3,6 @@
 <turbo-frame id="turboframe-repo-delete">
   <form action="{{ path(app.current_route, app.current_route_parameters) }}" method="post">
     <input type="submit" value="confirmer" />
+    <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
   </form>
 </turbo-frame>
