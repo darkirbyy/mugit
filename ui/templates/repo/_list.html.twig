@@ -35,7 +35,12 @@
             {% for repoInfo in repoListOutput.repoInfoList %}
               <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
                 <th class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfo.name }}</th>
-                <td class="px-4 py-2">{{ repoInfo.humanReadableSize }}</td>
+                <td class="px-4 py-2">
+                  {{ repoInfo.humanReadableSize }}
+                  {% if repoInfo.size > env.core.repo_max_size_mio * env.core.repo_warn_size_threshold * 1024 %}
+                    <span class="ri-alert-line text-lg text-amber-700 dark:text-amber-500" aria-label="{{ 'repo.list.warnSize'|trans }}"></span>
+                  {% endif %}
+                </td>
                 <td class="px-4 py-2" data-copy-clipboard-target="cell">
                   <span class="mr-1">{{ repoInfo.cloneURL }}</span>
                   {{ m.button('repo.list.copyURLToClipboard', 'ri-file-copy-line', 'tooltip') }}
@@ -55,6 +60,7 @@
       </div>
     </div>
     <div>
+      {# todo : only one, with duplicatable template ? #}
       {% for repoInfo in repoListOutput.repoInfoList %}
         {% set dropdownId = 'dropdown-repo-' ~ loop.index0 %}
         {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
@@ -64,13 +70,15 @@
           </turbo-frame>
         {% endset %}
         {{ m.dropdown_item('button', 'repo.list.rename', 'ri-pencil-line', null, extra) }}
-        {% set extra %}
-          <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfo.name }) }}">
-            {{ m.spinner() }}
-          </turbo-frame>
-        {% endset %}
-        {{ m.dropdown_item('button', 'repo.list.delete', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
-        {{ m.dropdown_end() }}
+        {% if is_granted('ROLE_ADMIN') %}
+          {% set extra %}
+            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfo.name }) }}">
+              {{ m.spinner() }}
+            </turbo-frame>
+          {% endset %}
+          {{ m.dropdown_item('button', 'repo.list.delete', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
+          {{ m.dropdown_end() }}
+        {% endif %}
       {% endfor %}
     </div>
   {% endif %}

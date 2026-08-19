@@ -11,13 +11,14 @@ repo:
     noRepo: Aucun dépôt
     name: Nom
     humanReadableSize: Taille
-    humanReadableSizeHelp: Un dépôt ne peut excéder TODO
+    humanReadableSizeHelp: Un dépôt ne peut excéder {repoMaxSizeMio}Mio
     cloneURL: URL
     edit: Editer
     rename: Renommer
     delete: Supprimer
     copyURLToClipboard: Copier l'URL dans le presse-papier
     copied: Copié !
+    warnSize: Le dépôt est proche de la taille limite
     failed: Échec lors du calcul de la liste des dépôts.
   create:
     label: Nom

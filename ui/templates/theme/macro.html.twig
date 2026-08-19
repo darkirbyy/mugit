@@ -46,8 +46,8 @@
     error: { icon: 'spam', color: 'bg-red-200 dark:bg-red-950' }
   } %}
   {% set vars = attribute(typeToVars, type) %}
-  <div>
-    <div id="{{ id }}" class="rounded border border-zinc-500/50 {{ vars.color }} mb-4 flex items-center p-2 text-sm duration-0" role="alert">
+  <div data-controller="dismiss-flash">
+    <div id="{{ id }}" class="rounded border border-zinc-500/50 {{ vars.color }} mb-4 flex items-center p-2 text-sm" role="alert">
       <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
         <span class="ri-{{ vars.icon }}-line text-lg" aria-hidden="true"></span>
         <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
@@ -62,8 +62,8 @@
         <button
           type="button"
           class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
-          data-dismiss-target="#{{ id }}"
           aria-label="{{ 'layout.flash.close'|trans }}"
+          data-dismiss-flash-target="button"
         >
           <span class="ri-close-line text-lg" aria-hidden="true"></span>
         </button>
@@ -110,12 +110,15 @@
     <li data-controller="dropdown-extra" data-dropdown-extra-class-open-value="ri-arrow-down-s-line" data-dropdown-extra-class-unopen-value="ri-arrow-right-s-line">
       <button {{ html_attr(attr) }} data-dropdown-extra-target="button">{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
       <div class="hidden" data-dropdown-extra-target="content">
-        {{ extra|raw }}
+        <div class="my-1 ml-1 border-l-4 border-zinc-500/50 pl-2">
+          {{ extra|raw }}
+        </div>
       </div>
     </li>
   {% endif %}
 {% endmacro %}
 
+{# HELP : internal macro #}
 {% macro dropdown_item_insert(textKey, iconStart = null, iconEnd = null) %}
   <div>
     {% if iconStart is not null %}
@@ -130,18 +133,22 @@
   </div>
 {% endmacro %}
 
+{# HELP : #}
 {% macro dropdown_separator() %}
   <li><hr class="-mx-1 my-1 border-zinc-500" /></li>
 {% endmacro %}
 
+{# HELP : #}
 {% macro tag_open(tag) %}
   {{ ('<' ~ tag)|raw }}
 {% endmacro %}
 
+{# HELP : #}
 {% macro tag_close(tag) %}
   {{ ('</' ~ tag)|raw }}
 {% endmacro %}
 
+{# HELP : #}
 {% macro spinner() %}
   <div class="relative top-1/2 left-1/2 size-8 -translate-x-1/2" aria-label="{{ 'aria.loading'|trans }}">
     <div class="size-8 p-0.5 text-zinc-500">

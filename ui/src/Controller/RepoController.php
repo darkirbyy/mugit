@@ -7,6 +7,7 @@ use App\DTO\CoreError;
 use App\DTO\RepoDeleteInput;
 use App\DTO\RepoRenameInput;
 use App\Service\CoreInteract;
+use App\Service\CoreInteractInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +46,7 @@ class RepoController extends AbstractController
      * Rename one repository
      */
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
-    #[Route('/rename/{oldName}', name: 'rename', methods: ['GET', 'POST'], requirements: ['oldName' => '^[a-zA-Z]([a-zA-Z0-9_-])*$'])]
+    #[Route('/rename/{oldName}', name: 'rename', methods: ['GET', 'POST'], requirements: ['oldName' => CoreInteractInterface::REGEX_NAME])]
     public function rename(string $oldName, Request $request, ValidatorInterface $validator, CoreInteract $coreInteract): Response
     {
         if (!$request->headers->has('Turbo-Frame')) {
@@ -74,7 +75,7 @@ class RepoController extends AbstractController
      */
     #[IsGranted('ROLE_ADMIN')]
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
-    #[Route('/delete/{name}', name: 'delete', methods: ['GET', 'POST'], requirements: ['name' => '^[a-zA-Z]([a-zA-Z0-9_-])*$'])]
+    #[Route('/delete/{name}', name: 'delete', methods: ['GET', 'POST'], requirements: ['name' => CoreInteractInterface::REGEX_NAME])]
     public function delete(string $name, Request $request, ValidatorInterface $validator, CoreInteract $coreInteract): Response
     {
         if (!$request->headers->has('Turbo-Frame')) {

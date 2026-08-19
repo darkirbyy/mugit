@@ -22,6 +22,7 @@ class CoreExecSSH implements CoreExecInterface
         #[Autowire('%core.host_port%')] private int $coreHostPort,
         #[Autowire('%core.host_pubkey%')] private string $coreHostPubkey,
         #[Autowire('%core.root_prikey%')] private string $coreRootPrikey,
+        #[Autowire('%core.timeout%')] private int $coreTimeout,
         private LoggerInterface $logger,
     ) {
         $this->ssh = null;
@@ -58,7 +59,7 @@ class CoreExecSSH implements CoreExecInterface
         }
 
         $this->ssh = new SSH2($this->coreHostAddr, $this->coreHostPort);
-        $this->ssh->setTimeout(5);
+        $this->ssh->setTimeout($this->coreTimeout);
         try {
 
             if ($this->ssh->getServerPublicHostKey() != $this->coreHostPubkey) {

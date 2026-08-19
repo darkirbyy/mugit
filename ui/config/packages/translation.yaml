@@ -7,6 +7,8 @@ framework:
         fallbacks:
             - fr
         providers:
+        globals:
+            '{repoMaxSizeMio}': '%core.repo_max_size_mio%'
 
 when@test:
     framework:

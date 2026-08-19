@@ -16,6 +16,9 @@ parameters:
     core.host_port: '%env(int:CORE_HOST_PORT)%'
     core.host_pubkey: '%env(string:CORE_HOST_PUBKEY)%'
     core.root_prikey: '%env(string:CORE_ROOT_PRIKEY)%'
+    core.timeout: '%env(int:CORE_TIMEOUT)%'
+    core.repo_max_size_mio: '%env(int:CORE_REPO_MAX_SIZE_MIO)%'
+    core.repo_warn_size_threshold: '%env(float:CORE_REPO_WARN_SIZE_THRESHOLD)%'
     mock.keycloak_enable: '%env(bool:MOCK_KEYCLOAK_ENABLE)%'
 
 imports:

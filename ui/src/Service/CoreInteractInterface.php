@@ -12,6 +12,8 @@ use App\DTO\RepoRenameInput;
 
 interface CoreInteractInterface
 {
+    const REGEX_NAME = '^[a-zA-Z]([a-zA-Z0-9_-])*$';
+
     /**
      * List all repositories names (without the `git` suffix) and sizes (in Kio), sorted alphabetically
      *
