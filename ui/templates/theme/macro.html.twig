@@ -1,4 +1,8 @@
-{# HELP : textKey is the key before translation, mode must be 'normal', 'tooltip' or 'icon', attr.class must be an array #}
+{# HELP : textKey is the key before translation, mode must be :
+  - 'normal': text + no tooltip
+  - 'tooltip': no text + tooltip
+  - 'off': no text + no tooltip 
+  #}
 {% macro button(textKey, icon = null, mode = 'normal', attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-800'|split(' ') %}
@@ -8,7 +12,7 @@
     {% set class = class|merge('after:border after:border-zinc-500 after:bg-zinc-300 hover:after:inline-block dark:after:bg-zinc-800'|split(' ')) %}
     {% set attr = attr|html_attr_merge({ 'data-tooltip': textKey|trans }) %}
   {% endif %}
-  {% if mode == 'icon' or mode == 'tooltip' %}
+  {% if mode == 'off' or mode == 'tooltip' %}
     {% set attr = attr|html_attr_merge({ 'aria-label': textKey|trans }) %}
   {% endif %}
   {% set attr = attr|html_attr_merge({ class: class }) %}
@@ -23,7 +27,7 @@
   </button>
 {% endmacro %}
 
-{# HELP : textKey is the key before translation, attr.class must be an array #}
+{# HELP : textKey is the key before translation #}
 {% macro link(textKey, path, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'font-bold underline opacity-75 hover:opacity-100'|split(' ') %}
@@ -68,6 +72,7 @@
   </div>
 {% endmacro %}
 
+{# HELP : #}
 {% macro dropdown_start(id, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'z-10 hidden rounded border border-zinc-500 bg-zinc-200 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950'|split(' ') %}
@@ -77,31 +82,52 @@
   {{ _self.tag_open('ul') }} class="p-1">
 {% endmacro %}
 
+{# HELP : #}
 {% macro dropdown_end() %}
   {{ _self.tag_close('ul') }}>
   {{ _self.tag_close('div') }}>
 {% endmacro %}
 
-{% macro dropdown_item(textKey, tag, iconStart = null, iconEnd = null, attr = null, extra = null) %}
+{# HELP : tag can be 'a' or 'button', textKey is the key before translation, extra can be:
+- null: nothing addd
+- an icon (starting with 'ri-'): added at the end
+- some content: tag is forced to 'button', a responsive icon is added at the end, a stimulus controller is set
+#}
+{% macro dropdown_item(tag, textKey, icon = null, attr = null, extra = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800'|split(' ') %}
   {% set attr = attr|html_attr_merge({ class: class }) %}
 
-  <li>
-    {{ _self.tag_open(tag) }} {{ html_attr(attr) }}><div>
-      {% if iconStart is not null %}
-        <span class="{{ iconStart }} my-0.5 pr-2" aria-hidden="true"></span>
+  {% if extra is null or extra starts with 'ri-' %}
+    <li>
+      {% if tag == 'button' %}
+        <button {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, extra) }}</button>
+      {% else %}
+        <a {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, extra) }}</a>
       {% endif %}
-      {{ textKey|trans }}
-    </div>
-    {% if iconEnd is not null %}
-      <div>
-        <span class="{{ iconEnd }}" aria-hidden="true"></span>
+    </li>
+  {% else %}
+    <li data-controller="dropdown-extra" data-dropdown-extra-class-open-value="ri-arrow-down-s-line" data-dropdown-extra-class-unopen-value="ri-arrow-right-s-line">
+      <button {{ html_attr(attr) }} data-dropdown-extra-target="button">{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
+      <div class="hidden" data-dropdown-extra-target="content">
+        {{ extra|raw }}
       </div>
+    </li>
+  {% endif %}
+{% endmacro %}
+
+{% macro dropdown_item_insert(textKey, iconStart = null, iconEnd = null) %}
+  <div>
+    {% if iconStart is not null %}
+      <span class="{{ iconStart }} my-0.5 pr-2" aria-hidden="true"></span>
     {% endif %}
-    {{ _self.tag_close(tag) -}}>
-    {{ extra|default('')|raw }}
-  </li>
+    {{ textKey|trans }}
+  </div>
+  <div>
+    {% if iconEnd is not null %}
+      <span class="{{ iconEnd }}" aria-hidden="true"></span>
+    {% endif %}
+  </div>
 {% endmacro %}
 
 {% macro dropdown_separator() %}

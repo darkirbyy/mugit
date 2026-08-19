@@ -32,12 +32,12 @@ class CoreInteract implements CoreInteractInterface
 
         if ($coreOutput->exitCode > 0) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutput->exitCode . ').');
-            return new CoreError('listFailed');
+            return new CoreError('repo.list.failed');
         }
 
         if (array_any($coreOutput->lines, fn($line) =>  count(explode(' ', $line)) != 2)) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned one ore mote line(s) that could not be parsed.');
-            return new CoreError('listFailed');
+            return new CoreError('repo.list.failed');
         }
 
         $repoListOutput = new RepoListOutput(array_map(function ($line) {
@@ -67,9 +67,9 @@ class CoreInteract implements CoreInteractInterface
         if ($coreOutput->exitCode > 0) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutput->exitCode . ').');
             return new CoreError(match ($coreOutput->exitCode) {
-                3, 4 => 'renameInvalid',
-                7 => 'renameAlreadyExist',
-                default => 'renameFailed',
+                3, 4 => 'repo.rename.invalid',
+                7 => 'repo.rename.alreadyexist',
+                default => 'repo.rename.failed',
             });
         }
 

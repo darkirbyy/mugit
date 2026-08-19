@@ -4,6 +4,7 @@
 
 repo:
   title: Tous les dépots
+  connectionFailed: Échec lors de la connexion au serveur git.
   list:
     createNew: Créer un nouveau dépôt
     refresh: Rafraichir
@@ -17,12 +18,23 @@ repo:
     delete: Supprimer
     copyURLToClipboard: Copier l'URL dans le presse-papier
     copied: Copié !
-  error: 
-    connectionFailed: Échec lors de la connexion au serveur git.
-    listFailed: Échec lors du calcul de la liste des dépôts.
-    renameInvalid: Le nouveau nom n'est pas valide.
-    renameAlreadyExist: Le nouveau nom n'est est déjà utilisé.
-    renameFailed: Échec lors du renommage de ce dépôt.
+    failed: Échec lors du calcul de la liste des dépôts.
+  create:
+    label: Nom
+    success: Le dépôt a été correctement créé.
+    invalid: Le nom n'est pas valide.
+    alreadyExist: Le nom est déjà utilisé.
+    failed: Échec lors de la création du dépôt
+  rename:
+    label: Nouveau nom
+    success: Le dépôt a été correctement renommé.
+    invalid: Le nouveau nom n'est pas valide.
+    alreadyExist: Le nouveau nom est déjà utilisé.
+    failed: Échec lors du renommage de ce dépôt.
+  delete:
+    label: La suppression est définitive
+    success: Le dépôt a été correctement supprimé.
+    failed: Échec lors de la suppression de ce dépôt.
 
 error:
   title: Erreur {code}

@@ -1,0 +1,7 @@
+{% import 'theme/macro.html.twig' as m %}
+
+<turbo-frame id="turboframe-repo-delete">
+  <form action="{{ path(app.current_route, app.current_route_parameters) }}" method="post">
+    <input type="submit" value="confirmer" />
+  </form>
+</turbo-frame>

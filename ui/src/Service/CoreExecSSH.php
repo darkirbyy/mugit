@@ -30,8 +30,8 @@ class CoreExecSSH implements CoreExecInterface
     #[Override]
     public function exec(string $command): CoreError|CoreOutput
     {
-        if(!$this->authenticate()){
-            return new CoreError('failedToConnect');
+        if (!$this->authenticate()) {
+            return new CoreError('repo.connectionFailed');
         }
 
         $output = $this->ssh->exec('./api.sh ' . $command);
@@ -56,17 +56,24 @@ class CoreExecSSH implements CoreExecInterface
 
             return true;
         }
-        
+
         $this->ssh = new SSH2($this->coreHostAddr, $this->coreHostPort);
-        if ($this->ssh->getServerPublicHostKey() != $this->coreHostPubkey) {
-            $this->logger->error('Failed to connect to core through SSH : invalid public key.');
+        $this->ssh->setTimeout(5);
+        try {
 
-            return false;
-        }
+            if ($this->ssh->getServerPublicHostKey() != $this->coreHostPubkey) {
+                $this->logger->error('Failed to connect to core through SSH: invalid public key.');
 
-        $key = PublicKeyLoader::load($this->coreRootPrikey);
-        if (!$this->ssh->login('root', $key)) {
-            $this->logger->error('Failed to authenticate to core through SSH : invalid user or private key.');
+                return false;
+            }
+
+            $key = PublicKeyLoader::load($this->coreRootPrikey);
+            if (!$this->ssh->login('root', $key)) {
+                $this->logger->error('Failed to authenticate to core through SSH: invalid user or private key.');
+                return false;
+            }
+        } catch (UnableToConnectException $e) {
+            $this->logger->error('Failed to authenticate to core through SSH: encountered exception ' . $e::class . '.');
             return false;
         }
 

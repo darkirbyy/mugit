@@ -93,28 +93,25 @@
           </div>
         </li>
         {{ m.dropdown_separator() }}
-        {{ m.dropdown_item('layout.navbar.mySSHKeys', 'a', 'ri-key-2-line', null, { href: '#' }) }}
-        {% set attr = { 'data-dropdown-toggle': 'dropdown-switch-theme', 'data-dropdown-placement': 'left-start' } %}
+        {{ m.dropdown_item('a', 'layout.navbar.mySSHKeys', 'ri-key-2-line', { href: '#' }) }}
         {% set extra %}
-          {# Switch theme sub-dropdown #}
-          {% set attr2 = {
-            class: ['min-w-40'],
-            'data-controller': 'switch-theme',
-            'data-switch-theme-class-active-value': 'bg-zinc-400 dark:bg-zinc-700',
-            'data-switch-theme-class-inactive-value': 'hover:bg-zinc-300 dark:hover:bg-zinc-800'
-          } %}
-          {{ m.dropdown_start('dropdown-switch-theme', attr2) }}
-          {% for theme, icon in { light: 'ri-sun-line', dark: 'ri-moon-line', auto: 'ri-settings-line' } %}
-            {{ m.dropdown_item('layout.navbar.theme.' ~ theme, 'button', icon, 'ri-check-line', { 'data-switch-theme-target': 'button ' ~ theme }) }}
-          {% endfor %}
-          {{ m.dropdown_end() }}
+          <ul
+            class="ml-6"
+            data-controller="switch-theme"
+            data-switch-theme-class-active-value="bg-zinc-300 dark:bg-zinc-800"
+            data-switch-theme-class-inactive-value="hover:bg-zinc-300 dark:hover:bg-zinc-800"
+          >
+            {% for theme, icon in { light: 'ri-sun-line', dark: 'ri-moon-line', auto: 'ri-settings-line' } %}
+              {{ m.dropdown_item('button', 'layout.navbar.theme.' ~ theme, icon, { 'data-switch-theme-target': 'button ' ~ theme }, 'ri-check-line') }}
+            {% endfor %}
+          </ul>
         {% endset %}
-        {{ m.dropdown_item('layout.navbar.appearance', 'button', 'ri-palette-line', 'ri-arrow-right-s-line', attr, extra) }}
+        {{ m.dropdown_item('button', 'layout.navbar.appearance', 'ri-palette-line', [], extra) }}
         {{ m.dropdown_separator() }}
-        {{ m.dropdown_item('layout.navbar.myAccount', 'a', 'ri-user-line', 'ri-external-link-line', { href: env.iam.base_url, 'data-turbo-prefetch': false }) }}
-        {{ m.dropdown_item('layout.navbar.backToHub', 'a', 'ri-home-4-line', 'ri-external-link-line', { href: env.hub.base_url, 'data-turbo-prefetch': false }) }}
+        {{ m.dropdown_item('a', 'layout.navbar.myAccount', 'ri-user-line', { href: env.iam.base_url, 'data-turbo-prefetch': false }, 'ri-external-link-line') }}
+        {{ m.dropdown_item('a', 'layout.navbar.backToHub', 'ri-home-4-line', { href: env.hub.base_url, 'data-turbo-prefetch': false }, 'ri-external-link-line') }}
         {% set attr = { href: env.hub.base_url, 'data-turbo-prefetch': false, 'data-turbo': false, class: ['text-red-900', 'dark:text-red-400'] } %}
-        {{ m.dropdown_item('layout.navbar.signOut', 'a', 'ri-logout-circle-r-line', 'ri-external-link-line', attr) }}
+        {{ m.dropdown_item('a', 'layout.navbar.signOut', 'ri-logout-circle-r-line', attr, 'ri-external-link-line') }}
         {{ m.dropdown_end() }}
       </navbar>
     </header>
@@ -134,8 +131,9 @@
 
       {# The block 'main' must be redefined on each page #}
       {% block main %}
+
       {% endblock %}
-      
+
       {# Spinner template #}
       <template id="template-spinner">
         {{ m.spinner() }}
