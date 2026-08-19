@@ -5,15 +5,15 @@ GIT_UID=$(id -u git)
 GIT_GID=$(id -g git)
 GIT_DIR="/home/git"
 SSH_FILE="$GIT_DIR/.ssh/authorized_keys"
-NAME_REGEX="^[a-zA-Z]([a-zA-Z0-9_-])*$"
-NAME_HELP="The names must start with a letter, and can only use letters, digits, and the symbols '-' or '_'."
-UUID_REGEX="^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$"
+NAME_REGEX="^[a-zA-Z]([a-zA-Z0-9_-]){1,127}$"
+NAME_HELP="The names must start with a letter, and can only use letters, digits, and the symbols '-' or '_', with 128 characters maximum."
+UUID_REGEX="^[0-9a-f]{8}-[0-9a-f]{4}-[13-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
 UUID_HELP="The uuids must use the standard format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' where x is a digit or a letter between 'a' and 'f'."
-KEY_REGEX="^[a-zA-Z0-9/+=\\]+$"
+KEY_REGEX="^[a-zA-Z0-9/+=\\]{68}$"
 KEY_HELP="The keys must be generated with the ed25519 algorithm. To be parsed correctly, they must given 
-  without the 'ssh-ed25519' prefix nor the optional comment suffix and enclosed in simple quote."
-COMMENT_REGEX="^[a-zA-Z0-9_@ -]*$"
-COMMENT_HELP="The comments can only use letters, digits, spaces and the symbols '-', '_' or '@'."
+  without the 'ssh-ed25519' prefix nor the optional comment suffix and enclosed in simple quote, with 68 characters exactly. "
+COMMENT_REGEX="^[a-zA-Z0-9_@ -]{0,255}$"
+COMMENT_HELP="The comments can only use letters, digits, spaces and the symbols '-', '_' or '@', with 255 characters maximum."
 
 # Define common function
 # Syntax : check_command "$command" "$values" "$type" "$help"

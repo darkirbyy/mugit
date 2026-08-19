@@ -8,10 +8,10 @@ To achieve that, here is the APIv1 between the CORE and the UI.
 - Each line MUST end with '\n'.  
 - Exit code MUST be 0 on success, anything between 1 and 10 on error (see [Exit code](#exit-code)).  
 - Errors MUST be printed on stderr ; success response MUST be printed on stdout.
-- Valid names for the repositories : MUST start with a letter ; MUST only contains letters, digits and the symbols '-' or '_'.
-- Valid uuids for the users : MUST use the standard format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' where x is a digit or a letter between 'a' and 'f'.  
-- Valid public keys for the users : MUST be generated with the ed25519 algorithm, without the 'ssh-ed25519' prefix nor the optional comment suffix ; MUST be enclosed in simple quotes.  
-- Valid comments for the users : MUST only contains letters, digits, spaces and symbols '-', '_' or '@' ; multiple spaces MUST be reduced to only one by the API.
+- Valid names for the repositories: MUST start with a letter ; MUST only contains letters, digits and the symbols '-' or '_' ; MUST be maximum 128 characters.
+- Valid uuids for the users: MUST use the standard format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' where x is a digit or a letter between 'a' and 'f'.  
+- Valid public keys for the users: MUST be generated with the ed25519 algorithm, without the 'ssh-ed25519' prefix nor the optional comment suffix ; MUST be enclosed in simple quotes ; MUST be extacly 68 characters.  
+- Valid comments for the users: MUST only contains letters, digits, spaces and symbols '-', '_' or '@' ; multiple spaces MUST be reduced to only one by the API ; MUST be maximum 255 characters.
 
 ## Commands
 
