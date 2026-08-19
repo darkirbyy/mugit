@@ -18,7 +18,7 @@ repo:
     delete: Supprimer
     copyURLToClipboard: Copier l'URL dans le presse-papier
     copied: Copié !
-    warnSize: Le dépôt est proche de la taille limite
+    warnSize: Limite presque atteinte
     failed: Échec lors du calcul de la liste des dépôts.
   create:
     label: Nom
@@ -44,10 +44,12 @@ error:
     notFound: Cette page n'existe pas.
     forbidden: Cette page n'est pas accessible.
     other: Le serveur a rencontré un problème, merci de réessayer plus tard.
-    
+
 ##################################
 # Common translations ############
 ##################################
+form:
+  submit: Valider
 
 layout:
   name: μGit

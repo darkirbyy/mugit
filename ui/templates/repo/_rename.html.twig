@@ -1,10 +1,31 @@
 {% import 'theme/macro.html.twig' as m %}
 
 <turbo-frame id="turboframe-repo-rename">
-  <form action="{{ path(app.current_route, app.current_route_parameters) }}" method="post">
-    <label for="form-repo-create-new-name">Nouveau nom</label>
-    <input type="text" name="new-name" id="form-repo-create-new-name" />
-    <input type="submit" value="ok" />
+  <form action="{{ path(app.current_route, app.current_route_parameters) }}" method="post" novalidate>
+    <div class="flex flex-col gap-0.5 pt-0.5">
+      <div class="flex gap-1">
+        <label for="form-repo-create-new-name" class="sr-only">{{ 'repo.rename.label'|trans }}</label>
+        <input
+          type="text"
+          name="new-name"
+          id="form-repo-create-new-name"
+          class="block flex-1 rounded border border-zinc-500/50 bg-transparent px-2 py-1 focus:bg-zinc-300 focus:ring-0 focus:dark:bg-zinc-900"
+          placeholder="{{ 'repo.rename.label'|trans }}"
+          required
+        />
+        <button
+          type="submit"
+          class="rounded border border-zinc-500/50 px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-900"
+          aria-label="{{ 'form.submit'|trans }}"
+          data-action="click->turboframe#submit"
+        >
+          <span class="ri-check-line" aria-hidden="true"></span>
+        </button>
+      </div>
+      {% if repoRenameOutput is not null %}
+        {{ m.flash_mini('error', repoRenameOutput.textKey) }}
+      {% endif %}
+    </div>
     <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
   </form>
 </turbo-frame>

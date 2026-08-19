@@ -2,7 +2,7 @@
 
 <turbo-frame id="turboframe-repo-list">
   {% if constant('class', repoListOutput) ends with 'CoreError' %}
-    {{ m.flash('error', 'flash-error-repo-list', repoListOutput.textKey, true, false) }}
+    {{ m.flash('error', repoListOutput.textKey, true, false) }}
   {% else %}
     <div class="relative rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
       <div class="flex flex-col border-b border-zinc-500 px-2 py-2 lg:flex-row lg:items-center lg:justify-between">
@@ -32,7 +32,9 @@
                 <td class="px-4 py-2">
                   {{ repoInfo.humanReadableSize }}
                   {% if repoInfo.size > env.core.repo_max_size_mio * env.core.repo_warn_size_threshold * 1024 %}
-                    <span class="ri-alert-line text-lg text-amber-700 dark:text-amber-500" aria-label="{{ 'repo.list.warnSize'|trans }}"></span>
+                    <div class="inline-block">
+                      {{ m.flash_mini('warning', 'repo.list.warnSize') }}
+                    </div>
                   {% endif %}
                 </td>
                 <td class="px-4 py-2" data-copy-clipboard-target="cell">
@@ -59,14 +61,14 @@
         {% set dropdownId = 'dropdown-repo-' ~ loop.index0 %}
         {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
         {% set extra %}
-          <turbo-frame role="none" id="turboframe-repo-rename" loading="lazy" src="{{ path('repo_rename', { oldName: repoInfo.name }) }}">
+          <turbo-frame role="none" id="turboframe-repo-rename" loading="lazy" src="{{ path('repo_rename', { oldName: repoInfo.name }) }}" data-controller="turboframe">
             {{ m.spinner() }}
           </turbo-frame>
         {% endset %}
         {{ m.dropdown_item('button', 'repo.list.rename', 'ri-pencil-line', null, extra) }}
         {% if is_granted('ROLE_ADMIN') %}
           {% set extra %}
-            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfo.name }) }}">
+            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfo.name }) }}" data-controller="turboframe">
               {{ m.spinner() }}
             </turbo-frame>
           {% endset %}

@@ -119,8 +119,7 @@
       {# Flash messages #}
       {% for type in ['info', 'success', 'warning', 'error'] %}
         {% for flash in app.flashes(type) %}
-          {% set flashId = 'flash-' ~ type ~ '-' ~ loop.index0 %}
-          {{ m.flash(type, flashId, flash.textKey, flash.canRetry, flash.canClose) }}
+          {{ m.flash(type, flash.textKey, flash.canRetry, flash.canClose) }}
         {% endfor %}
       {% endfor %}
 

@@ -11,18 +11,23 @@ export default class extends Controller {
 
   reload(event) {
     event.preventDefault();
+    this.restoreSpinner();
+    this.element.reload();
+  }
 
-    // remove all child
-    while (this.element.firstChild) {
-      this.element.removeChild(this.element.lastChild);
-    }
+  submit(event) {
+    this.restoreSpinner();
+  }
+
+  restoreSpinner() {
+    // hide all child
+    Array.from(this.element.children).forEach((child) => {
+      child.classList.add('hidden');
+    });
 
     // add initial spinner as a child
     const initialSpinner = document.createElement('div');
     initialSpinner.innerHTML = this.initialSpinnerHTML;
     this.element.appendChild(initialSpinner);
-
-    // trigger reload
-    this.element.reload();
   }
 }

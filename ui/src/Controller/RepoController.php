@@ -59,7 +59,7 @@ class RepoController extends AbstractController
             $repoRenameInput = new RepoRenameInput($oldName, $newName);
 
             $errors = $validator->validate($repoRenameInput);
-            $repoRenameOutput = count($errors) == 0 ?  $coreInteract->repoRename($repoRenameInput) : new CoreError('renameInvalid');
+            $repoRenameOutput = count($errors) == 0 ?  $coreInteract->repoRename($repoRenameInput) : new CoreError('repo.rename.invalid');
 
             if ($repoRenameOutput === true) {
                 $this->addFlash('success', new FlashMessage('repo.rename.success'));
@@ -87,7 +87,7 @@ class RepoController extends AbstractController
             $repoDeleteInput = new RepoDeleteInput($name);
 
             $errors = $validator->validate($repoDeleteInput);
-            $repoDeleteOutput = count($errors) == 0 ?  $coreInteract->repoDelete($repoDeleteInput) : new CoreError('deleteInvalid');
+            $repoDeleteOutput = count($errors) == 0 ?  $coreInteract->repoDelete($repoDeleteInput) : new CoreError('repo.delete.invalid');
 
             if ($repoDeleteOutput === true) {
                 $this->addFlash('success', new FlashMessage('repo.delete.success'));

@@ -68,7 +68,7 @@ class CoreInteract implements CoreInteractInterface
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutput->exitCode . ').');
             return new CoreError(match ($coreOutput->exitCode) {
                 3, 4 => 'repo.rename.invalid',
-                7 => 'repo.rename.alreadyexist',
+                7 => 'repo.rename.alreadyExist',
                 default => 'repo.rename.failed',
             });
         }
