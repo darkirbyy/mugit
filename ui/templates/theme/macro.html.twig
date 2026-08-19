@@ -46,7 +46,7 @@
     error: { icon: 'spam', color: 'bg-red-200 dark:bg-red-950' }
   } %}
   {% set vars = attribute(typeToVars, type) %}
-  <div data-controller="dismiss-flash">
+  <div data-controller="flash">
     <div id="{{ id }}" class="rounded border border-zinc-500/50 {{ vars.color }} mb-4 flex items-center p-2 text-sm" role="alert">
       <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
         <span class="ri-{{ vars.icon }}-line text-lg" aria-hidden="true"></span>
@@ -55,7 +55,7 @@
       <div class="mx-2">
         {{ textKey|trans }}
         {% if canRetry %}
-          {{ _self.link('layout.flash.tryAgain', '#', { 'data-controller': 'reload-frame' }) }}
+          {{ _self.link('layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
         {% endif %}
       </div>
       {% if canClose %}
@@ -63,7 +63,7 @@
           type="button"
           class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
           aria-label="{{ 'layout.flash.close'|trans }}"
-          data-dismiss-flash-target="button"
+          data-action="click->flash#dismiss"
         >
           <span class="ri-close-line text-lg" aria-hidden="true"></span>
         </button>
@@ -107,9 +107,9 @@
       {% endif %}
     </li>
   {% else %}
-    <li data-controller="dropdown-extra" data-dropdown-extra-class-open-value="ri-arrow-down-s-line" data-dropdown-extra-class-unopen-value="ri-arrow-right-s-line">
-      <button {{ html_attr(attr) }} data-dropdown-extra-target="button">{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
-      <div class="hidden" data-dropdown-extra-target="content">
+    <li data-controller="dropdown" data-dropdown-class-open-value="ri-arrow-down-s-line" data-dropdown-class-unopen-value="ri-arrow-right-s-line">
+      <button {{ html_attr(attr) }} data-dropdown-target="button">{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
+      <div class="hidden" data-dropdown-target="content">
         <div class="my-1 ml-1 border-l-4 border-zinc-500/50 pl-2">
           {{ extra|raw }}
         </div>
@@ -149,19 +149,10 @@
 {% endmacro %}
 
 {# HELP : #}
-{% macro spinner() %}
-  <div class="relative top-1/2 left-1/2 size-8 -translate-x-1/2" aria-label="{{ 'aria.loading'|trans }}">
-    <div class="size-8 p-0.5 text-zinc-500">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path
-          d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"
-        ></path>
-      </svg>
-    </div>
-    <div class="absolute top-0 left-0 size-8 motion-safe:animate-spin">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 3C16.9706 3 21 7.02944 21 12H19C19 8.13401 15.866 5 12 5V3Z"></path>
-      </svg>
-    </div>
+{% macro spinner(number = 1, bordered = false, gridClass = 'p-2 gap-2 grid-cols-1', itemClass = 'h-6', ) %}
+  <div class="grid {{ gridClass }} {{ bordered ? 'border-zinc-500/25 rounded border' }} motion-safe:animate-pulse" aria-label="{{ 'aria.loading'|trans }}">
+    {% for n in 1..number %}
+      <div class="{{ itemClass }} rounded bg-zinc-500/25"></div>
+    {% endfor %}
   </div>
 {% endmacro %}

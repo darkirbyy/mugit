@@ -9,7 +9,7 @@
         <div></div>
         <div class="flex shrink-0 flex-col gap-2 md:flex-row md:items-center lg:justify-end">
           {{ m.button('repo.list.createNew', 'ri-add-large-line', 'normal') }}
-          {{ m.button('repo.list.refresh', 'ri-reset-left-line', 'tooltip', { 'data-controller': 'reload-frame' }) }}
+          {{ m.button('repo.list.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
         </div>
       </div>
       <div>
@@ -73,7 +73,7 @@
         {% if is_granted('ROLE_ADMIN') %}
           {% set extra %}
             <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfo.name }) }}">
-              {{ m.spinner() }}
+            {{ m.spinner() }}
             </turbo-frame>
           {% endset %}
           {{ m.dropdown_item('button', 'repo.list.delete', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}

@@ -4,7 +4,7 @@ import { Controller } from '@hotwired/stimulus';
  * Stimulus controller that MUST be placed on a item of a dropdown if it has extra content
  */
 export default class extends Controller {
-  static targets = ['button', 'icon', 'content'];
+  static targets = ['button', 'content'];
   static values = {
     classOpen: String,
     classUnopen: String,

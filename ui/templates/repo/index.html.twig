@@ -4,7 +4,7 @@
 {% set title = 'repo.title'|trans %}
 
 {% block main %}
-  <turbo-frame role="none" id="turboframe-repo-list" src="{{ path('repo_list') }}">
-    {{ m.spinner() }}
+  <turbo-frame role="none" id="turboframe-repo-list" src="{{ path('repo_list') }}" data-controller="turboframe">
+    {{ m.spinner(5, true, 'p-3 gap-3 grid-cols-1', 'h-8') }}
   </turbo-frame>
 {% endblock %}
