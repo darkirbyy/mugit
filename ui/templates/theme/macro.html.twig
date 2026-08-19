@@ -1,15 +1,15 @@
-{# HELP : text is the key before translation, mode must be 'normal', 'tooltip' or 'icon', attr.class must be an array #}
-{% macro button(text, icon = null, mode = 'normal', attr = null) %}
+{# HELP : textKey is the key before translation, mode must be 'normal', 'tooltip' or 'icon', attr.class must be an array #}
+{% macro button(textKey, icon = null, mode = 'normal', attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-800'|split(' ') %}
 
   {% if mode == 'tooltip' %}
-    {% set class2 = 'absolute z-30 hidden rounded text-sm border border-zinc-500 bg-zinc-300 p-2'|split(' ')|map(c => 'after:' ~ c) %}
-    {% set class = class|merge(class2)|merge(['hover:after:block', 'dark:after:bg-zinc-800']) %}
-    {% set attr = attr|html_attr_merge({ 'data-tooltip': text|trans }) %}
+    {% set class = class|merge('after:absolute after:translate-x-3 after:-translate-y-2 after:z-30 after:hidden after:rounded after:text-sm after:p-2'|split(' ')) %}
+    {% set class = class|merge('after:border after:border-zinc-500 after:bg-zinc-300 hover:after:inline-block dark:after:bg-zinc-800'|split(' ')) %}
+    {% set attr = attr|html_attr_merge({ 'data-tooltip': textKey|trans }) %}
   {% endif %}
   {% if mode == 'icon' or mode == 'tooltip' %}
-    {% set attr = attr|html_attr_merge({ 'aria-label': text|trans }) %}
+    {% set attr = attr|html_attr_merge({ 'aria-label': textKey|trans }) %}
   {% endif %}
   {% set attr = attr|html_attr_merge({ class: class }) %}
 
@@ -18,23 +18,23 @@
       <span class="{{ icon }}" aria-hidden="true"></span>
     {% endif %}
     {% if mode == 'normal' %}
-      <span class="ml-1">{{ text|trans }}</span>
+      <span class="ml-1">{{ textKey|trans }}</span>
     {% endif %}
   </button>
 {% endmacro %}
 
-{# HELP : text is the key before translation, attr.class must be an array #}
-{% macro link(text, path, attr = null) %}
+{# HELP : textKey is the key before translation, attr.class must be an array #}
+{% macro link(textKey, path, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'font-bold underline opacity-75 hover:opacity-100'|split(' ') %}
 
   {% set attr = attr|html_attr_merge({ class: class }) %}
 
-  <a href="{{ path }}" {{ html_attr(attr) }}>{{ text|trans }}</a>
+  <a href="{{ path }}" {{ html_attr(attr) }}>{{ textKey|trans }}</a>
 {% endmacro %}
 
-{# HELP : text is the key before translation, type can be 'info', 'success', 'warning' or 'error' #}
-{% macro alert(text, id, type, retry = true, close = true) %}
+{# HELP : type can be 'info', 'success', 'warning' or 'error', textKey is the key before translation #}
+{% macro flash(type, id, textKey, canRetry = true, canClose = true) %}
   {% set typeToVars = {
     info: { icon: 'information', color: 'bg-sky-200 dark:bg-sky-950' },
     success: { icon: 'shield-check', color: 'bg-green-200 dark:bg-green-950' },
@@ -43,23 +43,23 @@
   } %}
   {% set vars = attribute(typeToVars, type) %}
   <div>
-    <div id="alert-{{ id }}" class="rounded border border-zinc-500/50 {{ vars.color }} mb-4 flex items-center p-2 text-sm duration-0" role="alert">
+    <div id="{{ id }}" class="rounded border border-zinc-500/50 {{ vars.color }} mb-4 flex items-center p-2 text-sm duration-0" role="alert">
       <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
         <span class="ri-{{ vars.icon }}-line text-lg" aria-hidden="true"></span>
-        <span class="font-bold">{{ ('layout.alert.' ~ type)|trans }}</span>
+        <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
       </div>
       <div class="mx-2">
-        {{ text|trans }}
-        {% if retry is not null %}
-          {{ _self.link('layout.alert.tryAgain', '#', { 'data-controller': 'reload-frame' }) }}
+        {{ textKey|trans }}
+        {% if canRetry %}
+          {{ _self.link('layout.flash.tryAgain', '#', { 'data-controller': 'reload-frame' }) }}
         {% endif %}
       </div>
-      {% if close %}
+      {% if canClose %}
         <button
           type="button"
           class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
-          data-dismiss-target="#alert-{{ id }}"
-          aria-label="{{ 'layout.alert.close'|trans }}"
+          data-dismiss-target="#{{ id }}"
+          aria-label="{{ 'layout.flash.close'|trans }}"
         >
           <span class="ri-close-line text-lg" aria-hidden="true"></span>
         </button>
@@ -82,7 +82,7 @@
   {{ _self.tag_close('div') }}>
 {% endmacro %}
 
-{% macro dropdown_item(text, tag, iconStart = null, iconEnd = null, attr = null, extra = null) %}
+{% macro dropdown_item(textKey, tag, iconStart = null, iconEnd = null, attr = null, extra = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800'|split(' ') %}
   {% set attr = attr|html_attr_merge({ class: class }) %}
@@ -92,7 +92,7 @@
       {% if iconStart is not null %}
         <span class="{{ iconStart }} my-0.5 pr-2" aria-hidden="true"></span>
       {% endif %}
-      {{ text|trans }}
+      {{ textKey|trans }}
     </div>
     {% if iconEnd is not null %}
       <div>

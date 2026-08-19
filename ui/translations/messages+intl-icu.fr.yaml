@@ -49,7 +49,7 @@ layout:
       light: Clair
       dark: Sombre
       auto: Système
-  alert:
+  flash:
     info: Information
     success: Succès
     warning: Attention

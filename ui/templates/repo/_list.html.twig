@@ -2,10 +2,10 @@
 
 <turbo-frame id="turboframe-repo-list">
   {% if constant('class', repoListOutput) ends with 'CoreError' %}
-    {{ m.alert('repo.error.' ~ repoListOutput.messageKey, 'repo-list-' ~ repoListOutput.messageKey, 'error') }}
+    {{ m.flash('error', 'flash-error-repo-list', 'repo.error.' ~ repoListOutput.textKey, true, false) }}
   {% else %}
-    <div class="relative rounded border border-zinc-500 shadow-xs">
-      <div class="flex flex-col border-b border-zinc-500 bg-zinc-200 px-2 py-2 lg:flex-row lg:items-center lg:justify-between dark:bg-zinc-900">
+    <div class="relative rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
+      <div class="flex flex-col border-b border-zinc-500 px-2 py-2 lg:flex-row lg:items-center lg:justify-between">
         <div></div>
         <div class="flex shrink-0 flex-col gap-2 md:flex-row md:items-center lg:justify-end">
           {{ m.button('repo.list.createNew', 'ri-add-large-line', 'normal') }}
@@ -33,7 +33,7 @@
           </thead>
           <tbody>
             {% for repoInfo in repoListOutput.repoInfoList %}
-              <tr class="border-zinc-500 bg-zinc-200 dark:bg-zinc-900 {{ not loop.last ? ' border-b' }}">
+              <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
                 <th class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfo.name }}</th>
                 <td class="px-4 py-2">{{ repoInfo.humanReadableSize }}</td>
                 <td class="px-4 py-2" data-copy-clipboard-target="cell">
@@ -57,7 +57,6 @@
     <div>
       {% for repoInfo in repoListOutput.repoInfoList %}
         {% set dropdownId = 'dropdown-repo-' ~ loop.index0 %}
-
         {{ m.dropdown_start(dropdownId, { class: ['min-w-40'] }) }}
         {% set extra %}
           {{ m.dropdown_start(dropdownId ~ '-rename', { class: ['min-w-40'] }) }}

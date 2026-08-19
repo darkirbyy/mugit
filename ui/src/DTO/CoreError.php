@@ -6,5 +6,5 @@ namespace App\DTO;
 
 class CoreError
 {
-    public function __construct(public string $messageKey, public array $messageParams = []) {}
+    public function __construct(public string $textKey) {}
 }

@@ -5,7 +5,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {% if (turbo_force_reload|default(false)) == true %}
+    {% if (turboForceReload|default(false)) == true %}
       <meta name="turbo-visit-control" content="reload" />
     {% endif %}
     <meta name="turbo-prefetch" content="{{ env.turbo.enable_prefetch ? 'true' : 'false' }}" />
@@ -123,10 +123,19 @@
     <main class="mx-auto w-full grow p-4 md:w-2xl lg:w-4xl xl:w-6xl" id="main-content">
       {# Heading : same as title if not defined #}
       <h1 class="mt-2 mb-8 text-3xl font-bold">{{ heading|default(title) }}</h1>
+
+      {# Flash messages #}
+      {% for type in ['info', 'success', 'warning', 'error'] %}
+        {% for flash in app.flashes(type) %}
+          {% set flashId = 'flash-' ~ type ~ '-' ~ loop.index0 %}
+          {{ m.flash(type, flashId, flash.textKey, flash.canRetry, flash.canClose) }}
+        {% endfor %}
+      {% endfor %}
+
       {# The block 'main' must be redefined on each page #}
       {% block main %}
-
       {% endblock %}
+      
       {# Spinner template #}
       <template id="template-spinner">
         {{ m.spinner() }}

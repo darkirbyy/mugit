@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\FlashMessage;
 use App\DTO\CoreError;
 use App\DTO\RepoRenameInput;
 use App\Service\CoreInteract;
@@ -56,7 +57,7 @@ class RepoController extends AbstractController
             $repoRenameOutput = count($errors) == 0 ?  $coreInteract->repoRename($repoRenameInput) : new CoreError('renameInvalid');
 
             if ($repoRenameOutput === true) {
-                // todo : add flash ?
+                $this->addFlash('success', new FlashMessage('lol'));
                 return $this->redirectToRoute('repo_index');
             }
         }

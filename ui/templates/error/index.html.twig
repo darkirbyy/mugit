@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 {% import 'theme/macro.html.twig' as m %}
 
-{% set title = 'error.title'|trans({ code: error_code }) %}
+{% set title = 'error.title'|trans({ code: errorCode }) %}
 
 {% block main %}
   <p>
-    {{ ('error.message.' ~ error_key)|trans }}
+    {{ ('error.message.' ~ errorKey)|trans }}
   </p>
   <p>
     {{ m.link('error.backToHome', path('home_index')) }}

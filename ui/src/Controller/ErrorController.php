@@ -30,9 +30,9 @@ class ErrorController extends AbstractController
         $turboForceReload = $request->headers->has('Turbo-Frame') && 422 != $statusCode;
 
         $response = $this->render('error/index.html.twig', [
-            'turbo_force_reload' => $turboForceReload,
-            'error_code' => $statusCode,
-            'error_key' => $errorKey,
+            'turboForceReload' => $turboForceReload,
+            'errorCode' => $statusCode,
+            'errorKey' => $errorKey,
         ]);
 
         return new Response($response->getContent(), $statusCode, $response->headers->all());
