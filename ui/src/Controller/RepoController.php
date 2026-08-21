@@ -3,18 +3,17 @@
 namespace App\Controller;
 
 use App\DTO\FlashMessage;
-use App\DTO\CoreError;
-use App\DTO\RepoDeleteInput;
-use App\DTO\RepoRenameInput;
+use App\DTO\RepoDeleteData;
+use App\DTO\RepoListData;
+use App\DTO\RepoRenameData;
 use App\Service\CoreInteract;
-use App\Service\CoreInteractInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/repo', name: 'repo_')]
 class RepoController extends AbstractController
@@ -38,36 +37,33 @@ class RepoController extends AbstractController
             return $this->redirectToRoute('repo_index');
         }
 
-        $repoListOutput = $coreInteract->repoList();
-        return $this->render('repo/_list.html.twig', ['repoListOutput' => $repoListOutput]);
+        $repoListData = new RepoListData([]);
+        $coreError = $coreInteract->repoList($repoListData);
+        return $this->render('repo/_list.html.twig', ['repoListData' => $repoListData, 'coreError' => $coreError]);
     }
 
     /**
      * Rename one repository
      */
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
-    #[Route('/rename/{oldName}', name: 'rename', methods: ['GET', 'POST'], requirements: ['oldName' => CoreInteractInterface::REGEX_NAME])]
-    public function rename(string $oldName, Request $request, ValidatorInterface $validator, CoreInteract $coreInteract): Response
+    #[Route('/rename', name: 'rename', methods: ['GET', 'POST'])]
+    public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, Request $request, CoreInteract $coreInteract): Response
     {
         if (!$request->headers->has('Turbo-Frame')) {
             return $this->redirectToRoute('repo_index');
         }
 
-        $repoRenameOutput = null;
+        $coreError = null;
         if ($request->getMethod() == 'POST') {
-            $newName =  $request->getPayload()->get('new-name');
-            $repoRenameInput = new RepoRenameInput($oldName, $newName);
+            $coreError = $coreInteract->repoRename($repoRenameData);
 
-            $errors = $validator->validate($repoRenameInput);
-            $repoRenameOutput = count($errors) == 0 ?  $coreInteract->repoRename($repoRenameInput) : new CoreError('repo.rename.invalid');
-
-            if ($repoRenameOutput === true) {
+            if ($coreError === null) {
                 $this->addFlash('success', new FlashMessage('repo.rename.success'));
                 return $this->redirectToRoute('repo_index');
             }
         }
 
-        return $this->render('repo/_rename.html.twig', ['repoRenameOutput' => $repoRenameOutput]);
+        return $this->render('repo/_rename.html.twig', ['repoRenameData' => $repoRenameData, 'coreError' => $coreError]);
     }
 
     /**
@@ -75,26 +71,23 @@ class RepoController extends AbstractController
      */
     #[IsGranted('ROLE_ADMIN')]
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
-    #[Route('/delete/{name}', name: 'delete', methods: ['GET', 'POST'], requirements: ['name' => CoreInteractInterface::REGEX_NAME])]
-    public function delete(string $name, Request $request, ValidatorInterface $validator, CoreInteract $coreInteract): Response
+    #[Route('/delete', name: 'delete', methods: ['GET', 'POST'])]
+    public function delete(#[ValueResolver('data')] RepoDeleteData $repoDeleteData, Request $request, CoreInteract $coreInteract): Response
     {
         if (!$request->headers->has('Turbo-Frame')) {
             return $this->redirectToRoute('repo_index');
         }
 
-        $repoDeleteOutput = null;
+        $coreError = null;
         if ($request->getMethod() == 'POST') {
-            $repoDeleteInput = new RepoDeleteInput($name);
+            $coreError = $coreInteract->repoDelete($repoDeleteData);
 
-            $errors = $validator->validate($repoDeleteInput);
-            $repoDeleteOutput = count($errors) == 0 ?  $coreInteract->repoDelete($repoDeleteInput) : new CoreError('repo.delete.invalid');
-
-            if ($repoDeleteOutput === true) {
+            if ($repoDeleteData === null) {
                 $this->addFlash('success', new FlashMessage('repo.delete.success'));
                 return $this->redirectToRoute('repo_index');
             }
         }
 
-        return $this->render('repo/_delete.html.twig', ['repoDeleteOutput' => $repoDeleteOutput]);
+        return $this->render('repo/_delete.html.twig', ['repoDeleteData' => $repoDeleteData, 'coreError' => $coreError]);
     }
 }

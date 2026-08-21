@@ -18,7 +18,7 @@ repo:
     delete: Supprimer
     copyURLToClipboard: Copier l'URL dans le presse-papier
     copied: Copié !
-    warnSize: Limite presque atteinte
+    warnSize: '> {repoWarnSizePercent}% du quota'
     failed: Échec lors du calcul de la liste des dépôts.
   create:
     label: Nom
@@ -33,7 +33,7 @@ repo:
     alreadyExist: Le nouveau nom est déjà utilisé.
     failed: Échec lors du renommage de ce dépôt.
   delete:
-    label: La suppression est définitive
+    label: La suppression est définitive, confirmer ?
     success: Le dépôt a été correctement supprimé.
     failed: Échec lors de la suppression de ce dépôt.
 
@@ -50,6 +50,7 @@ error:
 ##################################
 form:
   submit: Valider
+  delete: Supprimer
 
 layout:
   name: μGit

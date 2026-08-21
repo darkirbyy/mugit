@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\CoreError;
-use App\DTO\RepoCreateInput;
-use App\DTO\RepoDeleteInput;
-use App\DTO\RepoListOutput;
-use App\DTO\RepoRenameInput;
+use App\DTO\RepoCreateData;
+use App\DTO\RepoDeleteData;
+use App\DTO\RepoListData;
+use App\DTO\RepoRenameData;
 
 interface CoreInteractInterface
 {
@@ -20,28 +20,28 @@ interface CoreInteractInterface
     /**
      * List all repositories names (without the `git` suffix) and sizes (in Kio), sorted alphabetically
      *
-     * @return CoreError|RepoListOutput
+     * @return ?CoreError
      */
-    public function repoList(): CoreError|RepoListOutput;
+    public function repoList(RepoListData $repoListData): ?CoreError;
 
     /**
      * Create a new repository named $name if not already exists
      *
-     * @return CoreError|true
+     * @return ?CoreError
      */
-    public function repoCreate(RepoCreateInput $repoCreateInput): CoreError|true;
+    public function repoCreate(RepoCreateData $repoCreateData): ?CoreError;
 
     /**
      * Rename an existing repository named $oldName to $newName if not already exists
      *
-     * @return CoreError|true
+     * @return ?CoreError
      */
-    public function repoRename(RepoRenameInput $repoRenameInput): CoreError|true;
+    public function repoRename(RepoRenameData $repoRenameData): ?CoreError;
 
     /**
      * Delete an existing repository named $name
      *
-     * @return CoreError|true
+     * @return ?CoreError
      */
-    public function repoDelete(RepoDeleteInput $repoDeleteInput): CoreError|true;
+    public function repoDelete(RepoDeleteData $repoDeleteData): ?CoreError;
 }

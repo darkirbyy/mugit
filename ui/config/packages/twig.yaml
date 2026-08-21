@@ -14,7 +14,7 @@ twig:
                 base_url: '%iam.base_url%'
             core:
                 repo_max_size_mio: '%core.repo_max_size_mio%'
-                repo_warn_size_threshold: '%core.repo_warn_size_threshold%'
+                repo_warn_size_percent: '%core.repo_warn_size_percent%'
             mock:
                 keycloak_enable: '%mock.keycloak_enable%'
             versioning:

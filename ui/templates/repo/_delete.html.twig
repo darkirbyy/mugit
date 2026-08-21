@@ -2,7 +2,25 @@
 
 <turbo-frame id="turboframe-repo-delete">
   <form action="{{ path(app.current_route, app.current_route_parameters) }}" method="post">
-    <input type="submit" value="confirmer" />
+    <div class="flex flex-col gap-0.5 pt-0.5">
+      <div class="flex items-center gap-1 text-red-900 dark:text-red-400">
+        <div>
+          {{ 'repo.delete.label'|trans }}
+        </div>
+        <button
+          type="submit"
+          class="rounded border px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-900"
+          aria-label="{{ 'form.delete'|trans }}"
+          data-action="click->turboframe#submit"
+        >
+          <span class="ri-delete-bin-line" aria-hidden="true"></span>
+        </button>
+      </div>
+      {% if coreError is not null %}
+        {{ m.flash_mini('error', coreError.textKey) }}
+      {% endif %}
+    </div>
+    <input type="hidden" name="name" value="{{ repoDeleteData.name }}" />
     <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
   </form>
 </turbo-frame>

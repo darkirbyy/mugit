@@ -7,7 +7,7 @@ namespace App\DTO;
 use App\Service\CoreInteractInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RepoRenameInput
+class RepoRenameData
 {
     public function __construct(
         #[Assert\NotBlank()]
@@ -15,6 +15,6 @@ class RepoRenameInput
         public string $oldName,
         #[Assert\NotBlank()]
         #[Assert\Regex('/' . CoreInteractInterface::REGEX_NAME . '/')]
-        public string $newName
+        public string $newName,
     ) {}
 }

@@ -1,8 +1,8 @@
 {% import 'theme/macro.html.twig' as m %}
 
 <turbo-frame id="turboframe-repo-list">
-  {% if constant('class', repoListOutput) ends with 'CoreError' %}
-    {{ m.flash('error', repoListOutput.textKey, true, false) }}
+  {% if coreError is not null %}
+    {{ m.flash('error', coreError.textKey, true, false) }}
   {% else %}
     <div class="relative rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
       <div class="flex flex-col border-b border-zinc-500 px-2 py-2 lg:flex-row lg:items-center lg:justify-between">
@@ -26,19 +26,19 @@
             </tr>
           </thead>
           <tbody>
-            {% for repoInfo in repoListOutput.repoInfoList %}
+            {% for repoInfoData in repoListData.repoInfoDataList %}
               <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
-                <th class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfo.name }}</th>
+                <th class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfoData.name }}</th>
                 <td class="px-4 py-2">
-                  {{ repoInfo.humanReadableSize }}
-                  {% if repoInfo.size > env.core.repo_max_size_mio * env.core.repo_warn_size_threshold * 1024 %}
+                  {{ repoInfoData.humanReadableSize }}
+                  {% if repoInfoData.size > env.core.repo_max_size_mio * 1024 * env.core.repo_warn_size_percent / 100 %}
                     <div class="inline-block">
                       {{ m.flash_mini('warning', 'repo.list.warnSize') }}
                     </div>
                   {% endif %}
                 </td>
                 <td class="px-4 py-2" data-copy-clipboard-target="cell">
-                  <span class="mr-1">{{ repoInfo.cloneURL }}</span>
+                  <span class="mr-1">{{ repoInfoData.cloneURL }}</span>
                   {{ m.button('repo.list.copyURLToClipboard', 'ri-file-copy-line', 'tooltip') }}
                 </td>
                 <td class="px-2 py-2 text-left">
@@ -57,18 +57,18 @@
     </div>
     <div>
       {# todo : only one, with duplicatable template ? #}
-      {% for repoInfo in repoListOutput.repoInfoList %}
+      {% for repoInfoData in repoListData.repoInfoDataList %}
         {% set dropdownId = 'dropdown-repo-' ~ loop.index0 %}
         {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
         {% set extra %}
-          <turbo-frame role="none" id="turboframe-repo-rename" loading="lazy" src="{{ path('repo_rename', { oldName: repoInfo.name }) }}" data-controller="turboframe">
+          <turbo-frame role="none" id="turboframe-repo-rename" loading="lazy" src="{{ path('repo_rename', { oldName: repoInfoData.name }) }}" data-controller="turboframe">
             {{ m.spinner() }}
           </turbo-frame>
         {% endset %}
         {{ m.dropdown_item('button', 'repo.list.rename', 'ri-pencil-line', null, extra) }}
         {% if is_granted('ROLE_ADMIN') %}
           {% set extra %}
-            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfo.name }) }}" data-controller="turboframe">
+            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfoData.name }) }}" data-controller="turboframe">
               {{ m.spinner() }}
             </turbo-frame>
           {% endset %}

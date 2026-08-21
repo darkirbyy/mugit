@@ -5,23 +5,20 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\CoreError;
-use App\DTO\RepoCreateInput;
-use App\DTO\RepoDeleteInput;
-use App\DTO\RepoInfo;
-use App\DTO\RepoListOutput;
-use App\DTO\RepoRenameInput;
+use App\DTO\RepoCreateData;
+use App\DTO\RepoDeleteData;
+use App\DTO\RepoInfoData;
+use App\DTO\RepoListData;
+use App\DTO\RepoRenameData;
 use Override;
 use Psr\Log\LoggerInterface;
 
 class CoreInteract implements CoreInteractInterface
 {
-    public function __construct(
-        private LoggerInterface $logger,
-        private CoreExecInterface $coreExec,
-    ) {}
+    public function __construct(private LoggerInterface $logger, private CoreExecInterface $coreExec) {}
 
     #[Override]
-    public function repoList(): CoreError|RepoListOutput
+    public function repoList(RepoListData $repoListData): ?CoreError
     {
         $command = 'repo list';
         $coreOutput = $this->coreExec->exec($command);
@@ -35,29 +32,29 @@ class CoreInteract implements CoreInteractInterface
             return new CoreError('repo.list.failed');
         }
 
-        if (array_any($coreOutput->lines, fn($line) =>  count(explode(' ', $line)) != 2)) {
+        if (array_any($coreOutput->lines, fn($line) => count(explode(' ', $line)) != 2)) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned one ore mote line(s) that could not be parsed.');
             return new CoreError('repo.list.failed');
         }
 
-        $repoListOutput = new RepoListOutput(array_map(function ($line) {
+        $repoListData->repoInfoDataList = array_map(function ($line) {
             $lineExploded = explode(' ', $line);
-            return new RepoInfo($lineExploded[0], (int)$lineExploded[1]);
-        }, $coreOutput->lines));
+            return new RepoInfoData($lineExploded[0], (int) $lineExploded[1]);
+        }, $coreOutput->lines);
 
-        return $repoListOutput;
+        return null;
     }
 
     #[Override]
-    public function repoCreate(RepoCreateInput $repoCreateInput): CoreError|true
+    public function repoCreate(RepoCreateData $repoCreateData): ?CoreError
     {
         throw new \Exception('Not implemented');
     }
 
     #[Override]
-    public function repoRename(RepoRenameInput $repoRenameInput): CoreError|true
+    public function repoRename(RepoRenameData $repoRenameData): ?CoreError
     {
-        $command = 'repo rename ' . $repoRenameInput->oldName . ' ' . $repoRenameInput->newName;
+        $command = 'repo rename ' . $repoRenameData->oldName . ' ' . $repoRenameData->newName;
         $coreOutput = $this->coreExec->exec($command);
 
         if ($coreOutput instanceof CoreError) {
@@ -66,19 +63,21 @@ class CoreInteract implements CoreInteractInterface
 
         if ($coreOutput->exitCode > 0) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutput->exitCode . ').');
-            return new CoreError(match ($coreOutput->exitCode) {
-                3, 4 => 'repo.rename.invalid',
-                7 => 'repo.rename.alreadyExist',
-                default => 'repo.rename.failed',
-            });
+            return new CoreError(
+                match ($coreOutput->exitCode) {
+                    3, 4 => 'repo.rename.invalid',
+                    7 => 'repo.rename.alreadyExist',
+                    default => 'repo.rename.failed',
+                },
+            );
         }
 
-        return true;
+        return null;
     }
 
     #[Override]
-    public function repoDelete(RepoDeleteInput $repoDeleteInput): CoreError|true
+    public function repoDelete(RepoDeleteData $repoDeleteData): ?CoreError
     {
-        throw new \Exception('Not implemented');
+        return new CoreError('repo.delete.failed');
     }
 }

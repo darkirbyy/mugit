@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
-class RepoInfo
+class RepoInfoData
 {
     // todo : use env var for the HOST ?
     const string HOST = 'localhost';
