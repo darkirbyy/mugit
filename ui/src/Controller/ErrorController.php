@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
- * Controller for managing the error page.
+ * Controller defining the global errors routes
  */
 class ErrorController extends AbstractController
 {

@@ -8,24 +8,26 @@ use Mainick\KeycloakClientBundle\Interface\IamClientInterface;
 use Mainick\KeycloakClientBundle\Token\KeycloakResourceOwner;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
+/**
+ * Event to fix the URL computed in LogoutAuthListener.php from mainick/keycloak-bundle.
+ */
+#[AsEventListener(LogoutEvent::class, 'onLogout', -30)]
 final readonly class KeycloakLogoutListener
 {
     public function __construct(#[Autowire('%hub.base_url%')] private string $hubBaseUrl, private LoggerInterface $keycloakClientLogger, private IamClientInterface $iamClient) {}
 
-    /**
-     * Event to fix the URL computed in LogoutAuthListener.php from mainick/keycloak-bundle.
-     */
-    public function __invoke(LogoutEvent $event): void
+    public function onLogout(LogoutEvent $event): void
     {
         if (null === $event->getToken() || null === $event->getToken()->getUser()) {
             return;
         }
 
         $user = $event->getToken()->getUser();
-        if (!$user instanceof KeycloakResourceOwner) {
+        if (!($user instanceof KeycloakResourceOwner)) {
             return;
         }
 

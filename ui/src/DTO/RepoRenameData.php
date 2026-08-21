@@ -15,6 +15,6 @@ class RepoRenameData
         public string $oldName,
         #[Assert\NotBlank()]
         #[Assert\Regex('/' . CoreInteractInterface::REGEX_NAME . '/')]
-        public string $newName,
+        public ?string $newName,
     ) {}
 }

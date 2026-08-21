@@ -61,14 +61,14 @@
         {% set dropdownId = 'dropdown-repo-' ~ loop.index0 %}
         {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
         {% set extra %}
-          <turbo-frame role="none" id="turboframe-repo-rename" loading="lazy" src="{{ path('repo_rename', { oldName: repoInfoData.name }) }}" data-controller="turboframe">
+          <turbo-frame role="none" id="turboframe-repo-rename" loading="lazy" src="{{ path('repo_rename', { 'old-name': repoInfoData.name }) }}" data-controller="turboframe">
             {{ m.spinner() }}
           </turbo-frame>
         {% endset %}
         {{ m.dropdown_item('button', 'repo.list.rename', 'ri-pencil-line', null, extra) }}
         {% if is_granted('ROLE_ADMIN') %}
           {% set extra %}
-            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfoData.name }) }}" data-controller="turboframe">
+            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { 'name': repoInfoData.name }) }}" data-controller="turboframe">
               {{ m.spinner() }}
             </turbo-frame>
           {% endset %}

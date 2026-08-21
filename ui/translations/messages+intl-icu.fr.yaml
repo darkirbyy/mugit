@@ -18,7 +18,7 @@ repo:
     delete: Supprimer
     copyURLToClipboard: Copier l'URL dans le presse-papier
     copied: Copié !
-    warnSize: '> {repoWarnSizePercent}% du quota'
+    warnSize: '>{repoWarnSizePercent}% du quota'
     failed: Échec lors du calcul de la liste des dépôts.
   create:
     label: Nom

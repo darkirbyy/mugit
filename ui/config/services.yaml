@@ -34,11 +34,6 @@ services:
 
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
     
-    App\Security\KeycloakLogoutListener:
-        tags:
-            - { name: kernel.event_listener, event: 'Symfony\Component\Security\Http\Event\LogoutEvent', priority: -30 }
-
-
 when@dev: &services_dev
     services:
         App\Tests\Mock\KeycloakMockEntryPoint:

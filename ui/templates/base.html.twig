@@ -66,7 +66,7 @@
           <div>
             <span class="font-bold">{{ app.user.username }}</span>
             <img
-              class="mb-0.5 ml-1.5 inline w-6 rounded-full border border-zinc-500"
+              class="mb-0.5 ml-1.5 inline size-6 rounded-full border border-zinc-500 object-cover"
               src="{{ app.user.toArray.picture }}"
               alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}"
             />
@@ -78,7 +78,11 @@
         <li>
           <div class="flex flex-row items-center gap-3 p-2">
             <div>
-              <img class="w-12 rounded-full border border-zinc-500" src="{{ app.user.toArray.picture }}" alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}" />
+              <img
+                class="size-12 rounded-full border border-zinc-500 object-cover"
+                src="{{ app.user.toArray.picture }}"
+                alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}"
+              />
             </div>
             <div class="flex flex-col justify-center">
               <div class="h-5 text-base font-bold">
@@ -105,7 +109,7 @@
         {{ m.dropdown_separator() }}
         {{ m.dropdown_item('a', 'layout.navbar.myAccount', 'ri-user-line', { href: env.iam.base_url, 'data-turbo-prefetch': false }, 'ri-external-link-line') }}
         {{ m.dropdown_item('a', 'layout.navbar.backToHub', 'ri-home-4-line', { href: env.hub.base_url, 'data-turbo-prefetch': false }, 'ri-external-link-line') }}
-        {% set attr = { href: env.hub.base_url, 'data-turbo-prefetch': false, 'data-turbo': false, class: ['text-red-900', 'dark:text-red-400'] } %}
+        {% set attr = { href: path('mainick_keycloak_security_auth_logout'), 'data-turbo-prefetch': false, 'data-turbo': false, class: ['text-red-900', 'dark:text-red-400'] } %}
         {{ m.dropdown_item('a', 'layout.navbar.signOut', 'ri-logout-circle-r-line', attr, 'ri-external-link-line') }}
         {{ m.dropdown_end() }}
       </navbar>

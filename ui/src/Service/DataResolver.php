@@ -4,49 +4,42 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\RepoDeleteData;
-use App\DTO\RepoRenameData;
 use Symfony\Component\HttpFoundation\Request;
 use Override;
-use RuntimeException;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 
 #[AsTargetedValueResolver('data')]
 class DataResolver implements ValueResolverInterface
 {
+    public function __construct(private ObjectMapperInterface $objectMapper) {}
+
     #[Override]
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if ($argument->getType() === RepoRenameData::class) {
-            if ($request->getMethod() == 'GET') {
-                $oldName = $request->query->get('oldName');
-                $newName = '';
-            } else {
-                $oldName = $request->getPayload()->get('old-name');
-                $newName = $request->getPayload()->get('new-name');
-            }
-
-            if ($oldName === null) {
-                throw new RuntimeException('TODO');
-            }
-
-            return [new RepoRenameData($oldName, $newName)];
-        } elseif ($argument->getType() === RepoDeleteData::class) {
-            if ($request->getMethod() == 'GET') {
-                $name = $request->query->get('name');
-            } else {
-                $name = $request->getPayload()->get('name');
-            }
-
-            if ($name === null) {
-                throw new RuntimeException('TODO');
-            }
-
-            return [new RepoDeleteData($name)];
+        // Retrieve the data from query string or from payload depending on method
+        if ($request->getMethod() == 'GET') {
+            $sourceKebabed = $request->query->all();
         } else {
-            return [];
+            $sourceKebabed = $request->getPayload()->all();
         }
+
+        // Camelize all variables names
+        $sourceCamelized = [];
+        foreach ($sourceKebabed as $name => $value) {
+            $sourceCamelized[$this->camelize($name)] = $value;
+        }
+
+        // Map to the required DTO
+        $data = $this->objectMapper->map((object) $sourceCamelized, $argument->getType());
+
+        return [$data];
+    }
+
+    private function camelize(string $name): string
+    {
+        return lcfirst(str_replace('-', '', ucwords($name, '-')));
     }
 }
