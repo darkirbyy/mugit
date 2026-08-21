@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use Symfony\Component\HttpFoundation\Request;
-use Override;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -16,11 +15,11 @@ class DataResolver implements ValueResolverInterface
 {
     public function __construct(private ObjectMapperInterface $objectMapper) {}
 
-    #[Override]
+    #[\Override]
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         // Retrieve the data from query string or from payload depending on method
-        if ($request->getMethod() == 'GET') {
+        if ('GET' == $request->getMethod()) {
             $sourceKebabed = $request->query->all();
         } else {
             $sourceKebabed = $request->getPayload()->all();

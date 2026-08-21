@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Event to redirect when fetching directly a turbo-frame only route
+ * Event to redirect when fetching directly a turbo-frame only route.
  */
 #[AsEventListener(KernelEvents::CONTROLLER, 'onKernelController', 25)]
 final class TurboframeOnlyListener
@@ -20,7 +20,7 @@ final class TurboframeOnlyListener
     {
         // Act only if TurboframeOnly attribute is set
         $attributes = $event->getAttributes(TurboframeOnly::class);
-        if ($attributes === null || !array_key_exists(0, $attributes)) {
+        if (null === $attributes || !array_key_exists(0, $attributes)) {
             return;
         }
 

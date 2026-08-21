@@ -27,7 +27,7 @@ final readonly class KeycloakLogoutListener
         }
 
         $user = $event->getToken()->getUser();
-        if (!($user instanceof KeycloakResourceOwner)) {
+        if (!$user instanceof KeycloakResourceOwner) {
             return;
         }
 

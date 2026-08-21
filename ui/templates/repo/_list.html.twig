@@ -68,7 +68,7 @@
         {{ m.dropdown_item('button', 'repo.list.rename', 'ri-pencil-line', null, extra) }}
         {% if is_granted('ROLE_ADMIN') %}
           {% set extra %}
-            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { 'name': repoInfoData.name }) }}" data-controller="turboframe">
+            <turbo-frame role="none" id="turboframe-repo-delete" loading="lazy" src="{{ path('repo_delete', { name: repoInfoData.name }) }}" data-controller="turboframe">
               {{ m.spinner() }}
             </turbo-frame>
           {% endset %}

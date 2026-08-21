@@ -1,7 +1,7 @@
 {# HELP : textKey is the key before translation, mode must be :
   - 'normal': text + no tooltip
   - 'tooltip': no text + tooltip
-  - 'off': no text + no tooltip 
+  - 'off': no text + no tooltip
   #}
 {% macro button(textKey, icon = null, mode = 'normal', attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
@@ -74,7 +74,7 @@
 
 {# HELP : type can be 'info', 'success', 'warning' or 'error', textKey is the key before translation #}
 {% macro flash_mini(type, textKey) %}
-{# todo : facto cette conversion #}
+  {# todo : facto cette conversion #}
   {% set typeToVars = {
     info: { icon: 'ri-information-line', color: 'bg-sky-200 dark:bg-sky-950' },
     success: { icon: 'ri-shield-check-line', color: 'bg-green-200 dark:bg-green-950' },

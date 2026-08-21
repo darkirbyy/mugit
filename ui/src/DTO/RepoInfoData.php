@@ -7,8 +7,8 @@ namespace App\DTO;
 class RepoInfoData
 {
     // todo : use env var for the HOST ?
-    const string HOST = 'localhost';
-    const array UNITS = ['Kio', 'Mio', 'Gio', 'Tio'];
+    public const string HOST = 'localhost';
+    public const array UNITS = ['Kio', 'Mio', 'Gio', 'Tio'];
 
     public function __construct(public string $name, public int $size) {}
 

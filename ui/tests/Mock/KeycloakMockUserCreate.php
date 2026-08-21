@@ -9,9 +9,7 @@ use Symfony\Component\Uid\UuidV4;
 
 class KeycloakMockUserCreate
 {
-    public function __construct(
-        private Packages $packages,
-    ) {}
+    public function __construct(private Packages $packages) {}
 
     public function createUser(bool $isAdmin): KeycloakMockUser
     {

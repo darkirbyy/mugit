@@ -10,10 +10,9 @@ use App\DTO\CoreOutput;
 interface CoreExecInterface
 {
     /**
-     * Execute a command in the core API
+     * Execute a command in the core API.
      *
-     * @param string $command   the command (see SPECIFICATION)
-     * @return CoreError|CoreOutput
+     * @param string $command the command (see SPECIFICATION)
      */
-    public function exec(string $command):  CoreError|CoreOutput;
+    public function exec(string $command): CoreError|CoreOutput;
 }

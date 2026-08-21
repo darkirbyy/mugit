@@ -15,7 +15,7 @@ export default class extends Controller {
     this.element.reload();
   }
 
-  submit(event) {
+  submit() {
     this.restoreSpinner();
   }
 

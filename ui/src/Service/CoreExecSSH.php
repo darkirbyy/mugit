@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\DTO\CoreError;
 use App\DTO\CoreOutput;
-use Override;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Exception\UnableToConnectException;
 use phpseclib3\Net\SSH2;
@@ -28,7 +27,7 @@ class CoreExecSSH implements CoreExecInterface
         $this->ssh = null;
     }
 
-    #[Override]
+    #[\Override]
     public function exec(string $command): CoreError|CoreOutput
     {
         if (!$this->authenticate()) {
@@ -46,9 +45,10 @@ class CoreExecSSH implements CoreExecInterface
 
     /**
      * Authenticate to the Core through SSH.
-     * 
+     *
+     * @return bool true if authenticated successfully, false otherwise
+     *
      * @throws UnableToConnectException when the fingerprint or the credentials are invalids
-     * @return bool                     true if authenticated successfully, false otherwise
      */
     private function authenticate(): bool
     {
@@ -61,7 +61,6 @@ class CoreExecSSH implements CoreExecInterface
         $this->ssh = new SSH2($this->coreHostAddr, $this->coreHostPort);
         $this->ssh->setTimeout($this->coreTimeout);
         try {
-
             if ($this->ssh->getServerPublicHostKey() != $this->coreHostPubkey) {
                 $this->logger->error('Failed to connect to core through SSH: invalid public key.');
 
@@ -71,10 +70,12 @@ class CoreExecSSH implements CoreExecInterface
             $key = PublicKeyLoader::load($this->coreRootPrikey);
             if (!$this->ssh->login('root', $key)) {
                 $this->logger->error('Failed to authenticate to core through SSH: invalid user or private key.');
+
                 return false;
             }
         } catch (UnableToConnectException $e) {
             $this->logger->error('Failed to authenticate to core through SSH: encountered exception ' . $e::class . '.');
+
             return false;
         }
 

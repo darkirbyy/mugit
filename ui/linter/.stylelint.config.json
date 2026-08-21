@@ -1,8 +1,8 @@
 {
-    "extends": ["stylelint-config-standard"],
-    "rules": {
-        "at-rule-no-unknown": null,
-        "color-hex-length": "long",
-        "selector-class-pattern": null
-    }
+  "extends": ["stylelint-config-standard", "stylelint-config-tailwindcss"],
+  "rules": {
+    "at-rule-no-unknown": null,
+    "color-hex-length": "long",
+    "selector-class-pattern": null
+  }
 }

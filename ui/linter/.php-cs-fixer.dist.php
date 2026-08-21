@@ -23,7 +23,7 @@ return (new PhpCsFixer\Config())
             'only_booleans' => true
         ],
         'types_spaces' => [
-            'space' => 'single',
+            'space' => 'none',
         ]
     ])
     ->setFinder($finder)
