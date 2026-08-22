@@ -50,7 +50,27 @@ class CoreInteract implements CoreInteractInterface
     #[\Override]
     public function repoCreate(RepoCreateData $repoCreateData): ?CoreErrorData
     {
-        throw new \Exception('Not implemented');
+        $command = 'repo create ' . $repoCreateData->name;
+        $coreOutputData = $this->coreExec->exec($command);
+
+        if ($coreOutputData instanceof CoreErrorData) {
+            return $coreOutputData;
+        }
+
+        if ($coreOutputData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutputData->exitCode . ').');
+
+            return new CoreErrorData(
+                match ($coreOutputData->exitCode) {
+                    3 => 'repo.create.empty',
+                    4 => 'repo.create.invalid',
+                    7 => 'repo.create.alreadyExist',
+                    default => 'repo.create.failed',
+                },
+            );
+        }
+
+        return null;
     }
 
     #[\Override]
@@ -68,7 +88,8 @@ class CoreInteract implements CoreInteractInterface
 
             return new CoreErrorData(
                 match ($coreOutputData->exitCode) {
-                    3, 4 => 'repo.rename.invalid',
+                    3 => 'repo.rename.empty',
+                    4 => 'repo.rename.invalid',
                     7 => 'repo.rename.alreadyExist',
                     default => 'repo.rename.failed',
                 },
@@ -81,6 +102,19 @@ class CoreInteract implements CoreInteractInterface
     #[\Override]
     public function repoDelete(RepoDeleteData $repoDeleteData): ?CoreErrorData
     {
-        return new CoreErrorData('repo.delete.failed');
+        $command = 'repo delete ' . $repoDeleteData->name;
+        $coreOutputData = $this->coreExec->exec($command);
+
+        if ($coreOutputData instanceof CoreErrorData) {
+            return $coreOutputData;
+        }
+
+        if ($coreOutputData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutputData->exitCode . ').');
+
+            return new CoreErrorData('repo.delete.failed');
+        }
+
+        return null;
     }
 }

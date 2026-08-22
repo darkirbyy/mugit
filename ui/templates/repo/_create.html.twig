@@ -1,18 +1,18 @@
 {% import 'theme/macro.html.twig' as m %}
 
-<turbo-frame id="turboframe-repo-rename">
+<turbo-frame id="turboframe-repo-create">
   <form action="{{ path(app.current_route) }}" method="post" novalidate>
-    {# Field 'new-name' + submit button #}
+    {# Field 'name' + submit button #}
     <div class="flex flex-col gap-0.5 pt-0.5">
       <div class="flex gap-1">
-        <label for="form-repo-rename-new-name" class="sr-only">{{ 'repo.rename.label'|trans }}</label>
+        <label for="form-repo-create-name" class="sr-only">{{ 'repo.create.label'|trans }}</label>
         <input
           type="text"
-          name="new-name"
-          id="form-repo-rename-new-name"
+          name="name"
+          id="form-repo-create-name"
           class="block flex-1 rounded border border-zinc-500/50 bg-transparent px-2 py-1 focus:bg-zinc-300 focus:ring-0 focus:dark:bg-zinc-900"
-          placeholder="{{ 'repo.rename.label'|trans }}"
-          value="{{ repoRenameData.newName }}"
+          placeholder="{{ 'repo.create.label'|trans }}"
+          value="{{ repoCreateData.name }}"
           required
         />
         <button
@@ -24,7 +24,7 @@
           <span class="ri-check-line" aria-hidden="true"></span>
         </button>
       </div>
-      {% set error = attribute(formOutputData.errorList, 'new-name')|default(null) %}
+      {% set error = attribute(formOutputData.errorList, 'name')|default(null) %}
       {% if error is not empty %}
         {{ m.flash('error', error, 'mini') }}
       {% endif %}
@@ -39,7 +39,6 @@
     </div>
 
     {# Hidden fields #}
-    <input type="hidden" name="old-name" value="{{ repoRenameData.oldName }}" />
     <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
   </form>
 </turbo-frame>

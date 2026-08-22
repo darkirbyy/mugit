@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Attribute\TurboframeOnly;
 use App\DTO\FlashData;
+use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
@@ -46,12 +47,30 @@ class RepoController extends AbstractController
     }
 
     /**
+     * Create one repository.
+     */
+    #[IsCsrfTokenValid('submit', methods: ['POST'])]
+    #[TurboframeOnly('repo_index')]
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    public function create(#[ValueResolver('data')] RepoCreateData $repoCreateData, FormHandler $formHandler): Response
+    {
+        $formOutputData = $formHandler->handle($repoCreateData, 'repoCreate');
+        if ($formOutputData->proceed) {
+            $this->addFlash('success', new FlashData('repo.create.success'));
+
+            return $this->redirectToRoute('repo_index');
+        }
+
+        return $this->render('repo/_create.html.twig', ['repoCreateData' => $repoCreateData, 'formOutputData' => $formOutputData]);
+    }
+
+    /**
      * Rename one repository.
      */
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('repo_index')]
     #[Route('/rename', name: 'rename', methods: ['GET', 'POST'])]
-    public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, FormHandler $formHandler, CoreInteract $coreInteract): Response
+    public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, FormHandler $formHandler): Response
     {
         $formOutputData = $formHandler->handle($repoRenameData, 'repoRename');
         if ($formOutputData->proceed) {

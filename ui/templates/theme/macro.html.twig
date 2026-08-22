@@ -49,7 +49,7 @@
     error: { icon: 'ri-spam-line', color: 'bg-red-200 dark:bg-red-950' }
   } %}
   {% set vars = attribute(typeToVars, type) %}
-  {% if size == 'normal' %}
+  {% if size == 'full' %}
     <div data-controller="flash">
       <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-center px-2 py-1 text-sm" role="alert">
         <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">

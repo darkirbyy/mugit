@@ -23,9 +23,10 @@ repo:
   create:
     label: Nom
     success: Le dépôt a été correctement créé.
+    empty: Le nom est vide.
     invalid: Le nom n'est pas valide.
     alreadyExist: Le nom est déjà utilisé.
-    failed: Échec lors de la création du dépôt
+    failed: Échec lors de la création du dépôt.
   rename:
     label: Nouveau nom
     success: Le dépôt a été correctement renommé.
