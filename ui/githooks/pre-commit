@@ -18,7 +18,7 @@ if [ ! $HAS_NPM  ]; then
     exit 1
 fi
 
-ALL_STAGED=$(git diff --cached --name-only --diff-filter=AM)
+ALL_STAGED=$(git diff --cached --name-only --diff-filter=AM | sed -E 's#ui/##')
 
 # Define a helper function to pretty, lint and re-add files
 lint_and_add() {
@@ -40,6 +40,7 @@ lint_and_add() {
 # Target ui specifically
 cd ui
 
+# Apply lint_and_add to php, twig, js and css files
 lint_and_add '^(src|tests)/.+\.php$' "composer lint-php"
 lint_and_add '^templates/.+\.twig$' "composer lint-twig"
 lint_and_add '^assets/styles/.+\.css$' "npm run lint-css-file"
