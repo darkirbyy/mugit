@@ -9,7 +9,7 @@
 
   {% if mode == 'tooltip' %}
     {% set class = class|merge('after:absolute after:translate-x-3 after:-translate-y-2 after:z-30 after:hidden after:rounded after:text-sm after:p-2'|split(' ')) %}
-    {% set class = class|merge('after:border after:border-zinc-500 after:bg-zinc-300 hover:after:inline-block dark:after:bg-zinc-800'|split(' ')) %}
+    {% set class = class|merge('after:border after:border-zinc-500 after:bg-zinc-300 hover:after:inline-block dark:after:bg-zinc-800 whitespace-nowrap'|split(' ')) %}
     {% set attr = attr|html_attr_merge({ 'data-tooltip': textKey|trans }) %}
   {% endif %}
   {% if mode == 'off' or mode == 'tooltip' %}
@@ -105,7 +105,7 @@
 - an icon (starting with 'ri-'): added at the end
 - some content: tag is forced to 'button', a responsive icon is added at the end, a stimulus controller is set
 #}
-{% macro dropdown_item(tag, textKey, icon = null, attr = null, extra = null) %}
+{% macro dropdown_item(tag, textKey, icon = null, attr = null, extra = null, autoOpen = false) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800'|split(' ') %}
   {% set attr = attr|html_attr_merge({ class: class }) %}
@@ -119,7 +119,7 @@
       {% endif %}
     </li>
   {% else %}
-    <li class="py-0.5" data-controller="dropdown">
+    <li class="py-0.5" data-controller="dropdown" data-dropdown-auto-open-value="{{ autoOpen ? 'true' : 'false' }}">
       <button {{ html_attr(attr) }} data-dropdown-target="button">{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
       <div class="hidden" data-dropdown-target="content">
         <div class="mb-0.5 border-l-6 border-zinc-300 pt-0.5 pl-1 dark:border-zinc-800">
@@ -138,11 +138,11 @@
     {% endif %}
     {{ textKey|trans }}
   </div>
-  <div>
-    {% if iconEnd is not null %}
+  {% if iconEnd is not null %}
+    <div>
       <span class="{{ iconEnd }}" aria-hidden="true"></span>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 {% endmacro %}
 
 {# HELP : #}
