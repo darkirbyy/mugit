@@ -51,12 +51,12 @@
   {% set vars = attribute(typeToVars, type) %}
   {% if size == 'full' %}
     <div data-controller="flash">
-      <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-start px-2 py-1 text-sm" role="alert">
-        <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
+      <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-start p-1 text-sm" role="alert">
+        <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2 my-1">
           <span class="{{ vars.icon }} text-lg" aria-hidden="true"></span>
           <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
         </div>
-        <div class="mx-2">
+        <div class="m-2 flex-1">
           {{ textKey|trans|nl2br }}
           {% if canRetry %}
             {{ _self.link('layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
@@ -65,7 +65,7 @@
         {% if canClose %}
           <button
             type="button"
-            class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
+            class="ms-auto inline-flex size-8 shrink-0 items-center justify-center m-0.5 rounded hover:cursor-pointer hover:bg-zinc-500/25"
             aria-label="{{ 'layout.flash.close'|trans }}"
             data-action="click->flash#dismiss"
           >
@@ -76,8 +76,8 @@
     </div>
   {% else %}
     <div class="my-0.5 flex items-start rounded {{ vars.color }} p-1 text-sm">
-      <span class="{{ vars.icon }} inline-block rounded-full bg-zinc-500/25 px-1" aria-hidden="true"></span>
-      <div class="mx-1">
+      <span class="{{ vars.icon }} inline-block text-base px-1" aria-hidden="true"></span>
+      <div class="m-0.5 flex-1">
         {{ textKey|trans|nl2br }}
       </div>
     </div>
