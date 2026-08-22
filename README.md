@@ -3,7 +3,7 @@
 ![version](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/darkirbyy/07bb4b086f8e7dea73754e73bc5c1bb2/raw/mugit-version.json)
 ![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/darkirbyy/07bb4b086f8e7dea73754e73bc5c1bb2/raw/mugit-coverage.json)
 
-Very lightweight docker image and UI to store and share git repo on a server
+Very lightweight docker image and Symfony UI to store and share git repo on a server
 
 ## Prerequisite
 
@@ -21,7 +21,7 @@ Very lightweight docker image and UI to store and share git repo on a server
 
 ## Code quality
 
-**Prettier** with custom modules from `@zackad/prettier-plugin-twig` and `@prettier/plugin-php` for twig and PHP files.  
+**Prettier** with custom modules from `@zackad/prettier-plugin-twig`, `@prettier/plugin-php` and `prettier-plugin-tailwindcss` for php, twig, js and css files.
 To prettify one file:
 
 - in the console, execute `npm run pretty-file <file>`.
@@ -47,7 +47,7 @@ After this first install or cloning the existing project:
 - copy the `.env` file into a `.env.local` file and customize the values.  
 - start the php/web server along with npm server with `symfony server:start -d`.
 
-To use default git hooks, run `git config core.hooksPath ./githooks`. Current hooks are
+To use default git hooks, run `git config core.hooksPath ./ui/githooks`. Current hooks are
 
 - prettify and linting all staged files before commit (see [Code quality](#code-quality))
 - running tests before push : all tests for `main` branch, unit tests otherwise

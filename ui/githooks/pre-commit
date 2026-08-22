@@ -37,6 +37,9 @@ lint_and_add() {
     fi
 }
 
+# Target ui specifically
+cd ui
+
 lint_and_add '^(src|tests)/.+\.php$' "composer lint-php"
 lint_and_add '^templates/.+\.twig$' "composer lint-twig"
 lint_and_add '^assets/styles/.+\.css$' "npm run lint-css-file"

@@ -11,6 +11,9 @@ if [ ! $HAS_COMPOSER  ]; then
     exit 1
 fi
 
+# Target ui specifically
+cd ui
+
 # Test all if pushing on main, unit only otherwise
 CURRENT_BRANCH=$(git branch --show-current)
 if [ $CURRENT_BRANCH = 'main' ]; then
