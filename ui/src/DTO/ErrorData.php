@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
-class CoreErrorData
+class ErrorData
 {
     public function __construct(public string $textKey) {}
 }

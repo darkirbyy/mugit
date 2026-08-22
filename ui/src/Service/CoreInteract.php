@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\CoreErrorData;
+use App\DTO\ErrorData;
 use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoInfoData;
@@ -17,51 +17,51 @@ class CoreInteract implements CoreInteractInterface
     public function __construct(private LoggerInterface $logger, private CoreExecInterface $coreExec) {}
 
     #[\Override]
-    public function repoList(RepoListData $repoListData): ?CoreErrorData
+    public function repoList(RepoListData $repoListData): ?ErrorData
     {
         $command = 'repo list';
-        $coreOutputData = $this->coreExec->exec($command);
+        $coreData = $this->coreExec->exec($command);
 
-        if ($coreOutputData instanceof CoreErrorData) {
-            return $coreOutputData;
+        if (null === $coreData) {
+            return new ErrorData('repo.connectionFailed');
         }
 
-        if ($coreOutputData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutputData->exitCode . ').');
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
 
-            return new CoreErrorData('repo.list.failed');
+            return new ErrorData('repo.list.failed');
         }
 
-        if (array_any($coreOutputData->lineList, fn($line) => 2 != count(explode(' ', $line)))) {
+        if (array_any($coreData->lineList, fn($line) => 2 != count(explode(' ', $line)))) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned one ore mote line(s) that could not be parsed.');
 
-            return new CoreErrorData('repo.list.failed');
+            return new ErrorData('repo.list.failed');
         }
 
         $repoListData->repoInfoDataList = array_map(function ($line) {
             $lineExploded = explode(' ', $line);
 
             return new RepoInfoData($lineExploded[0], (int) $lineExploded[1]);
-        }, $coreOutputData->lineList);
+        }, $coreData->lineList);
 
         return null;
     }
 
     #[\Override]
-    public function repoCreate(RepoCreateData $repoCreateData): ?CoreErrorData
+    public function repoCreate(RepoCreateData $repoCreateData): ?ErrorData
     {
         $command = 'repo create ' . $repoCreateData->name;
-        $coreOutputData = $this->coreExec->exec($command);
+        $coreData = $this->coreExec->exec($command);
 
-        if ($coreOutputData instanceof CoreErrorData) {
-            return $coreOutputData;
+        if (null === $coreData) {
+            return new ErrorData('repo.connectionFailed');
         }
 
-        if ($coreOutputData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutputData->exitCode . ').');
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
 
-            return new CoreErrorData(
-                match ($coreOutputData->exitCode) {
+            return new ErrorData(
+                match ($coreData->exitCode) {
                     3 => 'repo.create.empty',
                     4 => 'repo.create.invalid',
                     7 => 'repo.create.alreadyExist',
@@ -74,20 +74,20 @@ class CoreInteract implements CoreInteractInterface
     }
 
     #[\Override]
-    public function repoRename(RepoRenameData $repoRenameData): ?CoreErrorData
+    public function repoRename(RepoRenameData $repoRenameData): ?ErrorData
     {
         $command = 'repo rename ' . $repoRenameData->oldName . ' ' . $repoRenameData->newName;
-        $coreOutputData = $this->coreExec->exec($command);
+        $coreData = $this->coreExec->exec($command);
 
-        if ($coreOutputData instanceof CoreErrorData) {
-            return $coreOutputData;
+        if (null === $coreData) {
+            return new ErrorData('repo.connectionFailed');
         }
 
-        if ($coreOutputData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutputData->exitCode . ').');
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
 
-            return new CoreErrorData(
-                match ($coreOutputData->exitCode) {
+            return new ErrorData(
+                match ($coreData->exitCode) {
                     3 => 'repo.rename.empty',
                     4 => 'repo.rename.invalid',
                     7 => 'repo.rename.alreadyExist',
@@ -100,19 +100,19 @@ class CoreInteract implements CoreInteractInterface
     }
 
     #[\Override]
-    public function repoDelete(RepoDeleteData $repoDeleteData): ?CoreErrorData
+    public function repoDelete(RepoDeleteData $repoDeleteData): ?ErrorData
     {
         $command = 'repo delete ' . $repoDeleteData->name;
-        $coreOutputData = $this->coreExec->exec($command);
+        $coreData = $this->coreExec->exec($command);
 
-        if ($coreOutputData instanceof CoreErrorData) {
-            return $coreOutputData;
+        if (null === $coreData) {
+            return new ErrorData('repo.connectionFailed');
         }
 
-        if ($coreOutputData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreOutputData->exitCode . ').');
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
 
-            return new CoreErrorData('repo.delete.failed');
+            return new ErrorData('repo.delete.failed');
         }
 
         return null;

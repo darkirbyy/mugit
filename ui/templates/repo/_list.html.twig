@@ -1,8 +1,8 @@
 {% import 'theme/macro.html.twig' as m %}
 
 <turbo-frame id="turboframe-repo-list">
-  {% if coreErrorData is not null %}
-    {{ m.flash('error', coreErrorData.textKey, 'full', true, false) }}
+  {% if errorData is not null %}
+    {{ m.flash('error', errorData.textKey, 'full', true, false) }}
   {% else %}
     <div class="rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
       <div class="flex items-center justify-end gap-1 border-b min-w-2xs border-zinc-500 px-2 py-2">

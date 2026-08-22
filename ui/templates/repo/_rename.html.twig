@@ -3,7 +3,7 @@
 <turbo-frame id="turboframe-repo-rename-{{ repoRenameData.oldName }}">
   <form action="{{ path(app.current_route) }}" method="post" novalidate>
     {# Field 'new-name' + submit button #}
-    <div class="flex flex-col gap-0.5 pt-0.5 min-w-2xs">
+    <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
       <div class="flex gap-1">
         <label for="form-repo-rename-new-name" class="sr-only">{{ 'repo.rename.label'|trans }}</label>
         <input
@@ -24,17 +24,17 @@
           <span class="ri-check-line" aria-hidden="true"></span>
         </button>
       </div>
-      {% set error = attribute(formOutputData.errorList, 'new-name')|default(null) %}
+      {% set error = attribute(formData.errorList, 'new-name')|default(null) %}
       {% if error is not empty %}
-        {{ m.flash('error', error, 'mini') }}
+        {{ m.flash('error', error.textKey, 'mini') }}
       {% endif %}
     </div>
 
     {# Global error #}
     <div class="mt-1">
-      {% set error = attribute(formOutputData.errorList, '_top')|default(null) %}
+      {% set error = attribute(formData.errorList, '_top')|default(null) %}
       {% if error is not empty %}
-        {{ m.flash('error', error, 'mini') }}
+        {{ m.flash('error', error.textKey, 'mini') }}
       {% endif %}
     </div>
 

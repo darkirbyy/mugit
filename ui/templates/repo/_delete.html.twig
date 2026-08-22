@@ -21,9 +21,9 @@
 
     {# Global error #}
     <div class="mt-1">
-      {% set error = attribute(formOutputData.errorList, '_top')|default(null) %}
+      {% set error = attribute(formData.errorList, '_top')|default(null) %}
       {% if error is not empty %}
-        {{ m.flash('error', error, 'mini') }}
+        {{ m.flash('error', error.textKey, 'mini') }}
       {% endif %}
     </div>
 

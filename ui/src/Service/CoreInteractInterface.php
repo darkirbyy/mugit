@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\CoreErrorData;
+use App\DTO\ErrorData;
 use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
@@ -23,20 +23,20 @@ interface CoreInteractInterface
     /**
      * List all repositories names (without the `git` suffix) and sizes (in Kio), sorted alphabetically.
      */
-    public function repoList(RepoListData $repoListData): ?CoreErrorData;
+    public function repoList(RepoListData $repoListData): ?ErrorData;
 
     /**
      * Create a new repository named $name if not already exists.
      */
-    public function repoCreate(RepoCreateData $repoCreateData): ?CoreErrorData;
+    public function repoCreate(RepoCreateData $repoCreateData): ?ErrorData;
 
     /**
      * Rename an existing repository named $oldName to $newName if not already exists.
      */
-    public function repoRename(RepoRenameData $repoRenameData): ?CoreErrorData;
+    public function repoRename(RepoRenameData $repoRenameData): ?ErrorData;
 
     /**
      * Delete an existing repository named $name.
      */
-    public function repoDelete(RepoDeleteData $repoDeleteData): ?CoreErrorData;
+    public function repoDelete(RepoDeleteData $repoDeleteData): ?ErrorData;
 }

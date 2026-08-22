@@ -25,17 +25,17 @@
             <span class="ri-check-line" aria-hidden="true"></span>
           </button>
         </div>
-        {% set error = attribute(formOutputData.errorList, 'name')|default(null) %}
+        {% set error = attribute(formData.errorList, 'name')|default(null) %}
         {% if error is not empty %}
-          {{ m.flash('error', error, 'mini') }}
+          {{ m.flash('error', error.textKey, 'mini') }}
         {% endif %}
       </div>
 
       {# Global error #}
       <div class="mt-1">
-        {% set error = attribute(formOutputData.errorList, '_top')|default(null) %}
+        {% set error = attribute(formData.errorList, '_top')|default(null) %}
         {% if error is not empty %}
-          {{ m.flash('error', error, 'mini') }}
+          {{ m.flash('error', error.textKey, 'mini') }}
         {% endif %}
       </div>
 
@@ -47,7 +47,7 @@
 </turbo-frame>
 
 {# todo : use or destroy (help button) #}
-{# 
+{#
 <div class="flex flex-1 flex-row">
   <label for="form-repo-create-name" class="sr-only">{{ 'repo.create.label'|trans }}</label>
   <input
@@ -61,5 +61,5 @@
   />
   {% set attr = { type: 'button', class: 'rounded-l-0 border-l-0 border border-zinc-500/50 bg-transparent bg-zinc-300 dark:bg-zinc-800'|split(' ') } %}
   {{ m.button('repo.create.help', 'ri-question-line', 'tooltip', attr) }}
-</div> 
+</div>
 #}

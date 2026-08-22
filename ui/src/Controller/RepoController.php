@@ -11,7 +11,6 @@ use App\DTO\RepoRenameData;
 use App\Service\CoreInteract;
 use App\Service\FormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Attribute\Route;
@@ -41,9 +40,9 @@ class RepoController extends AbstractController
     public function list(CoreInteract $coreInteract): Response
     {
         $repoListData = new RepoListData();
-        $coreErrorData = $coreInteract->repoList($repoListData);
+        $errorData = $coreInteract->repoList($repoListData);
 
-        return $this->render('repo/_list.html.twig', ['repoListData' => $repoListData, 'coreErrorData' => $coreErrorData]);
+        return $this->render('repo/_list.html.twig', ['repoListData' => $repoListData, 'errorData' => $errorData]);
     }
 
     /**
@@ -54,14 +53,14 @@ class RepoController extends AbstractController
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(#[ValueResolver('data')] RepoCreateData $repoCreateData, FormHandler $formHandler): Response
     {
-        $formOutputData = $formHandler->handle($repoCreateData, 'repoCreate');
-        if ($formOutputData->proceed) {
+        $formData = $formHandler->handle($repoCreateData, 'repoCreate');
+        if ($formData->proceed) {
             $this->addFlash('success', new FlashData('repo.create.success'));
 
             return $this->redirectToRoute('repo_index');
         }
 
-        return $this->render('repo/_create.html.twig', ['repoCreateData' => $repoCreateData, 'formOutputData' => $formOutputData]);
+        return $this->render('repo/_create.html.twig', ['repoCreateData' => $repoCreateData, 'formData' => $formData]);
     }
 
     /**
@@ -72,14 +71,14 @@ class RepoController extends AbstractController
     #[Route('/rename', name: 'rename', methods: ['GET', 'POST'])]
     public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, FormHandler $formHandler): Response
     {
-        $formOutputData = $formHandler->handle($repoRenameData, 'repoRename');
-        if ($formOutputData->proceed) {
+        $formData = $formHandler->handle($repoRenameData, 'repoRename');
+        if ($formData->proceed) {
             $this->addFlash('success', new FlashData('repo.rename.success'));
 
             return $this->redirectToRoute('repo_index');
         }
 
-        return $this->render('repo/_rename.html.twig', ['repoRenameData' => $repoRenameData, 'formOutputData' => $formOutputData]);
+        return $this->render('repo/_rename.html.twig', ['repoRenameData' => $repoRenameData, 'formData' => $formData]);
     }
 
     /**
@@ -91,13 +90,13 @@ class RepoController extends AbstractController
     #[Route('/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(#[ValueResolver('data')] RepoDeleteData $repoDeleteData, FormHandler $formHandler): Response
     {
-        $formOutputData = $formHandler->handle($repoDeleteData, 'repoDelete');
-        if ($formOutputData->proceed) {
+        $formData = $formHandler->handle($repoDeleteData, 'repoDelete');
+        if ($formData->proceed) {
             $this->addFlash('success', new FlashData('repo.delete.success'));
 
             return $this->redirectToRoute('repo_index');
         }
 
-        return $this->render('repo/_delete.html.twig', ['repoDeleteData' => $repoDeleteData, 'formOutputData' => $formOutputData]);
+        return $this->render('repo/_delete.html.twig', ['repoDeleteData' => $repoDeleteData, 'formData' => $formData]);
     }
 }
