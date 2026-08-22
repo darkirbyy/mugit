@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
+use Symfony\Component\String\ByteString;
 
 /**
  * Resolver that allows to autowire DTO into controllers arguments,
@@ -32,21 +33,14 @@ class DataResolver implements ValueResolverInterface
 
         // Camelize all variables names
         $sourceCamelized = [];
-        foreach ($sourceKebabed as $name => $value) {
-            $sourceCamelized[$this->camelize($name)] = $value;
+        foreach ($sourceKebabed as $kebabName => $value) {
+            $camelName = (new ByteString($kebabName))->camel()->toString();
+            $sourceCamelized[$camelName] = $value;
         }
 
         // Map to the required DTO
         $data = $this->objectMapper->map((object) $sourceCamelized, $argument->getType());
 
         return [$data];
-    }
-
-    /**
-     * Transform a kebab-case variable name into a camelCase one
-     */
-    private function camelize(string $name): string
-    {
-        return lcfirst(str_replace('-', '', ucwords($name, '-')));
     }
 }

@@ -123,7 +123,7 @@
       {# Flash messages #}
       {% for type in ['info', 'success', 'warning', 'error'] %}
         {% for flash in app.flashes(type) %}
-          {{ m.flash(type, flash.textKey, flash.canRetry, flash.canClose) }}
+          {{ m.flash(type, flash.textKey, 'full', flash.canRetry, flash.canClose) }}
         {% endfor %}
       {% endfor %}
 

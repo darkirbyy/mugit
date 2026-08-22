@@ -8,6 +8,7 @@ use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
 use App\Service\CoreInteract;
+use App\Service\FormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,20 +51,16 @@ class RepoController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('repo_index')]
     #[Route('/rename', name: 'rename', methods: ['GET', 'POST'])]
-    public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, Request $request, CoreInteract $coreInteract): Response
+    public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, FormHandler $formHandler, CoreInteract $coreInteract): Response
     {
-        $coreErrorData = null;
-        if ('POST' == $request->getMethod()) {
-            $coreErrorData = $coreInteract->repoRename($repoRenameData);
+        $formOutputData = $formHandler->handle($repoRenameData, 'repoRename');
+        if ($formOutputData->proceed) {
+            $this->addFlash('success', new FlashData('repo.rename.success'));
 
-            if (null === $coreErrorData) {
-                $this->addFlash('success', new FlashData('repo.rename.success'));
-
-                return $this->redirectToRoute('repo_index');
-            }
+            return $this->redirectToRoute('repo_index');
         }
 
-        return $this->render('repo/_rename.html.twig', ['repoRenameData' => $repoRenameData, 'coreErrorData' => $coreErrorData]);
+        return $this->render('repo/_rename.html.twig', ['repoRenameData' => $repoRenameData, 'formOutputData' => $formOutputData]);
     }
 
     /**
@@ -73,19 +70,15 @@ class RepoController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('repo_index')]
     #[Route('/delete', name: 'delete', methods: ['GET', 'POST'])]
-    public function delete(#[ValueResolver('data')] RepoDeleteData $repoDeleteData, Request $request, CoreInteract $coreInteract): Response
+    public function delete(#[ValueResolver('data')] RepoDeleteData $repoDeleteData, FormHandler $formHandler): Response
     {
-        $coreErrorData = null;
-        if ('POST' == $request->getMethod()) {
-            $coreErrorData = $coreInteract->repoDelete($repoDeleteData);
+        $formOutputData = $formHandler->handle($repoDeleteData, 'repoDelete');
+        if ($formOutputData->proceed) {
+            $this->addFlash('success', new FlashData('repo.delete.success'));
 
-            if (null === $repoDeleteData) {
-                $this->addFlash('success', new FlashData('repo.delete.success'));
-
-                return $this->redirectToRoute('repo_index');
-            }
+            return $this->redirectToRoute('repo_index');
         }
 
-        return $this->render('repo/_delete.html.twig', ['repoDeleteData' => $repoDeleteData, 'coreErrorData' => $coreErrorData]);
+        return $this->render('repo/_delete.html.twig', ['repoDeleteData' => $repoDeleteData, 'formOutputData' => $formOutputData]);
     }
 }

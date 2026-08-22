@@ -37,8 +37,11 @@
   <a href="{{ path }}" {{ html_attr(attr) }}>{{ textKey|trans }}</a>
 {% endmacro %}
 
-{# HELP : type can be 'info', 'success', 'warning' or 'error', textKey is the key before translation #}
-{% macro flash(type, textKey, canRetry = true, canClose = true) %}
+{# HELP : type can be 'info', 'success', 'warning' or 'error', textKey is the key before translation, size must be: 
+- full : full range flash with close button and retry link
+- mini : small sized flash, without any button or link
+#}
+{% macro flash(type, textKey, size = 'full', canRetry = true, canClose = true) %}
   {% set typeToVars = {
     info: { icon: 'ri-information-line', color: 'bg-sky-200 dark:bg-sky-950' },
     success: { icon: 'ri-shield-check-line', color: 'bg-green-200 dark:bg-green-950' },
@@ -46,48 +49,39 @@
     error: { icon: 'ri-spam-line', color: 'bg-red-200 dark:bg-red-950' }
   } %}
   {% set vars = attribute(typeToVars, type) %}
-  <div data-controller="flash">
-    <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-center px-2 py-1 text-sm" role="alert">
-      <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
-        <span class="{{ vars.icon }} text-lg" aria-hidden="true"></span>
-        <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
-      </div>
-      <div class="mx-2">
-        {{ textKey|trans }}
-        {% if canRetry %}
-          {{ _self.link('layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
+  {% if size == 'normal' %}
+    <div data-controller="flash">
+      <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-center px-2 py-1 text-sm" role="alert">
+        <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
+          <span class="{{ vars.icon }} text-lg" aria-hidden="true"></span>
+          <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
+        </div>
+        <div class="mx-2">
+          {{ textKey|trans }}
+          {% if canRetry %}
+            {{ _self.link('layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
+          {% endif %}
+        </div>
+        {% if canClose %}
+          <button
+            type="button"
+            class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
+            aria-label="{{ 'layout.flash.close'|trans }}"
+            data-action="click->flash#dismiss"
+          >
+            <span class="ri-close-line text-lg" aria-hidden="true"></span>
+          </button>
         {% endif %}
       </div>
-      {% if canClose %}
-        <button
-          type="button"
-          class="ms-auto inline-flex h-8 w-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
-          aria-label="{{ 'layout.flash.close'|trans }}"
-          data-action="click->flash#dismiss"
-        >
-          <span class="ri-close-line text-lg" aria-hidden="true"></span>
-        </button>
-      {% endif %}
     </div>
-  </div>
-{% endmacro %}
-
-{# HELP : type can be 'info', 'success', 'warning' or 'error', textKey is the key before translation #}
-{% macro flash_mini(type, textKey) %}
-  {# todo : facto cette conversion #}
-  {% set typeToVars = {
-    info: { icon: 'ri-information-line', color: 'bg-sky-200 dark:bg-sky-950' },
-    success: { icon: 'ri-shield-check-line', color: 'bg-green-200 dark:bg-green-950' },
-    warning: { icon: 'ri-alert-line', color: 'bg-amber-200 dark:bg-amber-950' },
-    error: { icon: 'ri-spam-line', color: 'bg-red-200 dark:bg-red-950' }
-  } %}
-  {% set vars = attribute(typeToVars, type) %}
-  <div class="my-0.5 flex items-center rounded {{ vars.color }} p-1 text-sm">
-    <span class="{{ vars.icon }} inline-block rounded-full bg-zinc-500/25 px-1" aria-hidden="true"></span>
-    <div class="mx-1">
-      {{ textKey|trans }}
+  {% else %}
+    <div class="my-0.5 flex items-center rounded {{ vars.color }} p-1 text-sm">
+      <span class="{{ vars.icon }} inline-block rounded-full bg-zinc-500/25 px-1" aria-hidden="true"></span>
+      <div class="mx-1">
+        {{ textKey|trans }}
+      </div>
     </div>
-  </div>
+  {% endif %}
 {% endmacro %}
 
 {# HELP : #}

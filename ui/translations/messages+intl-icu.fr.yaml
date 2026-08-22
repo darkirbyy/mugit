@@ -29,6 +29,7 @@ repo:
   rename:
     label: Nouveau nom
     success: Le dépôt a été correctement renommé.
+    empty: Le nouveau nom est vide.
     invalid: Le nouveau nom n'est pas valide.
     alreadyExist: Le nouveau nom est déjà utilisé.
     failed: Échec lors du renommage de ce dépôt.

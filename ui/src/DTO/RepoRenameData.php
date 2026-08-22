@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class RepoRenameData
 {
     public function __construct(
-        #[Assert\NotBlank] #[Assert\Regex('/' . CoreInteractInterface::REGEX_NAME . '/')] public string $oldName,
-        #[Assert\NotBlank] #[Assert\Regex('/' . CoreInteractInterface::REGEX_NAME . '/')] public ?string $newName,
+        #[Assert\NotBlank(message: 'repo.rename.empty')] #[Assert\Regex('/' . CoreInteractInterface::REGEX_NAME . '/', message: 'repo.rename.invalid')] public string $oldName,
+        #[Assert\NotBlank(message: 'repo.rename.empty')] #[Assert\Regex('/' . CoreInteractInterface::REGEX_NAME . '/', message: 'repo.rename.invalid')] public ?string $newName,
     ) {}
 }

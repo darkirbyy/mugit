@@ -2,7 +2,7 @@
 
 <turbo-frame id="turboframe-repo-list">
   {% if coreErrorData is not null %}
-    {{ m.flash('error', coreErrorData.textKey, true, false) }}
+    {{ m.flash('error', coreErrorData.textKey, 'full', true, false) }}
   {% else %}
     <div class="relative rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
       <div class="flex flex-col border-b border-zinc-500 px-2 py-2 lg:flex-row lg:items-center lg:justify-between">
@@ -33,7 +33,7 @@
                   {{ repoInfoData.humanReadableSize }}
                   {% if repoInfoData.size > env.core.repo_max_size_mio * 1024 * env.core.repo_warn_size_percent / 100 %}
                     <div class="inline-block">
-                      {{ m.flash_mini('warning', 'repo.list.warnSize') }}
+                      {{ m.flash('warning', 'repo.list.warnSize', 'mini') }}
                     </div>
                   {% endif %}
                 </td>

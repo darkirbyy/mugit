@@ -2,6 +2,7 @@
 
 <turbo-frame id="turboframe-repo-delete">
   <form action="{{ path(app.current_route) }}" method="post" novalidate>
+    {# Field to confirm deletion + submit button #}
     <div class="flex flex-col gap-0.5 pt-0.5">
       <div class="flex items-center gap-1 text-red-900 dark:text-red-400">
         <div>
@@ -16,10 +17,18 @@
           <span class="ri-delete-bin-line" aria-hidden="true"></span>
         </button>
       </div>
-      {% if coreErrorData is not null %}
-        {{ m.flash_mini('error', coreErrorData.textKey) }}
+    </div>
+
+    {# Global error #}
+    <div class="mt-1">
+      {% set error = attribute(formOutputData.errorList, '_top')|default(null) %}
+      {% if error is not empty %}
+        {{ m.flash('error', error, 'mini') }}
       {% endif %}
     </div>
+
+    {# Hidden fields #}
+
     <input type="hidden" name="name" value="{{ repoDeleteData.name }}" />
     <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
   </form>
