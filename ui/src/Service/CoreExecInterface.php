@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\CoreError;
-use App\DTO\CoreOutput;
+use App\DTO\CoreErrorData;
+use App\DTO\CoreOutputData;
 
+/**
+ * Communication layer to the core.
+ */
 interface CoreExecInterface
 {
     /**
@@ -14,5 +17,5 @@ interface CoreExecInterface
      *
      * @param string $command the command (see SPECIFICATION)
      */
-    public function exec(string $command): CoreError|CoreOutput;
+    public function exec(string $command): CoreErrorData|CoreOutputData;
 }

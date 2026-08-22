@@ -16,8 +16,8 @@
           <span class="ri-delete-bin-line" aria-hidden="true"></span>
         </button>
       </div>
-      {% if coreError is not null %}
-        {{ m.flash_mini('error', coreError.textKey) }}
+      {% if coreErrorData is not null %}
+        {{ m.flash_mini('error', coreErrorData.textKey) }}
       {% endif %}
     </div>
     <input type="hidden" name="name" value="{{ repoDeleteData.name }}" />

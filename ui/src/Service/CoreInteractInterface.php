@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\CoreError;
+use App\DTO\CoreErrorData;
 use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
 
+/**
+ * APIv1 layer to the core.
+ */
 interface CoreInteractInterface
 {
     public const REGEX_NAME = '^[a-zA-Z]([a-zA-Z0-9_-]){1,127}$';
@@ -20,20 +23,20 @@ interface CoreInteractInterface
     /**
      * List all repositories names (without the `git` suffix) and sizes (in Kio), sorted alphabetically.
      */
-    public function repoList(RepoListData $repoListData): ?CoreError;
+    public function repoList(RepoListData $repoListData): ?CoreErrorData;
 
     /**
      * Create a new repository named $name if not already exists.
      */
-    public function repoCreate(RepoCreateData $repoCreateData): ?CoreError;
+    public function repoCreate(RepoCreateData $repoCreateData): ?CoreErrorData;
 
     /**
      * Rename an existing repository named $oldName to $newName if not already exists.
      */
-    public function repoRename(RepoRenameData $repoRenameData): ?CoreError;
+    public function repoRename(RepoRenameData $repoRenameData): ?CoreErrorData;
 
     /**
      * Delete an existing repository named $name.
      */
-    public function repoDelete(RepoDeleteData $repoDeleteData): ?CoreError;
+    public function repoDelete(RepoDeleteData $repoDeleteData): ?CoreErrorData;
 }

@@ -19,8 +19,8 @@ final class TurboframeOnlyListener
     public function onKernelController(ControllerEvent $event): void
     {
         // Act only if TurboframeOnly attribute is set
-        $attributes = $event->getAttributes(TurboframeOnly::class);
-        if (null === $attributes || !array_key_exists(0, $attributes)) {
+        $attributeList = $event->getAttributes(TurboframeOnly::class);
+        if (null === $attributeList || !array_key_exists(0, $attributeList)) {
             return;
         }
 
@@ -30,7 +30,7 @@ final class TurboframeOnlyListener
         }
 
         // Retrieve the route defined in the attribute and generate the URL
-        $redirectRoute = $attributes[0]->redirectRoute;
+        $redirectRoute = $attributeList[0]->redirectRoute;
         $url = $this->urlGenerator->generate($redirectRoute);
 
         // Generate a lambda controller with the redirection

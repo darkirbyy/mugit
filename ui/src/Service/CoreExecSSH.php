@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\DTO\CoreError;
-use App\DTO\CoreOutput;
+use App\DTO\CoreErrorData;
+use App\DTO\CoreOutputData;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Exception\UnableToConnectException;
 use phpseclib3\Net\SSH2;
@@ -28,19 +28,19 @@ class CoreExecSSH implements CoreExecInterface
     }
 
     #[\Override]
-    public function exec(string $command): CoreError|CoreOutput
+    public function exec(string $command): CoreErrorData|CoreOutputData
     {
         if (!$this->authenticate()) {
-            return new CoreError('repo.connectionFailed');
+            return new CoreErrorData('repo.connectionFailed');
         }
 
         $output = $this->ssh->exec('./api.sh ' . $command);
         $exitStatus = $this->ssh->getExitStatus();
 
-        $lines = array_filter(explode("\n", $output));
+        $lineList = array_filter(explode("\n", $output));
         $exitCode = false !== $exitStatus ? $exitStatus : 1;
 
-        return new CoreOutput($exitCode, $lines);
+        return new CoreOutputData($exitCode, $lineList);
     }
 
     /**

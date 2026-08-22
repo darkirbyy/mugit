@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Attribute\TurboframeOnly;
-use App\DTO\FlashMessage;
+use App\DTO\FlashData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
@@ -36,12 +36,12 @@ class RepoController extends AbstractController
      */
     #[TurboframeOnly('repo_index')]
     #[Route('/list', name: 'list', methods: ['GET'])]
-    public function list(Request $request, CoreInteract $coreInteract): Response
+    public function list(CoreInteract $coreInteract): Response
     {
-        $repoListData = new RepoListData([]);
-        $coreError = $coreInteract->repoList($repoListData);
+        $repoListData = new RepoListData();
+        $coreErrorData = $coreInteract->repoList($repoListData);
 
-        return $this->render('repo/_list.html.twig', ['repoListData' => $repoListData, 'coreError' => $coreError]);
+        return $this->render('repo/_list.html.twig', ['repoListData' => $repoListData, 'coreErrorData' => $coreErrorData]);
     }
 
     /**
@@ -52,18 +52,18 @@ class RepoController extends AbstractController
     #[Route('/rename', name: 'rename', methods: ['GET', 'POST'])]
     public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, Request $request, CoreInteract $coreInteract): Response
     {
-        $coreError = null;
+        $coreErrorData = null;
         if ('POST' == $request->getMethod()) {
-            $coreError = $coreInteract->repoRename($repoRenameData);
+            $coreErrorData = $coreInteract->repoRename($repoRenameData);
 
-            if (null === $coreError) {
-                $this->addFlash('success', new FlashMessage('repo.rename.success'));
+            if (null === $coreErrorData) {
+                $this->addFlash('success', new FlashData('repo.rename.success'));
 
                 return $this->redirectToRoute('repo_index');
             }
         }
 
-        return $this->render('repo/_rename.html.twig', ['repoRenameData' => $repoRenameData, 'coreError' => $coreError]);
+        return $this->render('repo/_rename.html.twig', ['repoRenameData' => $repoRenameData, 'coreErrorData' => $coreErrorData]);
     }
 
     /**
@@ -75,17 +75,17 @@ class RepoController extends AbstractController
     #[Route('/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(#[ValueResolver('data')] RepoDeleteData $repoDeleteData, Request $request, CoreInteract $coreInteract): Response
     {
-        $coreError = null;
+        $coreErrorData = null;
         if ('POST' == $request->getMethod()) {
-            $coreError = $coreInteract->repoDelete($repoDeleteData);
+            $coreErrorData = $coreInteract->repoDelete($repoDeleteData);
 
             if (null === $repoDeleteData) {
-                $this->addFlash('success', new FlashMessage('repo.delete.success'));
+                $this->addFlash('success', new FlashData('repo.delete.success'));
 
                 return $this->redirectToRoute('repo_index');
             }
         }
 
-        return $this->render('repo/_delete.html.twig', ['repoDeleteData' => $repoDeleteData, 'coreError' => $coreError]);
+        return $this->render('repo/_delete.html.twig', ['repoDeleteData' => $repoDeleteData, 'coreErrorData' => $coreErrorData]);
     }
 }

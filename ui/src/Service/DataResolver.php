@@ -10,6 +10,11 @@ use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 
+/**
+ * Resolver that allows to autowire DTO into controllers arguments,
+ * trying to create and populate them using query string or payload.
+ * Must be specifically targetted by adding `#[ValueResolver('data')]`.
+ */
 #[AsTargetedValueResolver('data')]
 class DataResolver implements ValueResolverInterface
 {
@@ -37,6 +42,9 @@ class DataResolver implements ValueResolverInterface
         return [$data];
     }
 
+    /**
+     * Transform a kebab-case variable name into a camelCase one
+     */
     private function camelize(string $name): string
     {
         return lcfirst(str_replace('-', '', ucwords($name, '-')));

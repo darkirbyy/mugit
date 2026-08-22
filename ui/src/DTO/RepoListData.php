@@ -6,5 +6,5 @@ namespace App\DTO;
 
 class RepoListData
 {
-    public function __construct(public array $repoInfoDataList) {}
+    public function __construct(public ?array $repoInfoDataList = null) {}
 }
