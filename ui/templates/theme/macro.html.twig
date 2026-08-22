@@ -51,13 +51,13 @@
   {% set vars = attribute(typeToVars, type) %}
   {% if size == 'full' %}
     <div data-controller="flash">
-      <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-center px-2 py-1 text-sm" role="alert">
+      <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-start px-2 py-1 text-sm" role="alert">
         <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
           <span class="{{ vars.icon }} text-lg" aria-hidden="true"></span>
           <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
         </div>
         <div class="mx-2">
-          {{ textKey|trans }}
+          {{ textKey|trans|nl2br }}
           {% if canRetry %}
             {{ _self.link('layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
           {% endif %}
@@ -75,10 +75,10 @@
       </div>
     </div>
   {% else %}
-    <div class="my-0.5 flex items-center rounded {{ vars.color }} p-1 text-sm">
+    <div class="my-0.5 flex items-start rounded {{ vars.color }} p-1 text-sm">
       <span class="{{ vars.icon }} inline-block rounded-full bg-zinc-500/25 px-1" aria-hidden="true"></span>
       <div class="mx-1">
-        {{ textKey|trans }}
+        {{ textKey|trans|nl2br }}
       </div>
     </div>
   {% endif %}
@@ -87,7 +87,7 @@
 {# HELP : #}
 {% macro dropdown_start(id, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
-  {% set class = 'z-10 hidden rounded border border-zinc-500 bg-zinc-200 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950'|split(' ') %}
+  {% set class = 'z-10 hidden absolute rounded border border-zinc-500 bg-zinc-200 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950'|split(' ') %}
   {% set attr = attr|html_attr_merge({ class: class }) %}
 
   {{ _self.tag_open('div') }} id="{{ id }}" {{ html_attr(attr) }}>

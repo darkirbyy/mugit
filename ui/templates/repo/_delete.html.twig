@@ -1,11 +1,11 @@
 {% import 'theme/macro.html.twig' as m %}
 
-<turbo-frame id="turboframe-repo-delete">
+<turbo-frame id="turboframe-repo-delete-{{ repoDeleteData.name }}">
   <form action="{{ path(app.current_route) }}" method="post" novalidate>
     {# Field to confirm deletion + submit button #}
-    <div class="flex flex-col gap-0.5 pt-0.5">
+    <div class="flex flex-col gap-0.5 pt-0.5 min-w-2xs">
       <div class="flex items-center gap-1 text-red-900 dark:text-red-400">
-        <div class="px-1">
+        <div class="px-1 flex-1">
           {{ 'repo.delete.label'|trans }}
         </div>
         <button

@@ -24,14 +24,20 @@ repo:
     label: Nom
     success: Le dépôt a été correctement créé.
     empty: Le nom est vide.
-    invalid: Le nom n'est pas valide.
+    invalid: |-
+      Le nom n'est pas valide.
+      Il peut contenir lettres, chiffres, _ et -.
+      Il doit commencer par une lettre.
     alreadyExist: Le nom est déjà utilisé.
     failed: Échec lors de la création du dépôt.
   rename:
     label: Nouveau nom
     success: Le dépôt a été correctement renommé.
     empty: Le nouveau nom est vide.
-    invalid: Le nouveau nom n'est pas valide.
+    invalid: |-
+      Le nouveau nom n'est pas valide.
+      Il peut contenir lettres, chiffres, _ et -.
+      Il doit commencer par une lettre.
     alreadyExist: Le nouveau nom est déjà utilisé.
     failed: Échec lors du renommage de ce dépôt.
   delete:
