@@ -5,7 +5,7 @@
     {{ m.flash('error', errorData.textKey, 'full', true, false) }}
   {% else %}
     <div class="rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
-      <div class="flex items-center justify-end gap-1 border-b min-w-2xs border-zinc-500 px-2 py-2">
+      <div class="flex min-w-2xs items-center justify-end gap-1 border-b border-zinc-500 px-2 py-2">
         {% set dropdownId = 'dropdown-repo-create' %}
         {% set turboframeId = 'turboframe-repo-create' %}
         {{ m.button('repo.list.createNew', 'ri-add-large-line', 'tooltip', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
@@ -34,7 +34,7 @@
               <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
                 <th class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfoData.name }}</th>
                 <td class="px-4 py-2">
-                  {{ repoInfoData.humanReadableSize }}
+                  {{ repoInfoData.size|repo_size_to_human_readable }}
                   {% if repoInfoData.size > env.core.repo_max_size_mio * 1024 * env.core.repo_warn_size_percent / 100 %}
                     <div class="inline-block">
                       {{ m.flash('warning', 'repo.list.warnSize', 'mini') }}
@@ -42,7 +42,7 @@
                   {% endif %}
                 </td>
                 <td class="px-4 py-2" data-copy-clipboard-target="cell">
-                  <span class="mr-1">{{ repoInfoData.cloneURL }}</span>
+                  <span class="mr-1">{{ repoInfoData.name|repo_name_to_clone_URL }}</span>
                   {{ m.button('repo.list.copyURLToClipboard', 'ri-file-copy-line', 'tooltip') }}
                 </td>
                 <td class="px-2 py-2 text-left">
