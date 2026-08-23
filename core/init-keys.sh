@@ -12,9 +12,9 @@ ssh-keygen -t ed25519 -f keys/ssh_host_ed25519_key -N '' -C ''
 ssh-keygen -t ed25519 -f keys/ssh_root_ed25519_key -N '' -C '' 
 
 # Printing the variables for the UI .env.local file
-echo "================================================"
-echo "== SAVE THESES VARIABLES FOR .env.local in UI =="
-echo "================================================"
+echo "############################################"
+echo "### VARIABLES ADDED BY init-keys.sh ########"
+echo "############################################"
 host_pubkey=$(cat keys/ssh_host_ed25519_key.pub)
 root_prikey=$(cat keys/ssh_root_ed25519_key)
 echo "CORE_HOST_PUBKEY=\"$host_pubkey\""

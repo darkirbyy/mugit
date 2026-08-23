@@ -1,4 +1,4 @@
-name: mugit
+name: ${CORE_NAME:-mugit}
 services:
   mugit:
     build:
@@ -9,7 +9,7 @@ services:
         CORE_UID: ${CORE_UID:-1000}
         CORE_GID: ${CORE_GID:-1000}
     image: alpine:3.24-custom
-    container_name: mugit
+    container_name: ${CORE_NAME:-mugit}
     restart: unless-stopped
     environment:
       - TZ=${TIMEZONE:-Etc/UTC}
@@ -29,8 +29,7 @@ services:
       - ./keys/ssh_root_ed25519_key.pub:/root/.ssh/authorized_keys:rw
       - ./api.sh:/root/api.sh:ro
     networks:
-      web-network:
-        ipv4_address: 172.18.0.60
+      - web-network
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 22"]
       interval: 30s
