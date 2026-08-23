@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 find_next_available_port() {
     local port=$1
     while ss -ltn | awk '{print $4}' | grep -q ":$port$"; do
@@ -23,16 +22,13 @@ cd ../core
 if [ -f ".env" ]; then
     echo "Custom '.env' file detected."
     source ".env"
-else 
-    echo "No '.env' file detected."
-    CORE_PORT=22
-    CORE_DATA="./data/dev"
 fi
+echo "Creating mounted directories if not exist"
+mkdir -p "${CORE_DATA:-./data/dev}"
+mkdir -p "${CORE_KEYS:-./keys/dev}"
 echo "Creating keys if not exist"
-./init-keys.sh | sed -n '/###/,$p' >> ../ui/.env.local
-echo "Creating mounted directores if not exist"
-mkdir -p $CORE_DATA
-echo "Starting docker Core container on port $CORE_PORT"
+./init-keys.sh "${CORE_KEYS:-./keys/dev}" | sed -n '/###/,$p' >> ../ui/.env.local
+echo "Starting docker Core container"
 docker compose up -d
 cd ../ui
 

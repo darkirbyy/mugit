@@ -7,7 +7,6 @@ namespace App\Tests\Inte;
 use App\Service\CoreExecInterface;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -28,11 +27,6 @@ final class CoreExecTest extends KernelTestCase
         self::$coreRootPath = preg_replace('/ui$/', 'core', $projectDir);
         self::$coreDataPath = Path::canonicalize(Path::join(self::$coreRootPath, $parameterBag->get('core.data')));
 
-        // Delete and recreate core test data folder
-        $filesystem = new Filesystem();
-        $filesystem->remove(self::$coreDataPath);
-        $filesystem->mkdir(self::$coreDataPath);
-
         // Start a test instance of the core
         $process = new Process(['docker', 'compose', '--project-directory', self::$coreRootPath, 'up', '-d']);
         $process->run();
@@ -40,6 +34,8 @@ final class CoreExecTest extends KernelTestCase
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
+
+        self::bootKernel();
     }
 
     #[\Override]
