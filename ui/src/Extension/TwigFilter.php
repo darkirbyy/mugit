@@ -14,7 +14,7 @@ class TwigFilter
 {
     public const array UNITS = ['Kio', 'Mio', 'Gio', 'Tio'];
 
-    public function __construct(#[Autowire('%core.host_addr%')] private string $coreHostAddr) {}
+    public function __construct(#[Autowire('%core.addr%')] private string $coreAddr) {}
 
     /**
      * Tranform a repository name into a full URL ready to by copy-paste for cloning the repositoory.
@@ -22,7 +22,7 @@ class TwigFilter
     #[AsTwigFilter(name: 'repo_name_to_clone_URL')]
     public function repoNameToCloneURL(string $name): string
     {
-        return 'git@' . $this->coreHostAddr . ':' . $name . '.git';
+        return 'git@' . $this->coreAddr . ':' . $name . '.git';
     }
 
     /**

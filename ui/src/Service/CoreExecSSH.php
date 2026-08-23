@@ -16,11 +16,11 @@ class CoreExecSSH implements CoreExecInterface
     private ?SSH2 $ssh;
 
     public function __construct(
-        #[Autowire('%core.host_addr%')] private string $coreHostAddr,
-        #[Autowire('%core.host_port%')] private int $coreHostPort,
+        #[Autowire('%core.addr%')] private string $coreAddr,
+        #[Autowire('%core.port%')] private int $corePort,
         #[Autowire('%core.host_pubkey%')] private string $coreHostPubkey,
         #[Autowire('%core.root_prikey%')] private string $coreRootPrikey,
-        #[Autowire('%core.timeout%')] private int $coreTimeout,
+        #[Autowire('%core.connection_timeout%')] private int $coreConnectionTimeout,
         private LoggerInterface $logger,
     ) {
         $this->ssh = null;
@@ -57,8 +57,8 @@ class CoreExecSSH implements CoreExecInterface
             return true;
         }
 
-        $this->ssh = new SSH2($this->coreHostAddr, $this->coreHostPort);
-        $this->ssh->setTimeout($this->coreTimeout);
+        $this->ssh = new SSH2($this->coreAddr, $this->corePort);
+        $this->ssh->setTimeout($this->coreConnectionTimeout);
         try {
             if ($this->ssh->getServerPublicHostKey() != $this->coreHostPubkey) {
                 $this->logger->error('Failed to connect to core through SSH: invalid public key.');
