@@ -33,6 +33,13 @@ services:
         resource: '../src/'
 
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
+
+    phpseclib3\Net\SSH2:
+        factory: ['App\Extension\SSH2Factory', 'create']
+        arguments:
+            $host: '%core.addr%'
+            $port: '%core.port%'
+            $connectionTimeout: '%core.connection_timeout%'
     
 when@dev: &services_dev
     services:

@@ -13,18 +13,12 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class CoreExecSSH implements CoreExecInterface
 {
-    private ?SSH2 $ssh;
-
     public function __construct(
-        #[Autowire('%core.addr%')] private string $coreAddr,
-        #[Autowire('%core.port%')] private int $corePort,
         #[Autowire('%core.host_pubkey%')] private string $coreHostPubkey,
         #[Autowire('%core.root_prikey%')] private string $coreRootPrikey,
-        #[Autowire('%core.connection_timeout%')] private int $coreConnectionTimeout,
+        private SSH2 $ssh,
         private LoggerInterface $logger,
-    ) {
-        $this->ssh = null;
-    }
+    ) {}
 
     #[\Override]
     public function exec(string $command): ?CoreData
@@ -51,14 +45,12 @@ class CoreExecSSH implements CoreExecInterface
      */
     private function authenticate(): bool
     {
-        if (!is_null($this->ssh) && $this->ssh instanceof SSH2 && $this->ssh->isAuthenticated()) {
+        if ($this->ssh->isAuthenticated()) {
             $this->logger->info('Already authenticated to core through SSH.');
 
             return true;
         }
 
-        $this->ssh = new SSH2($this->coreAddr, $this->corePort);
-        $this->ssh->setTimeout($this->coreConnectionTimeout);
         try {
             if ($this->ssh->getServerPublicHostKey() != $this->coreHostPubkey) {
                 $this->logger->error('Failed to connect to core through SSH: invalid public key.');
