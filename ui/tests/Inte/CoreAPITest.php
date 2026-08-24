@@ -11,7 +11,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-final class CoreAPIv1Test extends KernelTestCase
+final class CoreAPITest extends KernelTestCase
 {
     private static CoreExecInterface $coreExec;
     private static string $coreRootPath;

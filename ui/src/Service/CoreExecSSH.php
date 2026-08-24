@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\CoreData;
-use phpseclib3\Crypt\PublicKeyLoader;
-use phpseclib3\Exception\UnableToConnectException;
-use phpseclib3\Net\SSH2;
+use phpseclib4\Crypt\PublicKeyLoader;
+use phpseclib4\Exception\BaseException;
+use phpseclib4\Net\SSH2;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -41,7 +41,7 @@ class CoreExecSSH implements CoreExecInterface
      *
      * @return bool true if authenticated successfully, false otherwise
      *
-     * @throws UnableToConnectException when the fingerprint or the credentials are invalids
+     * @throws BaseException when the fingerprint or the credentials are invalids
      */
     private function authenticate(): bool
     {
@@ -58,13 +58,13 @@ class CoreExecSSH implements CoreExecInterface
                 return false;
             }
 
-            $key = PublicKeyLoader::load($this->coreRootPrikey);
+            $key = PublicKeyLoader::loadPrivateKey($this->coreRootPrikey);
             if (!$this->ssh->login('root', $key)) {
                 $this->logger->error('Failed to authenticate to core through SSH: invalid user or private key.');
 
                 return false;
             }
-        } catch (UnableToConnectException $e) {
+        } catch (BaseException $e) {
             $this->logger->error('Failed to authenticate to core through SSH: encountered exception ' . $e::class . '.');
 
             return false;

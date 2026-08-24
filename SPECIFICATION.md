@@ -1,7 +1,7 @@
 # Specification
 
 The project is divided in two parts, with the idea that each part can be used independently, or run on a different machine (not tested !).  
-To achieve that, here is the APIv1 between the CORE and the UI.
+To achieve that, here is the API between the CORE and the UI.
 
 ## General consideration
 
@@ -50,4 +50,4 @@ To achieve that, here is the APIv1 between the CORE and the UI.
 
 ## PHP Interface
 
-To ease out the deployement of a new version of the API or a new communication layer, the UI defines a `CoreInteractInterface` and a `CoreExecInterface`. For the moment, there is only one implementation using the APIv1 and a SSH root connection.
+To ease out the deployement of a new version of the API or a new communication layer, the UI defines a `CoreInteractInterface` and a `CoreExecInterface`. For the moment, there is only one implementation using the API and a SSH root connection.

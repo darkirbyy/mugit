@@ -11,7 +11,7 @@ use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
 
 /**
- * APIv1 layer to the core.
+ * API layer to the core.
  */
 interface CoreInteractInterface
 {

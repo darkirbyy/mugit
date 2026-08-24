@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Extension;
 
-use phpseclib3\Net\SSH2;
+use phpseclib4\Net\SSH2;
 
 /**
  * Initialize a new SSH2 instance with the given parameters.

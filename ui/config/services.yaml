@@ -34,7 +34,7 @@ services:
 
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
 
-    phpseclib3\Net\SSH2:
+    phpseclib4\Net\SSH2:
         factory: ['App\Extension\SSH2Factory', 'create']
         arguments:
             $host: '%core.addr%'

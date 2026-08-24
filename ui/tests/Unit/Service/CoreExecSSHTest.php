@@ -6,9 +6,9 @@ namespace App\Tests\Unit\Service;
 
 use App\DTO\CoreData;
 use App\Service\CoreExecSSH;
-use phpseclib3\Crypt\EC;
-use phpseclib3\Exception\UnableToConnectException;
-use phpseclib3\Net\SSH2;
+use phpseclib4\Crypt\EC;
+use phpseclib4\Exception\TimeoutException;
+use phpseclib4\Net\SSH2;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -79,7 +79,7 @@ final class CoreExecSSHTest extends TestCase
     {
         $this->ssh->expects($this->once())->method('isAuthenticated')->willReturn(false);
         $this->ssh->expects($this->once())->method('getServerPublicHostKey')->willReturn('host-pubkey-true');
-        $this->ssh->expects($this->once())->method('login')->willThrowException(new UnableToConnectException());
+        $this->ssh->expects($this->once())->method('login')->willThrowException(new TimeoutException());
         $this->logger->expects($this->once())->method('error');
 
         $coreData = $this->coreExecSSH->exec('');
