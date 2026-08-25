@@ -37,6 +37,7 @@
         <exclude>
             <directory suffix=".php">src/generated</directory>
             <file>src/Kernel.php</file>
+            <file>src/PantherKernelTrait.php</file>
         </exclude>
         <deprecationTrigger>
             <function>trigger_deprecation</function>
@@ -50,6 +51,7 @@
     </coverage>
     <extensions>
         <bootstrap class="Symfony\Component\Panther\ServerExtension" />
+        <bootstrap class="App\Tests\PantherExtension" />
         <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension">
             <parameter name="clock-mock-namespaces" value="App" />
             <parameter name="dns-mock-namespaces" value="App" />
