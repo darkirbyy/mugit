@@ -28,9 +28,5 @@ final class SuiteFinish implements FinishedSubscriber
                 throw new ProcessFailedException($process);
             }
         }
-
-        if ('func' == $testsuiteName) {
-            // todo : npm clean ?
-        }
     }
 }

@@ -13,7 +13,7 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 
 Encore
     // directory where compiled assets will be stored
-    .setOutputPath('public/build/')
+    .setOutputPath(process.env.APP_ENV == 'test' ? process.env.PANTHER_WEB_SERVER_DIR + '/build/' : 'public/build/')
     // public path used by the web server to access the output path
     .setPublicPath(Encore.isProduction() ? '/' + app_name + '/build' : '/build')
     // only needed for CDN's or subdirectory deploy
@@ -28,7 +28,7 @@ Encore
     })
     // copy tests images files to the build only in dev
     .copyFiles(!Encore.isProduction() ? [{
-        from: './tests/images',
+        from: './tests/Mock/images',
         // target path, relative to the output dir
         to: 'tests/[path][name].[ext]',
         // only copy files matching this pattern

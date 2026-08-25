@@ -88,10 +88,10 @@
         "lint-js": "npm run lint-js-file \"assets/controllers/**/*.js\"",
         "lint-all": ["@lint-php", "@lint-twig", "@lint-css",  "@lint-js"],
 
-        "tests-unit": "php bin/phpunit --testsuite unit",
-        "tests-inte": "php bin/phpunit --testsuite inte",
-        "tests-func": "php bin/phpunit --testsuite func",
-        "tests-all": ["php bin/phpunit"]
+        "tests-unit": "vendor/bin/phpunit --testsuite unit",
+        "tests-inte": "vendor/bin/phpunit --testsuite inte",
+        "tests-func": "vendor/bin/phpunit --testsuite func",
+        "tests-all": "vendor/bin/phpunit"
     },
     "conflict": {
         "symfony/symfony": "*"

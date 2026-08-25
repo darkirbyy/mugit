@@ -35,9 +35,23 @@ final class SuiteStart implements StartedSubscriber
             }
         }
 
-        // Compile the assets for E2E testing via panther
+        // Prepare a temporary public directory and compile the assets into it
         if ('func' == $testsuiteName) {
-            // todo : npm run test-build
+            $uiRootPath = Path::join(__DIR__, '..', '..');
+            $pantherPublicPath = Path::join($uiRootPath, $_ENV['PANTHER_WEB_SERVER_DIR']);
+
+            $filesystem = new Filesystem();
+            $filesystem->remove($pantherPublicPath);
+            $filesystem->mkdir($pantherPublicPath);
+            $index = $filesystem->readFile(Path::join($uiRootPath, 'public', 'index.php'));
+            $index = str_replace('/vendor', '/../../vendor', $index);
+            $filesystem->dumpFile(Path::join($pantherPublicPath, 'index.php'), $index);
+
+            $process = new Process(['npm', 'run', 'test-build']);
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
         }
     }
 }
