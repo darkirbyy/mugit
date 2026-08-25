@@ -15,7 +15,7 @@ final class RepoControllerTest extends PantherTestCase
         $client = static::createPantherClient([]);
         $client->request('GET', '/repo');
 
-        $this->assertPageTitleContains('repo.title');
-        $this->assertSelectorTextContains('h1', 'repo.title');
+        $this->assertPageTitleContains('Tous les dépôts');
+        $this->assertSelectorTextContains('h1', 'Tous les dépôts');
     }
 }

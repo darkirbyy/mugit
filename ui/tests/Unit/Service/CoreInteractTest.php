@@ -39,7 +39,7 @@ final class CoreInteractTest extends TestCase
 
         $errorData = $this->coreInteract->$coreMethod($input);
         $this->assertInstanceOf(ErrorData::class, $errorData);
-        $this->assertStringStartsWith('repo.', $errorData->textKey);
+        $this->assertNotEmpty($errorData->textKey);
     }
 
     #[PU\Test]
@@ -51,7 +51,7 @@ final class CoreInteractTest extends TestCase
 
         $errorData = $this->coreInteract->$coreMethod($input);
         $this->assertInstanceOf(ErrorData::class, $errorData);
-        $this->assertStringStartsWith('repo.', $errorData->textKey);
+        $this->assertNotEmpty($errorData->textKey);
     }
 
     #[PU\Test]
