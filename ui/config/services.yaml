@@ -55,8 +55,5 @@ when@dev: &services_dev
         App\Tests\Mock\KeycloakMockUserCreate:
             autowire: true
             autoconfigure: true
-    
-    parameters:
-        core.data: '%env(string:CORE_DATA)%'
 
 when@test: *services_dev

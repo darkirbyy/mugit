@@ -8,8 +8,6 @@ use App\Service\CoreExecInterface;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 final class CoreAPITest extends KernelTestCase
 {
@@ -22,31 +20,10 @@ final class CoreAPITest extends KernelTestCase
     {
         parent::setUpBeforeClass();
 
-        // Retrieve and prepare some parameters
-        $parameterBag = self::getContainer()->getParameterBag();
-        $projectDir = $parameterBag->get('kernel.project_dir');
-        self::$coreRootPath = preg_replace('/ui$/', 'core', $projectDir);
-        self::$coreDataPath = Path::canonicalize(Path::join(self::$coreRootPath, $parameterBag->get('core.data')));
-
-        // Start a test instance of the core
-        $process = new Process(['docker', 'compose', '--project-directory', self::$coreRootPath, 'up', '-d']);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
+        // todo : better way to find the core data path ?
+        self::$coreRootPath = Path::join(__DIR__, '..', '..', '..', 'core');
+        self::$coreDataPath = Path::join(self::$coreRootPath, $_ENV['CORE_DATA']);
         self::$coreExec = self::getContainer()->get(CoreExecInterface::class);
-    }
-
-    #[\Override]
-    public static function tearDownAfterClass(): void
-    {
-        // Stop the test instance of the core
-        $process = new Process(['docker', 'compose', '--project-directory', self::$coreRootPath, 'down']);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
     }
 
     #[PU\Test]

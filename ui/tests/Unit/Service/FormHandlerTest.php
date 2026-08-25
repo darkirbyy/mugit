@@ -38,7 +38,7 @@ final class FormHandlerTest extends TestCase
     }
 
     #[PU\Test]
-    public function handleGETRequest(): void
+    public function handleGetRequest(): void
     {
         $this->request->setMethod('GET');
         $this->validator->expects($this->never())->method($this->anything());

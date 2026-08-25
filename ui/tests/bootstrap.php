@@ -12,12 +12,11 @@ if (method_exists(Dotenv::class, 'bootEnv')) {
     (new Dotenv())->bootEnv(dirname(__DIR__) . '/.env');
 }
 
-// Purging previous test data directory
-(new Filesystem())->remove(Path::join($coreRootPath, $_ENV['CORE_DATA']));
+// Creating test mounted directories is not exist
 (new Filesystem())->mkdir(Path::join($coreRootPath, $_ENV['CORE_DATA']));
-
-// Init test keys if not already exist
 (new Filesystem())->mkdir(Path::join($coreRootPath, $_ENV['CORE_KEYS']));
+
+// Generating test keys if not exist
 passthru(__DIR__ . '/../../core/init-keys.sh "' . $_ENV['CORE_KEYS'] . '" | sed -n \'/###/,$p\' >> "' . __DIR__ . '/../.env.test.local"');
 
 // Reload env variables (because the previous script may have added some)
