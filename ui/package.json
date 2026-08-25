@@ -37,7 +37,8 @@
     "scripts": {
         "dev-server": "encore dev-server",
         "dev-watch": "encore dev --watch",
-        "build": "encore production --progress",
+        "test-build": "encore dev --progress",
+        "prod-build": "encore production --progress",
         "pretty-file": "prettier --write --config linter/.prettierrc.json",
         "pretty-all": "npm run pretty-file \"src/**/*.php\" \"tests/**/*.php\" \"templates/**/*.twig\" \"assets/styles/**/*.css\" \"assets/controllers/**/*.js\"",
         "lint-css-file": "stylelint --fix --cache --cacheLocation var/cache/linter/ --config linter/.stylelint.config.json",

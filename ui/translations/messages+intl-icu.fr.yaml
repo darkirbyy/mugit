@@ -3,7 +3,7 @@
 ##################################
 
 repo:
-  title: Tous les dépots
+  title: Tous les dépôts
   connectionFailed: Échec lors de la connexion au serveur git.
   list:
     createNew: Créer un nouveau dépôt
