@@ -26,7 +26,7 @@ class RepoController extends AbstractController
     /**
      * Index page of the repositories.
      */
-    #[Route('/', name: 'index', methods: ['GET'])]
+    #[Route('', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render('repo/index.html.twig');

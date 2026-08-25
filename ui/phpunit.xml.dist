@@ -24,6 +24,10 @@
         </testsuite>
         <testsuite name="func">
             <directory>tests/Func</directory>
+            <exclude>tests/Func/AbstractControllerTest.php</exclude>
+        </testsuite>
+        <testsuite name="e2e">
+            <directory>tests/End2End</directory>
         </testsuite>
     </testsuites>
     <source ignoreSuppressionOfDeprecations="true"

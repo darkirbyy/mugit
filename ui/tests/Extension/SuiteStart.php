@@ -20,7 +20,7 @@ final class SuiteStart implements StartedSubscriber
         $testsuiteName = $event->testSuite()->name();
 
         // Clean up test data directory and start a test instance of the core
-        if ('inte' == $testsuiteName || 'func' == $testsuiteName) {
+        if (in_array($testsuiteName, ['inte', 'func', 'e2e'])) {
             $coreRootPath = Path::join(__DIR__, '..', '..', '..', 'core');
             $coreDataPath = Path::join($coreRootPath, $_ENV['CORE_DATA']);
 
@@ -36,7 +36,7 @@ final class SuiteStart implements StartedSubscriber
         }
 
         // Prepare a temporary public directory and compile the assets into it
-        if ('func' == $testsuiteName) {
+        if ('e2e' == $testsuiteName) {
             $uiRootPath = Path::join(__DIR__, '..', '..');
             $pantherPublicPath = Path::join($uiRootPath, $_ENV['PANTHER_WEB_SERVER_DIR']);
 

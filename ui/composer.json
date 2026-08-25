@@ -91,6 +91,7 @@
         "tests-unit": "vendor/bin/phpunit --testsuite unit",
         "tests-inte": "vendor/bin/phpunit --testsuite inte",
         "tests-func": "vendor/bin/phpunit --testsuite func",
+        "tests-e2e": "vendor/bin/phpunit --testsuite e2e",
         "tests-all": "vendor/bin/phpunit"
     },
     "conflict": {

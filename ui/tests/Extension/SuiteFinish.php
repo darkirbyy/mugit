@@ -19,7 +19,7 @@ final class SuiteFinish implements FinishedSubscriber
         $testsuiteName = $event->testSuite()->name();
 
         // Stop the test instance of the core
-        if ('inte' == $testsuiteName || 'func' == $testsuiteName) {
+        if (in_array($testsuiteName, ['inte', 'func', 'e2e'])) {
             $coreRootPath = Path::join(__DIR__, '..', '..', '..', 'core');
 
             $process = new Process(['docker', 'compose', '--project-directory', $coreRootPath, 'down']);

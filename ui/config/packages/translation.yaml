@@ -10,3 +10,8 @@ framework:
         globals:
             '{repoMaxSizeMio}': '%core.repo_max_size_mio%'
             '{repoWarnSizePercent}': '%core.repo_warn_size_percent%'
+
+when@test:
+    framework:
+        translator:
+            enabled: false
