@@ -8,6 +8,6 @@
     {{ ('error.message.' ~ errorKey)|trans }}
   </p>
   <p>
-    {{ m.link('error.backToHome', path('home_index')) }}
+    {{ m.link('link-error-back-home', 'error.backToHome', path('home_index')) }}
   </p>
 {% endblock %}

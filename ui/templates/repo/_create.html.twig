@@ -2,15 +2,16 @@
 
 <turbo-frame id="turboframe-repo-create">
   {% set extra %}
-    <form action="{{ path(app.current_route) }}" method="post" novalidate>
+    {% set formId = 'form-repo-create' %}
+    <form id="{{ formId }}" action="{{ path(app.current_route) }}" method="post" novalidate>
       {# Field 'name' + submit button #}
       <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
         <div class="flex gap-1">
-          <label for="form-repo-create-name" class="sr-only">{{ 'repo.create.label'|trans }}</label>
+          <label for="{{ formId }}-name" class="sr-only">{{ 'repo.create.label'|trans }}</label>
           <input
             type="text"
             name="name"
-            id="form-repo-create-name"
+            id="{{ formId }}-name"
             class="block flex-1 rounded border border-zinc-500/50 bg-transparent px-2 py-1 focus:bg-zinc-300 focus:ring-0 focus:dark:bg-zinc-900"
             placeholder="{{ 'repo.create.label'|trans }}"
             value="{{ repoCreateData.name }}"
@@ -19,6 +20,7 @@
           <button
             type="submit"
             name="submit"
+            id="{{ formId }}-submit"
             class="rounded border border-zinc-500/50 px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-900"
             aria-label="{{ 'form.submit'|trans }}"
             data-action="click->turboframe#submit"
@@ -28,7 +30,7 @@
         </div>
         {% set error = attribute(formData.errorList, 'name')|default(null) %}
         {% if error is not empty %}
-          {{ m.flash('error', error.textKey, 'mini') }}
+          {{ m.flash('flash-error-repo-create-name', 'error', error.textKey, 'mini') }}
         {% endif %}
       </div>
 
@@ -36,7 +38,7 @@
       <div class="mt-1">
         {% set error = attribute(formData.errorList, '_top')|default(null) %}
         {% if error is not empty %}
-          {{ m.flash('error', error.textKey, 'mini') }}
+          {{ m.flash('flash-error-repo-create-top', 'error', error.textKey, 'mini') }}
         {% endif %}
       </div>
 
@@ -44,23 +46,5 @@
       <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
     </form>
   {% endset %}
-  {{ m.dropdown_item('a', 'repo.list.createNew', 'ri-add-line', null, extra, true) }}
+  {{ m.dropdown_item('button-repo-create-new', 'button', 'repo.list.createNew', 'ri-add-line', null, extra, true) }}
 </turbo-frame>
-
-{# todo : use or destroy (help button) #}
-{#
-<div class="flex flex-1 flex-row">
-  <label for="form-repo-create-name" class="sr-only">{{ 'repo.create.label'|trans }}</label>
-  <input
-    type="text"
-    name="name"
-    id="form-repo-create-name"
-    class="rounded-r-0 block w-full rounded-l border border-zinc-500/50 bg-transparent px-2 py-1 focus:bg-zinc-300 focus:ring-0 focus:dark:bg-zinc-900"
-    placeholder="{{ 'repo.create.label'|trans }}"
-    value="{{ repoCreateData.name }}"
-    required
-  />
-  {% set attr = { type: 'button', class: 'rounded-l-0 border-l-0 border border-zinc-500/50 bg-transparent bg-zinc-300 dark:bg-zinc-800'|split(' ') } %}
-  {{ m.button('repo.create.help', 'ri-question-line', 'tooltip', attr) }}
-</div>
-#}

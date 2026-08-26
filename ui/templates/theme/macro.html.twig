@@ -3,7 +3,7 @@
   - 'tooltip': no text + tooltip
   - 'off': no text + no tooltip
   #}
-{% macro button(textKey, icon = null, mode = 'normal', attr = null) %}
+{% macro button(id, textKey, icon = null, mode = 'normal', attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-800'|split(' ') %}
 
@@ -15,7 +15,7 @@
   {% if mode == 'off' or mode == 'tooltip' %}
     {% set attr = attr|html_attr_merge({ 'aria-label': textKey|trans }) %}
   {% endif %}
-  {% set attr = attr|html_attr_merge({ class: class }) %}
+  {% set attr = attr|html_attr_merge({ class: class, id: id }) %}
 
   <button {{ html_attr(attr) }}>
     {% if icon is not null %}
@@ -28,20 +28,20 @@
 {% endmacro %}
 
 {# HELP : textKey is the key before translation #}
-{% macro link(textKey, path, attr = null) %}
+{% macro link(id, textKey, path, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'font-bold underline opacity-75 hover:opacity-100'|split(' ') %}
 
-  {% set attr = attr|html_attr_merge({ class: class }) %}
+  {% set attr = attr|html_attr_merge({ class: class, id: id, href: path }) %}
 
-  <a href="{{ path }}" {{ html_attr(attr) }}>{{ textKey|trans }}</a>
+  <a {{ html_attr(attr) }}>{{ textKey|trans }}</a>
 {% endmacro %}
 
 {# HELP : type can be 'info', 'success', 'warning' or 'error', textKey is the key before translation, size must be:
 - full : full range flash with close button and retry link
 - mini : small sized flash, without any button or link
 #}
-{% macro flash(type, textKey, size = 'full', canRetry = true, canClose = true) %}
+{% macro flash(id, type, textKey, size = 'full', canRetry = true, canClose = true) %}
   {% set typeToVars = {
     info: { icon: 'ri-information-line', color: 'bg-sky-200 dark:bg-sky-950' },
     success: { icon: 'ri-shield-check-line', color: 'bg-green-200 dark:bg-green-950' },
@@ -50,22 +50,22 @@
   } %}
   {% set vars = attribute(typeToVars, type) %}
   {% if size == 'full' %}
-    <div data-controller="flash">
+    <div data-controller="flash" id="{{ id }}">
       <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-start p-1 text-sm" role="alert">
-        <div class="flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2 my-1">
+        <div class="my-1 flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
           <span class="{{ vars.icon }} text-lg" aria-hidden="true"></span>
           <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
         </div>
         <div class="m-2 flex-1">
           {{ textKey|trans|nl2br }}
           {% if canRetry %}
-            {{ _self.link('layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
+            {{ _self.link('link-flash-retry', 'layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
           {% endif %}
         </div>
         {% if canClose %}
           <button
             type="button"
-            class="ms-auto inline-flex size-8 shrink-0 items-center justify-center m-0.5 rounded hover:cursor-pointer hover:bg-zinc-500/25"
+            class="m-0.5 ms-auto inline-flex size-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
             aria-label="{{ 'layout.flash.close'|trans }}"
             data-action="click->flash#dismiss"
           >
@@ -75,8 +75,8 @@
       </div>
     </div>
   {% else %}
-    <div class="my-0.5 flex items-start rounded {{ vars.color }} p-1 text-sm">
-      <span class="{{ vars.icon }} inline-block text-base px-1" aria-hidden="true"></span>
+    <div id="{{ id }}" class="my-0.5 flex items-start rounded {{ vars.color }} p-1 text-sm">
+      <span class="{{ vars.icon }} inline-block px-1 text-base" aria-hidden="true"></span>
       <div class="m-0.5 flex-1">
         {{ textKey|trans|nl2br }}
       </div>
@@ -88,9 +88,9 @@
 {% macro dropdown_start(id, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'z-10 hidden absolute rounded border border-zinc-500 bg-zinc-200 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950'|split(' ') %}
-  {% set attr = attr|html_attr_merge({ class: class }) %}
+  {% set attr = attr|html_attr_merge({ class: class, id: id }) %}
 
-  {{ _self.tag_open('div') }} id="{{ id }}" {{ html_attr(attr) }}>
+  {{ _self.tag_open('div') }} {{ html_attr(attr) }}>
   {{ _self.tag_open('ul') }} class="px-1 py-0.5">
 {% endmacro %}
 
@@ -105,10 +105,10 @@
 - an icon (starting with 'ri-'): added at the end
 - some content: tag is forced to 'button', a responsive icon is added at the end, a stimulus controller is set
 #}
-{% macro dropdown_item(tag, textKey, icon = null, attr = null, extra = null, autoOpen = false) %}
+{% macro dropdown_item(id, tag, textKey, icon = null, attr = null, extra = null, autoOpen = false) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800'|split(' ') %}
-  {% set attr = attr|html_attr_merge({ class: class }) %}
+  {% set attr = attr|html_attr_merge({ class: class, id: id }) %}
 
   {% if extra is null or extra starts with 'ri-' %}
     <li class="py-0.5">
@@ -120,7 +120,8 @@
     </li>
   {% else %}
     <li class="py-0.5" data-controller="dropdown" data-dropdown-auto-open-value="{{ autoOpen ? 'true' : 'false' }}">
-      <button {{ html_attr(attr) }} data-dropdown-target="button">{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
+      {% set attr = attr|html_attr_merge({ 'data-dropdown-target': 'button' }) %}
+      <button {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
       <div class="hidden" data-dropdown-target="content">
         <div class="mb-0.5 border-l-6 border-zinc-300 pt-0.5 pl-1 dark:border-zinc-800">
           {{ extra|raw }}

@@ -6,7 +6,7 @@ namespace App\Tests\Func;
 
 use PHPUnit\Framework\Attributes as PU;
 
-final class HomeControllerTest extends AbstractControllerTest
+final class HomeControllerTest extends FuncControllerTest
 {
     #[PU\Test]
     public function homeIndex(): void

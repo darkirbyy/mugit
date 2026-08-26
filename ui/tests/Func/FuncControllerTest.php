@@ -9,16 +9,14 @@ use App\Tests\Mock\KeycloakMockUserCreate;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-abstract class AbstractControllerTest extends WebTestCase
+abstract class FuncControllerTest extends WebTestCase
 {
-    protected CoreExecInterface $coreExec;
     protected KernelBrowser $client;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->client = static::createClient();
-        $this->coreExec = self::getContainer()->get(CoreExecInterface::class);
     }
 
     public function login(bool $isAdmin): void
