@@ -52,8 +52,4 @@ when@dev: &services_dev
             autowire: true
             autoconfigure: true
 
-        App\Tests\Mock\KeycloakMockUserCreate:
-            autowire: true
-            autoconfigure: true
-
 when@test: *services_dev
