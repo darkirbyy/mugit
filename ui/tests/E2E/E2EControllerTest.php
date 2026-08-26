@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\End2End;
+namespace App\Tests\E2E;
 
-use App\Service\CoreExecInterface;
+use App\Tests\Extension\CoreAwareTrait;
+use Override;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 
-abstract class End2EndControllerTest extends PantherTestCase
+abstract class E2EControllerTest extends PantherTestCase
 {
-    protected CoreExecInterface $coreExec;
+    use CoreAwareTrait;
+
     protected Client $client;
 
     #[\Override]
@@ -18,7 +20,26 @@ abstract class End2EndControllerTest extends PantherTestCase
     {
         parent::setUp();
         $this->client = static::createPantherClient();
-        $this->coreExec = self::getContainer()->get(CoreExecInterface::class);
+        self::coreInit();
+    }
+
+    #[Override]
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        self::coreReset();
+    }
+
+    public function switchToAdmin(): void
+    {
+        $this->client->waitForVisibility('a[id="link-switch-role"]');
+        $this->clickLink('link-switch-role');
+        $this->client->waitForVisibility('a[id="link-switch-role"]');
+    }
+
+    public function clickLink(string $linkId): void
+    {
+        $this->client->executeScript("document.querySelector('a[id=" . $linkId . "]').click()");
     }
 
     public function clickButton(string $buttonId): void
@@ -26,7 +47,7 @@ abstract class End2EndControllerTest extends PantherTestCase
         $this->client->executeScript("document.querySelector('button[id=" . $buttonId . "]').click()");
     }
 
-    public function submitForm(string $buttonId, array $values): void
+    public function submitForm(string $buttonId, array $values = []): void
     {
         $this->client->submitForm($buttonId, $values, 'POST', ['HTTP_Turbo_Frame' => 'true']);
     }

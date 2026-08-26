@@ -4,64 +4,69 @@ declare(strict_types=1);
 
 namespace App\Tests\Inte;
 
-use App\Service\CoreExecInterface;
+use App\Tests\Extension\CoreAwareTrait;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Filesystem\Path;
 
 final class CoreAPITest extends KernelTestCase
 {
-    private static CoreExecInterface $coreExec;
-    private static string $coreRootPath;
-    private static string $coreDataPath;
+    use CoreAwareTrait;
 
     #[\Override]
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
+        self::coreInit();
+    }
 
-        // todo : better way to find the core data path ?
-        self::$coreRootPath = Path::join(__DIR__, '..', '..', '..', 'core');
-        self::$coreDataPath = Path::join(self::$coreRootPath, $_ENV['CORE_DATA']);
-        self::$coreExec = self::getContainer()->get(CoreExecInterface::class);
+    #[\Override]
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        self::coreReset();
     }
 
     #[PU\Test]
     public function repoCreate(): void
     {
         $coreData = self::$coreExec->exec('repo create repo-1');
-        $coreData = self::$coreExec->exec('repo create repo-2');
+
         $this->assertSame(0, $coreData->exitCode);
-        $this->assertDirectoryExists(Path::join(self::$coreDataPath, 'repo-1.git'));
-        $this->assertDirectoryExists(Path::join(self::$coreDataPath, 'repo-2.git'));
+        $this->assertDirectoryExists(self::coreRepoPath('repo-1'));
+    }
+
+    #[PU\Test]
+    public function repoRename(): void
+    {
+        self::coreRepoAdd('repo-1');
+
+        $coreData = self::$coreExec->exec('repo rename repo-1 repo-2');
+
+        $this->assertSame(0, $coreData->exitCode);
+        $this->assertDirectoryDoesNotExist(self::coreRepoPath('repo-1'));
+        $this->assertDirectoryExists(self::coreRepoPath('repo-2'));
+    }
+
+    #[PU\Test]
+    public function repoDelete(): void
+    {
+        self::coreRepoAdd('repo-1');
+
+        $coreData = self::$coreExec->exec('repo delete repo-1');
+
+        $this->assertSame(0, $coreData->exitCode);
+        $this->assertDirectoryDoesNotExist(self::coreRepoPath('repo-1'));
     }
 
     #[PU\Test]
     #[PU\DataProvider('repoFailValues')]
-    #[PU\Depends('repoCreate')]
     public function repoFail(string $subcommand, int $expectedExitCode): void
     {
+        self::coreRepoAdd('repo-1', 'repo-2');
+
         $coreData = self::$coreExec->exec('repo ' . $subcommand);
+
         $this->assertSame($expectedExitCode, $coreData->exitCode);
-    }
-
-    #[PU\Test]
-    #[PU\Depends('repoFail')]
-    public function repoRename(): void
-    {
-        $coreData = self::$coreExec->exec('repo rename repo-2 repo-3');
-        $this->assertSame(0, $coreData->exitCode);
-        $this->assertDirectoryExists(Path::join(self::$coreDataPath, 'repo-3.git'));
-        $this->assertDirectoryDoesNotExist(Path::join(self::$coreDataPath, 'repo-2.git'));
-    }
-
-    #[PU\Test]
-    #[PU\Depends('repoFail')]
-    public function repoDelete(): void
-    {
-        $coreData = self::$coreExec->exec('repo delete repo-1');
-        $this->assertSame(0, $coreData->exitCode);
-        $this->assertDirectoryDoesNotExist(Path::join(self::$coreDataPath, 'repo-1.git'));
     }
 
     public static function repoFailValues(): array

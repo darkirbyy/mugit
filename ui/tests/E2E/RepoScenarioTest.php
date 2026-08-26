@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\End2End;
+namespace App\Tests\E2E;
 
 use PHPUnit\Framework\Attributes as PU;
 
-final class RepoScenarioTest extends End2EndControllerTest
+final class RepoScenarioTest extends E2EControllerTest
 {
     #[PU\Test]
     public function repoCreateFailThenSuccess(): void
@@ -61,16 +61,15 @@ final class RepoScenarioTest extends End2EndControllerTest
         // Check table updated cell content
         $this->assertAnySelectorTextNotContains('td', 'repo.list.noRepo');
         $this->assertAnySelectorTextContains('td', 'repo-1');
-
-        // Clean up core
-        $this->coreExec->exec('repo delete repo-1');
     }
 
     #[PU\Test]
     public function repoRenameSuccess(): void
     {
-        // Prepare core and start main request
-        $this->coreExec->exec('repo create repo-1');
+        // Prepare core
+        self::coreRepoAdd('repo-1');
+
+        // Start main request
         $this->client->request('GET', '/repo');
         $this->client->followRedirects(true);
 
@@ -91,7 +90,7 @@ final class RepoScenarioTest extends End2EndControllerTest
 
         // Check dropdown button's content, and presence of the rename button
         $this->assertAnySelectorTextContains('div', 'repo.list.rename');
-        $this->assertAnySelectorTextContains('div', 'repo.list.delete');
+        $this->assertAnySelectorTextNotContains('div', 'repo.list.delete');
         $this->assertSelectorExists('button[id="button-repo-rename-repo-1"]');
         $this->assertSelectorExists('turbo-frame[id="turboframe-repo-rename-repo-1"]');
 
@@ -118,8 +117,61 @@ final class RepoScenarioTest extends End2EndControllerTest
         // Check table updated cell content
         $this->assertAnySelectorTextContains('td', 'repo-2');
         $this->assertAnySelectorTextNotContains('td', 'repo-1');
+    }
 
-        // Clean up core
-        $this->coreExec->exec('repo delete repo-2');
+    #[PU\Test]
+    public function repoDeleteSuccess(): void
+    {
+        // Prepare core
+        self::coreRepoAdd('repo-1', 'repo-2');
+        
+        // Start main request
+        $this->client->request('GET', '/repo');
+        $this->client->followRedirects(true);
+        $this->switchToAdmin();
+        
+        // Check presence of main list turbo-frame
+        $this->assertSelectorExists('turbo-frame[id="turboframe-repo-list"]');
+
+        // Wait for main list turbo-frame to be loaded
+        $this->waitForTurboframeLoaded('turboframe-repo-list');
+
+        // Check table header and cell content, and presence of the edit button of one repo
+        $this->assertAnySelectorTextContains('td', 'repo-1');
+        $this->assertAnySelectorTextContains('td', 'repo-2');
+        $this->assertSelectorExists('button[id="button-repo-edit-repo-1"]');
+
+        // Click the edit button of one repo and wait for dropdown to appear
+        $this->clickButton('button-repo-edit-repo-1');
+        $this->waitForDiv('dropdown-repo-edit-repo-1');
+
+        // Check dropdown button's content, and presence of the delete button
+        $this->assertAnySelectorTextContains('div', 'repo.list.rename');
+        $this->assertAnySelectorTextContains('div', 'repo.list.delete');
+        $this->assertSelectorExists('button[id="button-repo-delete-repo-1"]');
+        $this->assertSelectorExists('turbo-frame[id="turboframe-repo-delete-repo-1"]');
+
+        // Click the delete button wait for turbo-frame to be loaded
+        $this->clickButton('button-repo-delete-repo-1');
+        $this->waitForTurboframeLoaded('turboframe-repo-delete-repo-1');
+
+        // Check form label content, and presence of the input field and submit button
+        $this->assertAnySelectorTextContains('div', 'repo.delete.label');
+        $this->assertSelectorExists('button[id="form-repo-delete-repo-1-submit"]');
+
+        // Submit form and wait for flash to appear
+        $this->submitForm('form-repo-delete-repo-1-submit');
+        $this->waitForDiv('flash-success-main-0');
+
+        // Check flash content, and presence of main list turbo-frame
+        $this->assertAnySelectorTextContains('div', 'repo.delete.success');
+        $this->assertSelectorExists('turbo-frame[id="turboframe-repo-list"]');
+
+        // Wait for main list turbo-frame to be loaded
+        $this->waitForTurboframeLoaded('turboframe-repo-list');
+
+        // Check table updated cell content
+        $this->assertAnySelectorTextContains('td', 'repo-2');
+        $this->assertAnySelectorTextNotContains('td', 'repo-1');
     }
 }

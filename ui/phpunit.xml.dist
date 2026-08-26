@@ -27,8 +27,8 @@
             <exclude>tests/Func/FuncControllerTest.php</exclude>
         </testsuite>
         <testsuite name="e2e">
-            <directory>tests/End2End</directory>
-            <exclude>tests/End2End/End2EndControllerTest.php</exclude>
+            <directory>tests/E2E</directory>
+            <exclude>tests/E2E/E2EControllerTest.php</exclude>
         </testsuite>
     </testsuites>
     <source ignoreSuppressionOfDeprecations="true"
@@ -54,7 +54,7 @@
         </report>
     </coverage>
     <extensions>
-        <bootstrap class="App\Tests\Extension\TestsuiteExtension" />
+        <bootstrap class="App\Tests\Extension\SuiteExtension" />
         <bootstrap class="Symfony\Component\Panther\ServerExtension" />
         <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension">
             <parameter name="clock-mock-namespaces" value="App" />
