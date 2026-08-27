@@ -124,12 +124,12 @@ final class RepoScenarioTest extends E2EControllerTest
     {
         // Prepare core
         self::coreRepoAdd('repo-1', 'repo-2');
-        
-        // Start main request
+
+        // Switch to amdin and start main request
+        $this->client->request('GET', '/switch?is-admin=true');
         $this->client->request('GET', '/repo');
         $this->client->followRedirects(true);
-        $this->switchToAdmin();
-        
+
         // Check presence of main list turbo-frame
         $this->assertSelectorExists('turbo-frame[id="turboframe-repo-list"]');
 

@@ -24,6 +24,7 @@ final class HomeControllerTest extends FuncControllerTest
         $this->client->request('GET', '/switch');
 
         $this->assertResponseRedirects('/');
-        $this->assertTrue($this->client->getSession()->get('is-admin'));
+        $token = unserialize($this->client->getSession()->get('_security_main'));
+        $this->assertTrue($token->getUser()->getIsAdmin());
     }
 }

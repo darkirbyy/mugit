@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use App\Tests\Extension\CoreAwareTrait;
-use Override;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -23,18 +22,11 @@ abstract class E2EControllerTest extends PantherTestCase
         self::coreInit();
     }
 
-    #[Override]
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();
         self::coreReset();
-    }
-
-    public function switchToAdmin(): void
-    {
-        $this->client->waitForVisibility('a[id="link-switch-role"]');
-        $this->clickLink('link-switch-role');
-        $this->client->waitForVisibility('a[id="link-switch-role"]');
     }
 
     public function clickLink(string $linkId): void

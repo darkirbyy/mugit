@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Tests\Mock\KeycloakMockEntryPoint;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +28,16 @@ class HomeController extends AbstractController
      * Route to switch from standard user to admin user, ONLY available in dev/test environment and if keycloak is mocked.
      */
     #[Route('/switch', name: 'switch', methods: ['GET'], env: ['dev', 'test'], condition: "true == '%mock.keycloak_enable%'")]
-    public function switch(Security $security, Request $request): Response
+    public function switch(Security $security, Request $request, KeycloakMockEntryPoint $keycloakMockEntryPoint): Response
     {
-        $isAdmin = $this->getUser()->getIsAdmin();
-        $security->logout(false);
+        if (null !== $request->query->get('is-admin')) {
+            $isAdmin = $request->query->getBoolean('is-admin');
+        } else {
+            $isAdmin = !$this->getUser()->getIsAdmin();
+        }
 
-        $request->getSession()->set('is-admin', !$isAdmin);
-        $request->getSession()->save();
+        $security->logout(false);
+        $security->login($keycloakMockEntryPoint->createUser($isAdmin));
 
         $url = $request->headers->get('referer', '/');
 

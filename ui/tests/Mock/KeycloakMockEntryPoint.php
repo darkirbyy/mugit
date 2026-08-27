@@ -29,12 +29,12 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
     {
         if ($this->mockKeycloakEnable) {
             $session = $request->getSession();
-            $isAdmin = $request->getSession()->get('is-admin', false);
-            $this->loginFakeUser($session, $isAdmin);
+            $this->loginFakeUser($session, false);
 
-            return new RedirectResponse('/');
+            $url = $session->get('_security.main.target_path', '/');
+
+            return new RedirectResponse($url);
         }
-
         return $this->inner->start($request, $authException);
     }
 
@@ -45,14 +45,13 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
         $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
 
-        $session->set('is-admin', $isAdmin);
         $session->set('_security_main', serialize($token));
         $session->save();
 
         return $user;
     }
 
-    private function createUser(bool $isAdmin): KeycloakMockUser
+    public function createUser(bool $isAdmin): KeycloakMockUser
     {
         $number = 1;
         $uuid = UuidV4::fromString('11111111-1111-4111-8111-' . 111111111111 * $number);
