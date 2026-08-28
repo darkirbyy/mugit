@@ -17,8 +17,7 @@ trait CoreAwareTrait
 
     public static function coreInit(): void
     {
-        // todo : better way to find the core data path ?
-        self::$coreRootPath = Path::join(__DIR__, '..', '..', '..', 'core');
+        self::$coreRootPath = realpath(__DIR__ . '/../../../core');
         self::$coreDataPath = Path::join(self::$coreRootPath, $_ENV['CORE_DATA']);
         self::$coreExec = self::getContainer()->get(CoreExecInterface::class);
     }

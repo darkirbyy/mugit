@@ -54,7 +54,7 @@
         </report>
     </coverage>
     <extensions>
-        <bootstrap class="App\Tests\Extension\SuiteExtension" />
+        <bootstrap class="App\Tests\Extension\TestsExtension" />
         <bootstrap class="Symfony\Component\Panther\ServerExtension" />
         <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension">
             <parameter name="clock-mock-namespaces" value="App" />

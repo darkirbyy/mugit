@@ -10,8 +10,8 @@ fi
 
 # Checking if the keys are already present
 if [ -e "$1/ssh_host_ed25519_key" ] || [ -e "$1/ssh_root_ed25519_key" ]; then
-    echo "The keys have already been generated, aborting."
-    exit 1
+    echo "The keys have already been generated, skipping."
+    exit 0
 fi
 
 # Generating the server keys and a root keys access

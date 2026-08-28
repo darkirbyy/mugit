@@ -8,8 +8,7 @@ use PHPUnit\Event\TestSuite\Started;
 use PHPUnit\Event\TestSuite\StartedSubscriber;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Finder\Finder;
 
 final class SuiteStart implements StartedSubscriber
 {
@@ -17,40 +16,21 @@ final class SuiteStart implements StartedSubscriber
 
     public function notify(Started $event): void
     {
-        $testsuiteName = $event->testSuite()->name();
+        $finder = new Finder();
+        $filesystem = new Filesystem();
+        $coreRootPath = realpath(__DIR__ . '/../../../core');
 
-        // Clean up test data directory and start a test instance of the core
-        if (in_array($testsuiteName, ['inte', 'func', 'e2e'])) {
-            $coreRootPath = Path::join(__DIR__, '..', '..', '..', 'core');
+        // INTE, FUNC, E2E ONLY : clean up core data directory before the suite statr
+        if (in_array($event->testSuite()->name(), TestsExtension::SUITE_REQUIRE_CORE)) {
             $coreDataPath = Path::join($coreRootPath, $_ENV['CORE_DATA']);
 
-            $filesystem = new Filesystem();
-            $filesystem->remove($coreDataPath);
-            $filesystem->mkdir($coreDataPath);
-
-            $process = new Process(['docker', 'compose', '--project-directory', $coreRootPath, 'up', '-d']);
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
+            $finder->directories()->name('*.git')->depth('== 0')->in($coreDataPath);
+            if (!$finder->hasResults()) {
+                return;
             }
-        }
 
-        // Prepare a temporary public directory and compile the assets into it
-        if ('e2e' == $testsuiteName) {
-            $uiRootPath = Path::join(__DIR__, '..', '..');
-            $pantherPublicPath = Path::join($uiRootPath, $_ENV['PANTHER_WEB_SERVER_DIR']);
-
-            $filesystem = new Filesystem();
-            $filesystem->remove($pantherPublicPath);
-            $filesystem->mkdir($pantherPublicPath);
-            $index = $filesystem->readFile(Path::join($uiRootPath, 'public', 'index.php'));
-            $index = str_replace('/vendor', '/../../vendor', $index);
-            $filesystem->dumpFile(Path::join($pantherPublicPath, 'index.php'), $index);
-
-            $process = new Process(['npm', 'run', 'test-build']);
-            $process->run();
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
+            foreach ($finder as $file) {
+                $filesystem->remove($file->getPathname());
             }
         }
     }
