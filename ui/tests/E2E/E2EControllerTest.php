@@ -29,28 +29,32 @@ abstract class E2EControllerTest extends PantherTestCase
         self::coreReset();
     }
 
-    public function clickLink(string $linkId): void
+    public function clickElement(string $elementId): void
     {
-        $this->client->executeScript("document.querySelector('a[id=" . $linkId . "]').click()");
+        $this->assertSelectorExists('[id="' . $elementId . '"]');
+        $this->client->executeScript("document.querySelector('[id=" . $elementId . "]').click()");
     }
 
-    public function clickButton(string $buttonId): void
+    public function submitForm(string $formId, array $values = []): void
     {
-        $this->client->executeScript("document.querySelector('button[id=" . $buttonId . "]').click()");
+        foreach (array_keys($values) as $key) {
+            $this->assertSelectorExists('input[id="' . $formId . '-' . $key . '"]');
+        }
+        $this->assertSelectorExists('button[id="' . $formId . '-submit"]');
+        $this->client->submitForm($formId . '-submit', $values, 'POST', ['HTTP_Turbo_Frame' => 'true']);
     }
 
-    public function submitForm(string $buttonId, array $values = []): void
+    public function waitForTurboframe(string ...$turboframeIdList): void
     {
-        $this->client->submitForm($buttonId, $values, 'POST', ['HTTP_Turbo_Frame' => 'true']);
+        foreach ($turboframeIdList as $turboframeId) {
+            $this->client->waitForAttributeToContain('turbo-frame[id="' . $turboframeId . '"]', 'complete', 'true');
+        }
     }
 
-    public function waitForTurboframeLoaded(string $turboframeId): void
+    public function waitForDiv(string ...$divIdList): void
     {
-        $this->client->waitForAttributeToContain('turbo-frame[id="' . $turboframeId . '"]', 'complete', 'true');
-    }
-
-    public function waitForDiv(string $divId): void
-    {
-        $this->client->waitForVisibility('div[id="' . $divId . '"]');
+        foreach ($divIdList as $divId) {
+            $this->client->waitForVisibility('div[id="' . $divId . '"]');
+        }
     }
 }
