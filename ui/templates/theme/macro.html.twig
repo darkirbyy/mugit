@@ -6,10 +6,14 @@
 {% macro button(id, textKey, icon = null, mode = 'normal', attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-800'|split(' ') %}
+  {% set class = class|merge('focus-within:bg-zinc-300 focus-within:opacity-100 dark:focus-within:bg-zinc-800'|split(' ')) %}
+  {% set class = class|merge('focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
+  {% set class = class|merge('focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
 
   {% if mode == 'tooltip' %}
     {% set class = class|merge('after:absolute after:translate-x-3 after:-translate-y-2 after:z-30 after:hidden after:rounded after:text-sm after:p-2'|split(' ')) %}
-    {% set class = class|merge('after:border after:border-zinc-500 after:bg-zinc-300 hover:after:inline-block dark:after:bg-zinc-800 whitespace-nowrap'|split(' ')) %}
+    {% set class = class|merge('after:border after:border-zinc-500 after:bg-zinc-300 dark:after:bg-zinc-800 whitespace-nowrap'|split(' ')) %}
+    {% set class = class|merge('hover:after:inline-block focus-within:after:inline-block'|split(' ')) %}
     {% set attr = attr|html_attr_merge({ 'data-tooltip': textKey|trans }) %}
   {% endif %}
   {% if mode == 'off' or mode == 'tooltip' %}
@@ -30,7 +34,8 @@
 {# HELP : textKey is the key before translation #}
 {% macro link(id, textKey, path, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
-  {% set class = 'font-bold underline opacity-75 hover:opacity-100'|split(' ') %}
+  {% set class = 'font-bold rounded underline opacity-75 hover:opacity-100 '|split(' ') %}
+  {% set class = class|merge('focus-within:opacity-100 focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
 
   {% set attr = attr|html_attr_merge({ class: class, id: id, href: path }) %}
 
@@ -65,7 +70,7 @@
         {% if canClose %}
           <button
             type="button"
-            class="m-0.5 ms-auto inline-flex size-8 shrink-0 items-center justify-center rounded hover:cursor-pointer hover:bg-zinc-500/25"
+            class="m-0.5 ms-auto inline-flex size-8 shrink-0 items-center justify-center rounded focus-within:bg-zinc-500/25 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-500/25 dark:focus-within:outline-zinc-200"
             aria-label="{{ 'layout.flash.close'|trans }}"
             data-action="click->flash#dismiss"
           >
@@ -107,7 +112,9 @@
 #}
 {% macro dropdown_item(id, tag, textKey, icon = null, attr = null, extra = null, autoOpen = false) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
-  {% set class = 'inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800'|split(' ') %}
+  {% set class = 'inline-flex w-full items-center justify-between rounded px-1 py-0.5 text-left'|split(' ') %}
+  {% set class = class|merge('hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800 focus-within:bg-zinc-300 dark:focus-within:bg-zinc-800'|split(' ')) %}
+  {% set class = class|merge('focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
   {% set attr = attr|html_attr_merge({ class: class, id: id }) %}
 
   {% if extra is null or extra starts with 'ri-' %}
@@ -119,10 +126,10 @@
       {% endif %}
     </li>
   {% else %}
-    <li class="py-0.5" data-controller="dropdown" data-dropdown-auto-open-value="{{ autoOpen ? 'true' : 'false' }}">
-      {% set attr = attr|html_attr_merge({ 'data-dropdown-target': 'button' }) %}
+    <li class="py-0.5" data-controller="dropdown-extra" data-dropdown-extra-auto-open-value="{{ autoOpen ? 'true' : 'false' }}">
+      {% set attr = attr|html_attr_merge({ 'data-dropdown-extra-target': 'button' }) %}
       <button {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
-      <div class="hidden" data-dropdown-target="content">
+      <div class="hidden" data-dropdown-extra-target="content">
         <div class="mb-0.5 border-l-6 border-zinc-300 pt-0.5 pl-1 dark:border-zinc-800">
           {{ extra|raw }}
         </div>
@@ -133,16 +140,14 @@
 
 {# HELP : internal macro #}
 {% macro dropdown_item_insert(textKey, iconStart = null, iconEnd = null) %}
-  <div>
+  <span>
     {% if iconStart is not null %}
       <span class="{{ iconStart }} my-0.5 pr-2" aria-hidden="true"></span>
     {% endif %}
     {{ textKey|trans }}
-  </div>
+  </span>
   {% if iconEnd is not null %}
-    <div>
-      <span class="{{ iconEnd }}" aria-hidden="true"></span>
-    </div>
+    <span><span class="{{ iconEnd }}" aria-hidden="true"></span></span>
   {% endif %}
 {% endmacro %}
 
@@ -163,7 +168,7 @@
 
 {# HELP : #}
 {% macro spinner(number = 1, bordered = false, gridClass = 'p-1 gap-1 grid-cols-1', itemClass = 'h-8') %}
-  <div class="grid {{ gridClass }} {{ bordered ? 'border-zinc-500/25 rounded border' }} motion-safe:animate-pulse" aria-label="{{ 'aria.loading'|trans }}">
+  <div class="grid {{ gridClass }} {{ bordered ? 'border-zinc-500/25 rounded border' }} motion-safe:animate-pulse" aria-live="polite" aria-busy="true">
     {% for n in 1..number %}
       <div class="{{ itemClass }} rounded bg-zinc-500/25"></div>
     {% endfor %}

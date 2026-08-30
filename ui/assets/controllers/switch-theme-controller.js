@@ -57,8 +57,6 @@ export default class extends Controller {
       let active = target.getAttribute('data-' + this.identifier + '-target').includes(theme);
       target.classList.toggle('bg-zinc-300', active);
       target.classList.toggle('dark:bg-zinc-800', active);
-      target.classList.toggle('hover:bg-zinc-300', !active);
-      target.classList.toggle('dark:hover:bg-zinc-800', !active);
       // todo : use something more robust than lastChildElement
       target.lastElementChild.classList.toggle('hidden', !active);
     });

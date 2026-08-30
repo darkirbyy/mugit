@@ -46,7 +46,12 @@
 
     {# ACCESSIBILITY: Skip to content link for screen reader #}
     <div class="absolute z-40 mx-auto mt-2 w-full -translate-y-10 text-center transition duration-200 focus-within:translate-y-0 motion-reduce:duration-0">
-      <a id="link-skip-content" class="rounded border border-zinc-500 bg-zinc-100 px-2 py-1 dark:bg-zinc-900" href="#main-content" data-turbo="false">
+      <a
+        id="link-skip-content"
+        class="rounded border border-zinc-500 bg-zinc-100 px-2 py-1 focus-within:outline-2 focus-within:outline-zinc-800 dark:bg-zinc-900 dark:focus-within:outline-zinc-200"
+        href="#main-content"
+        data-turbo="false"
+      >
         {{ 'aria.skipToContent'|trans }}
       </a>
     </div>
@@ -56,42 +61,44 @@
       {# Header left part #}
       <ul>
         <li>
-          <a id="link-header-home" href="{{ path('home_index') }}" class="m-0.5 rounded px-2 py-1 font-bold hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800">
+          <a
+            id="link-header-home"
+            href="{{ path('home_index') }}"
+            class="m-0.5 rounded px-2 py-1 font-bold focus-within:bg-zinc-300 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-300 dark:focus-within:bg-zinc-800 dark:focus-within:outline-zinc-200 dark:hover:bg-zinc-800"
+          >
             {{ 'layout.name'|trans }}
           </a>
         </li>
       </ul>
       {# Header right part #}
-      <navbar>
+      <nav>
         <button
           id="button-navbar-menu"
-          class="m-0.5 rounded px-2 py-1 hover:cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-800"
+          class="m-0.5 rounded px-2 py-1 focus-within:bg-zinc-300 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-300 dark:focus-within:bg-zinc-800 dark:focus-within:outline-zinc-200 dark:hover:bg-zinc-800"
           data-dropdown-toggle="dropdown-navbar-menu"
           data-dropdown-placement="bottom-end"
           aria-label="{{ 'aria.toggleNavigation'|trans }}"
         >
-          <div>
-            <span class="font-bold">{{ app.user.username }}</span>
-            <img
-              class="mb-0.5 ml-1.5 inline size-6 rounded-full border border-zinc-500 object-cover"
-              src="{{ app.user.toArray.picture }}"
-              alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}"
-            />
-          </div>
+          <span class="font-bold">{{ app.user.username }}</span>
+          <img
+            class="mb-0.5 ml-1.5 inline size-6 rounded-full border border-zinc-500 object-cover"
+            src="{{ app.user.toArray.picture }}"
+            alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}"
+          />
         </button>
 
         {# Menu dropdown #}
-        {{ m.dropdown_start('dropdown-navbar-menu', { class: ['min-w-60'] }) }}
+        {{ m.dropdown_start('dropdown-navbar-menu', { class: ['sm:w-auto w-full sm:min-w-60 sm:rounded'], 'data-controller': 'dropdown-main' }) }}
         <li>
-          <div class="flex flex-row items-center gap-3 p-2">
-            <div>
+          <div class="flex flex-row items-center gap-3 py-0.5">
+            <div class="py-1 pl-2">
               <img
                 class="size-12 rounded-full border border-zinc-500 object-cover"
                 src="{{ app.user.toArray.picture }}"
                 alt="{{ 'aria.avatar'|trans({ name: app.user.username }) }}"
               />
             </div>
-            <div class="flex flex-col justify-center">
+            <div class="flex grow flex-col justify-center px-1 py-2">
               <div class="h-5 text-base font-bold">
                 {{ app.user.username ~ (is_granted('ROLE_ADMIN') ? ' (' ~ ('layout.navbar.admin'|trans) ~ ')') }}
               </div>
@@ -100,6 +107,15 @@
                   {{ app.user.email }}
                 </div>
               {% endif %}
+            </div>
+            <div class="self-start">
+              <button
+                class="rounded px-2 py-1 focus-within:bg-zinc-500/25 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-500/25 dark:focus-within:outline-zinc-200"
+                data-action="click->dropdown-main#close"
+                aria-label="{{ 'layout.flash.close'|trans }}"
+              >
+                <span class="ri-close-line text-lg" aria-hidden="true"></span>
+              </button>
             </div>
           </div>
         </li>
@@ -123,7 +139,7 @@
         {% set attr = { href: path('mainick_keycloak_security_auth_logout'), 'data-turbo-prefetch': false, 'data-turbo': false, class: ['text-red-900', 'dark:text-red-400'] } %}
         {{ m.dropdown_item('link-navbar-sign-out', 'a', 'layout.navbar.signOut', 'ri-logout-circle-r-line', attr, 'ri-external-link-line') }}
         {{ m.dropdown_end() }}
-      </navbar>
+      </nav>
     </header>
 
     {# MAIN #}

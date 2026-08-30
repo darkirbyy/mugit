@@ -9,7 +9,7 @@
         {% set buttonId = 'button-repo-create' %}
         {% set dropdownId = 'dropdown-repo-create' %}
         {% set turboframeId = 'turboframe-repo-create' %}
-        {{ m.button(buttonId, 'repo.list.createNew', 'ri-add-large-line', 'tooltip', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
+        {{ m.button(buttonId, 'repo.list.createNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
         {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
         <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('repo_create') }}" data-controller="turboframe">
           {{ m.spinner(2, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
@@ -22,7 +22,7 @@
           <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
             <tr>
               <th scope="col" class="px-4 pr-2">{{ 'repo.list.name'|trans }}</th>
-              <th scope="col" class="px-4 py-2">
+              <th scope="col" class="px-4 py-2 whitespace-nowrap">
                 {{ 'repo.list.humanReadableSize'|trans }}
                 <span class="text-base font-medium">{{ m.button('button-repo-help-size', 'repo.list.humanReadableSizeHelp', 'ri-question-line', 'tooltip') }}</span>
               </th>
@@ -34,7 +34,7 @@
             {% for repoInfoData in repoListData.repoInfoDataList %}
               <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
                 <td class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfoData.name }}</td>
-                <td class="px-4 py-2">
+                <td class="px-4 py-2 whitespace-nowrap">
                   {{ repoInfoData.size|repo_size_to_human_readable }}
                   {% if repoInfoData.size > env.core.repo_max_size_mio * 1024 * env.core.repo_warn_size_percent / 100 %}
                     <div class="inline-block">
@@ -42,7 +42,7 @@
                     </div>
                   {% endif %}
                 </td>
-                <td class="px-4 py-2" data-copy-clipboard-target="cell">
+                <td class="px-4 py-2 whitespace-nowrap" data-copy-clipboard-target="cell">
                   <span class="mr-1">{{ repoInfoData.name|repo_name_to_clone_URL }}</span>
                   {% set buttonId = 'button-repo-copy-url-' ~ repoInfoData.name %}
                   {{ m.button(buttonId, 'repo.list.copyURLToClipboard', 'ri-file-copy-line', 'tooltip') }}
@@ -52,7 +52,7 @@
                   {% set dropdownId = 'dropdown-repo-edit-' ~ repoInfoData.name %}
                   {% set turboframeRenameId = 'turboframe-repo-rename-' ~ repoInfoData.name %}
                   {% set turboframeDeleteId = 'turboframe-repo-delete-' ~ repoInfoData.name %}
-                  {{ m.button(buttonId, 'repo.list.edit', 'ri-more-2-line', 'tooltip', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
+                  {{ m.button(buttonId, 'repo.list.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
                   {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
                   {% set extra %}
                     <turbo-frame id="{{ turboframeRenameId }}" loading="lazy" src="{{ path('repo_rename', { 'old-name': repoInfoData.name }) }}" data-controller="turboframe">

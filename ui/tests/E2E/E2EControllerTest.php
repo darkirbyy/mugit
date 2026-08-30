@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use App\Tests\Extension\CoreAwareTrait;
+use PHPUnit\Framework\Attributes as PU;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 
+#[PU\CoversNothing]
 abstract class E2EControllerTest extends PantherTestCase
 {
     use CoreAwareTrait;

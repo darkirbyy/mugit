@@ -29,7 +29,7 @@ final class RepoScenarioTest extends E2EControllerTest
         $this->waitForTurboframe('turboframe-repo-create');
 
         // Check dropdown content
-        $this->assertAnySelectorTextContains('div', 'repo.list.createNew');
+        $this->assertAnySelectorTextContains('span', 'repo.list.createNew');
         $this->assertAnySelectorTextContains('label', 'repo.create.label');
 
         // Submit form with invalid name
@@ -71,8 +71,8 @@ final class RepoScenarioTest extends E2EControllerTest
         $this->waitForDiv('dropdown-repo-edit-repo-1');
 
         // Check dropdown content
-        $this->assertAnySelectorTextContains('div', 'repo.list.rename');
-        $this->assertAnySelectorTextNotContains('div', 'repo.list.delete');
+        $this->assertAnySelectorTextContains('span', 'repo.list.rename');
+        $this->assertAnySelectorTextNotContains('span', 'repo.list.delete');
 
         // Click the rename button
         $this->clickElement('button-repo-rename-repo-1');
@@ -112,8 +112,8 @@ final class RepoScenarioTest extends E2EControllerTest
         $this->waitForDiv('dropdown-repo-edit-repo-1');
 
         // Check dropdown content
-        $this->assertAnySelectorTextContains('div', 'repo.list.rename');
-        $this->assertAnySelectorTextContains('div', 'repo.list.delete');
+        $this->assertAnySelectorTextContains('span', 'repo.list.rename');
+        $this->assertAnySelectorTextContains('span', 'repo.list.delete');
 
         // Click the delete button
         $this->clickElement('button-repo-delete-repo-1');
