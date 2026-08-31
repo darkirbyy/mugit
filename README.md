@@ -68,4 +68,6 @@ The workflow can be triggered manually in GitHub Actions or automatically when p
 
 ## TODO
 
-add hint about sparse checkout in README.
+- add hint about sparse checkout in README.
+- use `git config --global --add safe.directory <path/to/mugit-repo>`so that another user or script can pull the changes
+- if e2e test with panther are slow, try to find the `ui/vendor/symfony/panther/src/ProcessManager/WebServerReadinessProbeTrait.php` file and comment out the whole code in `checkPortAvailable` method.
