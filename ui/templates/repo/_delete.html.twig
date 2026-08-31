@@ -1,38 +1,16 @@
 {% import 'theme/macro.html.twig' as m %}
 
 <turbo-frame id="turboframe-repo-delete-{{ repoDeleteData.name }}">
-  {% set formId = 'form-repo-delete-' ~ repoDeleteData.name %}
-  <form id="{{ formId }}" action="{{ path(app.current_route) }}" method="post" novalidate>
-    {# Field to confirm deletion + submit button #}
-    <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
-      <div class="flex items-center gap-1 text-red-900 dark:text-red-400">
-        <div class="flex-1 px-1">
-          {{ 'repo.delete.label'|trans }}
-        </div>
-        <button
-          type="submit"
-          name="submit"
-          id="{{ formId }}-submit"
-          class="rounded border px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-900"
-          aria-label="{{ 'form.delete'|trans }}"
-          data-action="click->turboframe#submit"
-        >
-          <span class="ri-delete-bin-line" aria-hidden="true"></span>
-        </button>
+  {% set formName = 'repo-delete-' ~ repoDeleteData.name %}
+  {{ m.form_start(formName) }}
+  <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
+    <div class="flex items-center gap-1 text-red-900 dark:text-red-400">
+      <div class="flex-1 px-1">
+        {{ 'repo.delete.label'|trans }}
       </div>
+      {{ m.form_submit(formName, 'form.delete', 'ri-delete-bin-line') }}
     </div>
-
-    {# Global error #}
-    <div class="mt-1">
-      {% set error = attribute(formData.errorList, '_top')|default(null) %}
-      {% if error is not empty %}
-        {{ m.flash('flash-error-repo-delete-' ~ repoDeleteData.name ~ '-top', 'error', error.textKey, 'mini') }}
-      {% endif %}
-    </div>
-
-    {# Hidden fields #}
-
-    <input type="hidden" name="name" value="{{ repoDeleteData.name }}" />
-    <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
-  </form>
+  </div>
+  <input type="hidden" name="name" value="{{ repoDeleteData.name }}" />
+  {{ m.form_end(formName, formData) }}
 </turbo-frame>

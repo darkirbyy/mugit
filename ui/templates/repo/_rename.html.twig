@@ -1,48 +1,9 @@
 {% import 'theme/macro.html.twig' as m %}
 
 <turbo-frame id="turboframe-repo-rename-{{ repoRenameData.oldName }}">
-  {% set formId = 'form-repo-rename-' ~ repoRenameData.oldName %}
-  <form id="{{ formId }}" action="{{ path(app.current_route) }}" method="post" novalidate>
-    {# Field 'new-name' + submit button #}
-    <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
-      <div class="flex gap-1">
-        <label for="{{ formId }}-new-name" class="sr-only">{{ 'repo.rename.label'|trans }}</label>
-        <input
-          type="text"
-          name="new-name"
-          id="{{ formId }}-new-name"
-          class="block flex-1 rounded border border-zinc-500/50 bg-transparent px-2 py-1 focus:bg-zinc-300 focus:ring-0 focus:dark:bg-zinc-900"
-          placeholder="{{ 'repo.rename.label'|trans }}"
-          value="{{ repoRenameData.newName }}"
-          required
-        />
-        <button
-          type="submit"
-          name="submit"
-          id="{{ formId }}-submit"
-          class="rounded border border-zinc-500/50 px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-900"
-          aria-label="{{ 'form.submit'|trans }}"
-          data-action="click->turboframe#submit"
-        >
-          <span class="ri-check-line" aria-hidden="true"></span>
-        </button>
-      </div>
-      {% set error = attribute(formData.errorList, 'new-name')|default(null) %}
-      {% if error is not empty %}
-        {{ m.flash('flash-error-repo-delete-' ~ repoRenameData.oldName ~ '-new-name', 'error', error.textKey, 'mini') }}
-      {% endif %}
-    </div>
-
-    {# Global error #}
-    <div class="mt-1">
-      {% set error = attribute(formData.errorList, '_top')|default(null) %}
-      {% if error is not empty %}
-        {{ m.flash('flash-error-repo-delete-' ~ repoRenameData.oldName ~ '-top', 'error', error.textKey, 'mini') }}
-      {% endif %}
-    </div>
-
-    {# Hidden fields #}
-    <input type="hidden" name="old-name" value="{{ repoRenameData.oldName }}" />
-    <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
-  </form>
+  {% set formName = 'repo-rename-' ~ repoRenameData.oldName %}
+  {{ m.form_start(formName) }}
+  {{ m.form_text_field(formName, formData, 'new-name', 'repo.rename.label', repoRenameData.newName, true) }}
+  <input type="hidden" name="old-name" value="{{ repoRenameData.oldName }}" />
+  {{ m.form_end(formName, formData) }}
 </turbo-frame>

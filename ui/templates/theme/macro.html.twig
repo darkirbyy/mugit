@@ -34,62 +34,18 @@
 {# HELP : textKey is the key before translation #}
 {% macro link(id, textKey, path, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
-  {% set class = 'font-bold rounded underline opacity-75 hover:opacity-100 '|split(' ') %}
-  {% set class = class|merge('focus-within:opacity-100 focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
+  {% set class = 'font-bold rounded underline opacity-75 hover:opacity-100 focus-within:opacity-100 '|split(' ') %}
+  {% set class = class|merge('focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
 
   {% set attr = attr|html_attr_merge({ class: class, id: id, href: path }) %}
 
   <a {{ html_attr(attr) }}>{{ textKey|trans }}</a>
 {% endmacro %}
 
-{# HELP : type can be 'info', 'success', 'warning' or 'error', textKey is the key before translation, size must be:
-- full : full range flash with close button and retry link
-- mini : small sized flash, without any button or link
-#}
-{% macro flash(id, type, textKey, size = 'full', canRetry = true, canClose = true) %}
-  {% set typeToVars = {
-    info: { icon: 'ri-information-line', color: 'bg-sky-200 dark:bg-sky-950' },
-    success: { icon: 'ri-shield-check-line', color: 'bg-green-200 dark:bg-green-950' },
-    warning: { icon: 'ri-alert-line', color: 'bg-amber-200 dark:bg-amber-950' },
-    error: { icon: 'ri-spam-line', color: 'bg-red-200 dark:bg-red-950' }
-  } %}
-  {% set vars = attribute(typeToVars, type) %}
-  {% if size == 'full' %}
-    <div data-controller="flash" id="{{ id }}">
-      <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-start p-1 text-sm" role="alert">
-        <div class="my-1 flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
-          <span class="{{ vars.icon }} text-lg" aria-hidden="true"></span>
-          <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
-        </div>
-        <div class="m-2 flex-1">
-          {{ textKey|trans|nl2br }}
-          {% if canRetry %}
-            {{ _self.link('link-flash-retry', 'layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
-          {% endif %}
-        </div>
-        {% if canClose %}
-          <button
-            type="button"
-            class="m-0.5 ms-auto inline-flex size-8 shrink-0 items-center justify-center rounded focus-within:bg-zinc-500/25 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-500/25 dark:focus-within:outline-zinc-200"
-            aria-label="{{ 'layout.flash.close'|trans }}"
-            data-action="click->flash#dismiss"
-          >
-            <span class="ri-close-line text-lg" aria-hidden="true"></span>
-          </button>
-        {% endif %}
-      </div>
-    </div>
-  {% else %}
-    <div id="{{ id }}" class="my-0.5 flex items-start rounded {{ vars.color }} p-1 text-sm">
-      <span class="{{ vars.icon }} inline-block px-1 text-base" aria-hidden="true"></span>
-      <div class="m-0.5 flex-1">
-        {{ textKey|trans|nl2br }}
-      </div>
-    </div>
-  {% endif %}
-{% endmacro %}
+{# ####################################### #}
+{# ############# DROPDOWN ################ #}
+{# ####################################### #}
 
-{# HELP : #}
 {% macro dropdown_start(id, attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
   {% set class = 'z-10 hidden absolute rounded border border-zinc-500 bg-zinc-200 shadow-lg shadow-zinc-300 dark:bg-zinc-950 dark:shadow-zinc-950'|split(' ') %}
@@ -99,7 +55,6 @@
   {{ _self.tag_open('ul') }} class="px-1 py-0.5">
 {% endmacro %}
 
-{# HELP : #}
 {% macro dropdown_end() %}
   {{ _self.tag_close('ul') }}>
   {{ _self.tag_close('div') }}>
@@ -151,26 +106,134 @@
   {% endif %}
 {% endmacro %}
 
-{# HELP : #}
 {% macro dropdown_separator() %}
   <li><hr class="-mx-1 my-0.5 border-zinc-500" /></li>
 {% endmacro %}
 
-{# HELP : #}
-{% macro tag_open(tag) %}
-  {{ ('<' ~ tag)|raw }}
+{# ####################################### #}
+{# ############# FORM #################### #}
+{# ####################################### #}
+{% macro form_start(formName) %}
+  {% set formId = 'form-' ~ formName %}
+  {{ _self.tag_open('form') }} id="{{ formId }}" action="{{ path(app.current_route) }}" method="post" novalidate>
 {% endmacro %}
 
-{# HELP : #}
-{% macro tag_close(tag) %}
-  {{ ('</' ~ tag)|raw }}
+{% macro form_text_field(formName, formData, fieldName, fieldTextKey, fieldValue, withSubmit = false) %}
+  {% set fieldId = 'form-' ~ formName ~ '-' ~ fieldName %}
+  <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
+    <div class="flex gap-1">
+      <label for="{{ fieldId }}" class="sr-only">{{ fieldTextKey|trans }}</label>
+      <input
+        type="text"
+        name="{{ fieldName }}"
+        id="{{ fieldId }}"
+        class="block flex-1 rounded border border-zinc-500/50 bg-transparent px-2 py-1 focus-within:ring-2 focus-within:ring-zinc-800 focus:bg-zinc-300 dark:focus-within:ring-zinc-100 focus:dark:bg-zinc-900"
+        placeholder="{{ fieldTextKey|trans }}"
+        value="{{ fieldValue }}"
+        required
+      />
+      {% if withSubmit %}
+        {{ _self.form_submit(formName, 'form.submit', 'ri-check-line') }}
+      {% endif %}
+    </div>
+    {% set error = attribute(formData.errorList, fieldName)|default(null) %}
+    {% if error is not empty %}
+      {{ _self.flash('flash-error-' ~ formName ~ '-' ~ fieldName, 'error', error.textKey, 'mini') }}
+    {% endif %}
+  </div>
 {% endmacro %}
 
-{# HELP : #}
+{% macro form_submit(formName, submitTextKey, submitIcon) %}
+  <button
+    type="submit"
+    name="submit"
+    id="form-{{ formName }}-submit"
+    class="rounded border border-zinc-500/50 px-2 py-1 opacity-75 focus-within:opacity-100 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:focus-within:outline-zinc-200 dark:hover:bg-zinc-900"
+    aria-label="{{ submitTextKey|trans }}"
+    data-action="click->turboframe#submit"
+  >
+    <span class="{{ submitIcon }}" aria-hidden="true"></span>
+  </button>
+{% endmacro %}
+
+{% macro form_end(formName, formData) %}
+  {# Global error #}
+  <div class="mt-1">
+    {% set error = attribute(formData.errorList, '_top')|default(null) %}
+    {% if error is not empty %}
+      {{ _self.flash('flash-error-' ~ formName ~ '-top', 'error', error.textKey, 'mini') }}
+    {% endif %}
+  </div>
+
+  {# Hidden fields #}
+  <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
+  {{ _self.tag_close('form') }}>
+{% endmacro %}
+
+{# ####################################### #}
+{# ############# OTHER ################### #}
+{# ####################################### #}
+
+{# HELP : type can be 'info', 'success', 'warning' or 'error', textKey is the key before translation, size must be:
+- full : full range flash with close button and retry link
+- mini : small sized flash, without any button or link
+#}
+{% macro flash(id, type, textKey, size = 'full', canRetry = true, canClose = true) %}
+  {% set typeToVars = {
+    info: { icon: 'ri-information-line', color: 'bg-sky-200 dark:bg-sky-950' },
+    success: { icon: 'ri-shield-check-line', color: 'bg-green-200 dark:bg-green-950' },
+    warning: { icon: 'ri-alert-line', color: 'bg-amber-200 dark:bg-amber-950' },
+    error: { icon: 'ri-spam-line', color: 'bg-red-200 dark:bg-red-950' }
+  } %}
+  {% set vars = attribute(typeToVars, type) %}
+  {% if size == 'full' %}
+    <div data-controller="flash" id="{{ id }}">
+      <div class="rounded border border-zinc-500 {{ vars.color }} mb-2 flex items-start p-1 text-sm" role="alert">
+        <div class="my-1 flex items-center gap-1.5 rounded-full bg-zinc-500/25 px-2">
+          <span class="{{ vars.icon }} text-lg" aria-hidden="true"></span>
+          <span class="font-bold">{{ ('layout.flash.' ~ type)|trans }}</span>
+        </div>
+        <div class="m-2 flex-1">
+          {{ textKey|trans|nl2br }}
+          {% if canRetry %}
+            {{ _self.link('link-flash-retry', 'layout.flash.tryAgain', '#', { 'data-action': 'click->turboframe#reload' }) }}
+          {% endif %}
+        </div>
+        {% if canClose %}
+          <button
+            type="button"
+            class="m-0.5 ms-auto inline-flex size-8 shrink-0 items-center justify-center rounded focus-within:bg-zinc-500/25 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-500/25 dark:focus-within:outline-zinc-200"
+            aria-label="{{ 'layout.flash.close'|trans }}"
+            data-action="click->flash#dismiss"
+          >
+            <span class="ri-close-line text-lg" aria-hidden="true"></span>
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <div id="{{ id }}" class="my-0.5 flex items-start rounded {{ vars.color }} p-1 text-sm">
+      <span class="{{ vars.icon }} inline-block px-1 text-base" aria-hidden="true"></span>
+      <div class="m-0.5 flex-1">
+        {{ textKey|trans|nl2br }}
+      </div>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{# HELP : number is number of blocks, gridClass is applied once to the whole grid, itemClass is applied to each item #}
 {% macro spinner(number = 1, bordered = false, gridClass = 'p-1 gap-1 grid-cols-1', itemClass = 'h-8') %}
   <div class="grid {{ gridClass }} {{ bordered ? 'border-zinc-500/25 rounded border' }} motion-safe:animate-pulse" aria-live="polite" aria-busy="true">
     {% for n in 1..number %}
       <div class="{{ itemClass }} rounded bg-zinc-500/25"></div>
     {% endfor %}
   </div>
+{% endmacro %}
+
+{% macro tag_open(tag) %}
+  {{ ('<' ~ tag)|raw }}
+{% endmacro %}
+
+{% macro tag_close(tag) %}
+  {{ ('</' ~ tag)|raw }}
 {% endmacro %}

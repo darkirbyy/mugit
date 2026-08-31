@@ -17,7 +17,7 @@
         {{ m.dropdown_end() }}
         {{ m.button('button-repo-refresh', 'repo.list.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
       </div>
-      <div class="overflow-x-scroll">
+      <div class="overflow-auto">
         <table class="w-full text-left" data-controller="copy-clipboard" data-copy-clipboard-copied-text-value="{{ 'repo.list.copied'|trans }}">
           <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
             <tr>
