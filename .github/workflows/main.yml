@@ -1,17 +1,17 @@
-name: Main Workflow
-run-name: ${{ github.actor }} triggered "Test, Build, Deploy" 🚀
+name: main
+run-name: 🏭 ${{ github.actor }} triggered "main"
 
 on:
   push:
     branches:
       - main
 
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'The deployment environment'
-        required: true
-        type: environment
+  # workflow_dispatch:
+  #   inputs:
+  #     environment:
+  #       description: 'The deployment environment'
+  #       required: true
+  #       type: environment
 
 jobs:
   prepare:

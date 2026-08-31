@@ -1,0 +1,81 @@
+name: build
+run-name: 🛠️ ${{ github.actor }} triggered "build", version ${{ inputs.version }}, environment ${{ inputs.environment }}
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'The targeted environment'
+        required: true
+        type: environment
+      version:
+        description: 'The targeted version (x.x.x)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    environment: ${{ inputs.environment }}
+    steps:
+    - name: Checkout code in the runner
+      uses: actions/checkout@v6
+
+    - name: Setup php 8.4
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+
+    - name: Cache composer BUILD packages
+      id: composer-cache
+      uses: actions/cache@v5
+      with:
+        path: ui/vendor
+        key: ${{ runner.os }}-php-build-${{ hashFiles('composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-build-
+
+    - name: Install php BUILD dependencies
+      run: |
+        cd ui
+        composer install --no-scripts --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+
+    - name: Setup Node.js 22.x
+      uses: actions/setup-node@v6
+      with:
+        node-version: 22.x
+
+    - name: Cache npm packages
+      id: npm-cache
+      uses: actions/cache@v5
+      with:
+        path: ui/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install node dependencies and build assets
+      run: | 
+        cd ui
+        npm install
+        npm run prod-build
+
+    - name: Upload build
+      uses: actions/upload-artifact@v7
+      with:
+        name: build-${{ inputs.version }}
+        include-hidden-files: true
+        path: |
+          ui/bin/
+          ui/config/
+          ui/public/
+          ui/src/
+          ui/templates/
+          ui/translations/
+          ui/vendor/
+          ui/composer.json
+          ui/.env
+          ui/.env.${{ inputs.environment }}

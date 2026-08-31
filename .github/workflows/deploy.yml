@@ -1,0 +1,82 @@
+name: deploy
+run-name: 🚀 ${{ github.actor }} triggered "deploy", version ${{ inputs.version }}, environment ${{ inputs.environment }}
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'The targeted environment'
+        required: true
+        type: environment
+      version:
+        description: 'The targeted version (x.x.x)'
+        required: true
+        type: string
+      coverage:
+        description: 'The coverage (number between 0 and 100)'
+        required: true
+        type: number
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    environment: ${{ inputs.environment }}
+    steps:
+    - name: Setup WARP to enable IPv6
+      uses: fscarmen/warp-on-actions@v1.4
+      with:
+        stack: dual
+
+    - name: Download build
+      uses: actions/download-artifact@v7
+      with:
+        name: build-${{ inputs.version }}
+        path: build
+
+    - name: Deploy on server
+      uses: easingthemes/ssh-deploy@main
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SERV_KEYS }}
+        ARGS: "--recursive --delete --links --owner --group --perms --compress --checksum"
+        EXCLUDE: "/var/, /.env.local, /.env.${{ inputs.environment }}.local"
+        SOURCE: "build/"
+        REMOTE_HOST: ${{ secrets.SERV_ADDR }}
+        REMOTE_USER: ${{ secrets.SERV_USER }}
+        REMOTE_PORT: ${{ secrets.SERV_PORT }}
+        TARGET: ${{ secrets.SERV_PATH }}
+        SCRIPT_AFTER_REQUIRED: true
+        SCRIPT_BEFORE: |
+          mkdir -p ${{ secrets.SERV_PATH }}
+        SCRIPT_AFTER: |
+          mkdir -p ${{ secrets.SERV_PATH }}/var && chmod 775 ${{ secrets.SERV_PATH }}/var
+          touch ${{ secrets.SERV_PATH }}/.env.local.php && chmod 664 ${{ secrets.SERV_PATH }}/.env.local.php
+          sudo /usr/bin/docker exec -u php-fpm php-fpm symfony-upgrade-app ${{ secrets.SERV_PATH }} ${{ inputs.environment }}
+          sudo /usr/bin/docker exec -u php-fpm php-fpm opcache-clear-app ${{ secrets.SERV_PATH }} ${{ inputs.environment }}
+          sudo ${{ secrets.SERV_UPDATE_LOCATION }}/update.sh ${{ inputs.version }}
+   
+    - name: Update coverage badge
+      if: inputs.environment == 'prod'
+      uses: schneegans/dynamic-badges-action@v1.9.0
+      with:
+        auth: ${{ secrets.GIST_KEY }}
+        gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
+        filename: mugit-coverage.json
+        label: coverage
+        message: ${{ inputs.coverage }}%
+        valColorRange: ${{ inputs.coverage }}
+        minColorRange: ${{ vars.MIN_COVERAGE }}
+        maxColorRange: 100
+
+    - name: Update version badge
+      if: inputs.environment == 'prod'
+      uses: schneegans/dynamic-badges-action@v1.9.0
+      with:
+        auth: ${{ secrets.GIST_KEY }}
+        gistID: 07bb4b086f8e7dea73754e73bc5c1bb2
+        filename: mugit-version.json
+        label: version
+        message: ${{ inputs.version }}
+        color: blue
