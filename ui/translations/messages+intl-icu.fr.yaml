@@ -5,6 +5,9 @@
 user:
   keys:
     title: Toutes mes clés SSH
+    help: |-
+      Pour générer une paire de clés SSH, utiliser la commande 'ssh-keygen' sur Linux. Seul l'algorithme ed25519 est autorisé, utiliser l'option '-t ed25519' si besoin.
+      Par défaut, les clés sont générées dans '/home/<user>/.ssh'. Copier/coller le contenu de la clé publique (fichier finissant par .pub) ici.
     list:
       addNew: Ajouter une nouvelle clé SSH
       refresh: Rafraichir
@@ -16,7 +19,7 @@ user:
       remove: Supprimer
       failed: Échec lors du calcul de la liste des clés SSH.
     add:
-      label: Clé SSH
+      label: Clé SSH publique
       empty: La clé SSH est vide.
       invalid: |-
         La clé SSH n'est pas valide.

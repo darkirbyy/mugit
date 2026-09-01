@@ -1,11 +1,8 @@
 {% import 'theme/macro.html.twig' as m %}
 
 <turbo-frame id="turboframe-repo-create">
-  {% set extra %}
-    {% set formName = 'repo-create' %}
-    {{ m.form_start(formName) }}
-    {{ m.form_text_field(formName, formData, 'name', 'repo.create.label', repoCreateData.name) }}
-    {{ m.form_end(formName, formData) }}
-  {% endset %}
-  {{ m.dropdown_item('button-repo-create-new', 'button', 'repo.list.createNew', 'ri-add-line', null, extra, true) }}
+  {% set formName = 'repo-create' %}
+  {{ m.form_start(formName) }}
+  {{ m.form_text_field(formName, formData, 'name', 'repo.create.label', repoCreateData.name) }}
+  {{ m.form_end(formName, formData) }}
 </turbo-frame>

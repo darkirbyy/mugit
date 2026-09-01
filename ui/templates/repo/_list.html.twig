@@ -11,9 +11,12 @@
         {% set turboframeId = 'turboframe-repo-create' %}
         {{ m.button(buttonId, 'repo.list.createNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
         {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
-        <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('repo_create') }}" data-controller="turboframe">
-          {{ m.spinner(2, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
-        </turbo-frame>
+        {% set extra %}
+          <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('repo_create') }}" data-controller="turboframe">
+            {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
+          </turbo-frame>
+        {% endset %}
+        {{ m.dropdown_item('button-repo-create-new', 'button', 'repo.list.createNew', 'ri-add-line', null, extra, true) }}
         {{ m.dropdown_end() }}
         {{ m.button('button-repo-refresh', 'repo.list.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
       </div>
@@ -34,10 +37,10 @@
             {% for repoInfoData in repoListData.repoInfoDataList %}
               <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
                 <td class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfoData.name }}</td>
-                <td class="px-4 py-2 whitespace-nowrap">
+                <td class="px-4 py-2">
                   {{ repoInfoData.size|repo_size_to_human_readable }}
                   {% if repoInfoData.size > env.core.repo_max_size_mio * 1024 * env.core.repo_warn_size_percent / 100 %}
-                    <div class="inline-block">
+                    <div class="inline-block whitespace-nowrap">
                       {{ m.flash('flash-warning-repo-size-' ~ repoInfoData.name, 'warning', 'repo.list.warnSize', 'mini') }}
                     </div>
                   {% endif %}

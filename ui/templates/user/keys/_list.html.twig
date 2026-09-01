@@ -10,10 +10,13 @@
         {% set dropdownId = 'dropdown-user-keys-add' %}
         {% set turboframeId = 'turboframe-user-keys-add' %}
         {{ m.button(buttonId, 'user.keys.list.addNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
-        {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
-        <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('user_keys_add', { uuid: userKeysListData.uuid }) }}" data-controller="turboframe">
-          {{ m.spinner(2, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
-        </turbo-frame>
+        {{ m.dropdown_start(dropdownId, { class: ['min-w-100'] }) }}
+        {% set extra %}
+          <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('user_keys_add', { uuid: userKeysListData.uuid }) }}" data-controller="turboframe">
+            {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
+          </turbo-frame>
+        {% endset %}
+        {{ m.dropdown_item('button-user-keys-add-new', 'button', 'user.keys.list.addNew', 'ri-add-line', null, extra, true) }}
         {{ m.dropdown_end() }}
         {{ m.button('button-user-keys-refresh', 'user.keys.list.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
       </div>
@@ -22,7 +25,7 @@
           <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
             <tr>
               <th scope="col" class="px-4 pr-2">{{ 'user.keys.list.key'|trans }}</th>
-              <th scope="col" class="px-4 py-2">{{ 'user.keys.list.dateAdded'|trans }}</th>
+              <th scope="col" class="px-4 py-2 whitespace-nowrap">{{ 'user.keys.list.dateAdded'|trans }}</th>
               <th scope="col" class="px-4 py-2">{{ 'user.keys.list.comment'|trans }}</th>
               <th scope="col" class="w-8 px-2 py-2" aria-label="{{ 'user.keys.list.edit'|trans }}"></th>
             </tr>

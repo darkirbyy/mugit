@@ -4,6 +4,7 @@
 {% set title = 'user.keys.title'|trans %}
 
 {% block main %}
+  {{ m.flash('flash-info-user-keys-help', 'info', 'user.keys.help', 'full', false, false) }}
   <turbo-frame id="turboframe-user-keys-list" src="{{ path('user_keys_list') }}" data-controller="turboframe">
     {{ m.spinner(5, true, 'p-3 gap-3 grid-cols-1', 'h-8') }}
   </turbo-frame>
