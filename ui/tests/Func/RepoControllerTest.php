@@ -80,7 +80,7 @@ final class RepoControllerTest extends FuncControllerTest
         $this->assertSelectorExists('turbo-frame[id="turboframe-repo-delete-repo-1"]');
         $this->assertSelectorExists('form[action="/repo/delete"]');
 
-        $this->client->submitForm('form-repo-delete-repo-1-submit', ['name' => 'repo-1'], 'POST', ['HTTP_Turbo_Frame' => 'true']);
+        $this->client->submitForm('form-repo-delete-repo-1-submit', [], 'POST', ['HTTP_Turbo_Frame' => 'true']);
 
         $this->assertResponseRedirects('/repo');
     }

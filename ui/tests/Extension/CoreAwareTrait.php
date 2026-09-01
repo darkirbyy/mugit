@@ -30,17 +30,12 @@ trait CoreAwareTrait
         return Path::join(self::$coreDataPath, $repoName . '.git');
     }
 
-    public static function coreRepoAdd(string ...$repoNameList): array
+    public static function coreRepoAdd(string ...$repoNameList): void
     {
         $filesystem = new Filesystem();
-        $paths = [];
         foreach ($repoNameList as $repoName) {
-            $repoPath = self::coreRepoPath($repoName);
-            $filesystem->mkdir($repoPath);
-            $paths[] = $repoPath;
+            $filesystem->mkdir(self::coreRepoPath($repoName));
         }
-
-        return $paths;
     }
 
     public static function coreUserGenerateFakeKey(int $userNumber, int $keyNumber): string
@@ -48,23 +43,18 @@ trait CoreAwareTrait
         return 'AAAA' . str_repeat((string) $userNumber, 32) . str_repeat((string) $keyNumber, 32);
     }
 
-    public static function coreUserAdd(string|array|null ...$userCommentsList): array
+    public static function coreUserAdd(string|array|null ...$userCommentsList): void
     {
         $filesystem = new Filesystem();
         $lines = [];
-        $keys = [];
         foreach ($userCommentsList as $userNumber => $userComments) {
             $userUuid = KeycloakMockEntryPoint::userNumberToUuid($userNumber + 1);
-            $keys[$userUuid] = [];
             foreach ((array) $userComments as $keyNumber => $userComment) {
                 $key = self::coreUserGenerateFakeKey($userNumber + 1, $keyNumber + 1);
                 $lines[] = 'ssh-ed25519 ' . $key . ' ' . $userUuid . ':' . time() . ':' . $userComment;
-                $keys[$userUuid][] = $key;
             }
         }
         $filesystem->appendToFile(self::$coreAuthorizedKeysFilepath, implode("\n", $lines) . "\n", true);
-
-        return $keys;
     }
 
     public static function coreAuthorizedKeysContent(): string

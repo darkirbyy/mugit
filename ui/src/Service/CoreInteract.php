@@ -145,7 +145,7 @@ class CoreInteract implements CoreInteractInterface
         }
 
         $userKeysListData->userKeysInfoDataList = array_map(function ($line) {
-            $lineExploded = explode(' ', $line);
+            $lineExploded = explode(' ', $line, 3);
 
             return new UserKeysInfoData($lineExploded[0], \DateTime::createFromTimestamp((int) $lineExploded[1]), count($lineExploded) > 2 ? $lineExploded[2] : null);
         }, $coreData->lineList);
@@ -158,7 +158,7 @@ class CoreInteract implements CoreInteractInterface
     {
         $key = substr($userKeysAddData->fullKey, 12, 68);
         $comment = substr($userKeysAddData->fullKey, 81);
-        $command = 'user key-add ' . $userKeysAddData->uuid . ' \'' . $key . '\' ' . $comment;
+        $command = 'user key-add ' . $userKeysAddData->uuid . ' \'' . $key . '\' \'' . $comment . '\'';
         $coreData = $this->coreExec->exec($command);
 
         if (null === $coreData) {
