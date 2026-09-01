@@ -41,11 +41,20 @@ class TwigFilter
     }
 
     /**
-     * Replnce the middle part of a full key with an ellipsis.
+     * Replace the middle part of a full key with an ellipsis.
      */
     #[AsTwigFilter(name: 'user_keys_replace_ellipsis')]
     public function userKeysReplaceEllipsis(string $key, int $start, int $end): string
     {
         return substr($key, 0, $start) . '...' . substr($key, strlen($key) - $end, $end);
+    }
+
+    /**
+     * Hash a user SSH key.
+     */
+    #[AsTwigFilter(name: 'user_keys_hash')]
+    public function userKeysHash(string $key): string
+    {
+        return md5($key);
     }
 }

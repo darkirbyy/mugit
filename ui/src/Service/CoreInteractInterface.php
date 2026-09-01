@@ -10,6 +10,7 @@ use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
 use App\DTO\UserKeysListData;
+use App\DTO\UserKeysRemoveData;
 
 /**
  * API layer to the core.
@@ -45,4 +46,9 @@ interface CoreInteractInterface
      * List all SSH keys, date and comment for a given user.
      */
     public function userKeysList(UserKeysListData $userKeysListData): ?ErrorData;
+
+    /**
+     * Remove an existing SSH keys for a given user.
+     */
+    public function userKeysRemove(UserKeysRemoveData $userKeysRemoveData): ?ErrorData;
 }

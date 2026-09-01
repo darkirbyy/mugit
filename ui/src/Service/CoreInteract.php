@@ -12,6 +12,7 @@ use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
 use App\DTO\UserKeysInfoData;
 use App\DTO\UserKeysListData;
+use App\DTO\UserKeysRemoveData;
 use Psr\Log\LoggerInterface;
 
 class CoreInteract implements CoreInteractInterface
@@ -123,7 +124,7 @@ class CoreInteract implements CoreInteractInterface
     #[\Override]
     public function userKeysList(UserKeysListData $userKeysListData): ?ErrorData
     {
-        $command = 'user key-list ' . $userKeysListData->uuid->toString();
+        $command = 'user key-list ' . $userKeysListData->uuid;
         $coreData = $this->coreExec->exec($command);
 
         if (null === $coreData) {
@@ -147,6 +148,25 @@ class CoreInteract implements CoreInteractInterface
 
             return new UserKeysInfoData($lineExploded[0], \DateTime::createFromTimestamp((int) $lineExploded[1]), count($lineExploded) > 2 ? $lineExploded[2] : null);
         }, $coreData->lineList);
+
+        return null;
+    }
+
+    #[\Override]
+    public function userKeysRemove(UserKeysRemoveData $userKeysRemoveData): ?ErrorData
+    {
+        $command = 'user key-remove ' . $userKeysRemoveData->uuid . ' ' . $userKeysRemoveData->key;
+        $coreData = $this->coreExec->exec($command);
+
+        if (null === $coreData) {
+            return new ErrorData('git.connectionFailed');
+        }
+
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
+
+            return new ErrorData('user.keys.remove.failed');
+        }
 
         return null;
     }
