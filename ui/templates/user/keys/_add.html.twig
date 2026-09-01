@@ -4,6 +4,5 @@
   {% set formName = 'user-keys-add' %}
   {{ m.form_start(formName) }}
   {{ m.form_text_field(formName, formData, 'full-key', 'user.keys.add.label', userKeysAddData.fullKey) }}
-  <input type="hidden" name="uuid" value="{{ userKeysAddData.uuid }}" />
   {{ m.form_end(formName, formData) }}
 </turbo-frame>

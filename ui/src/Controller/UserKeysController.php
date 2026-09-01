@@ -51,6 +51,7 @@ class UserKeysController extends AbstractController
     #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
     public function add(#[ValueResolver('data')] UserKeysAddData $userKeysAddData, FormHandler $formHandler): Response
     {
+        $userKeysAddData->uuid = $this->getUser()->getId();
         $formData = $formHandler->handle($userKeysAddData, 'userKeysAdd');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('user.keys.add.success'));
@@ -69,6 +70,7 @@ class UserKeysController extends AbstractController
     #[Route('/remove', name: 'remove', methods: ['GET', 'POST'])]
     public function remove(#[ValueResolver('data')] UserKeysRemoveData $userKeysRemoveData, FormHandler $formHandler): Response
     {
+        $userKeysRemoveData->uuid = $this->getUser()->getId();
         $formData = $formHandler->handle($userKeysRemoveData, 'userKeysRemove');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('user.keys.remove.success'));

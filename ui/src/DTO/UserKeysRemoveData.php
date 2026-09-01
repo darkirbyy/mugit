@@ -6,5 +6,5 @@ namespace App\DTO;
 
 class UserKeysRemoveData
 {
-    public function __construct(public string $uuid, public string $key) {}
+    public function __construct(public string $key, public ?string $uuid = null) {}
 }
