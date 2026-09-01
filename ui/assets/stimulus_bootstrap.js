@@ -11,15 +11,13 @@ export const app = startStimulusApp(
   )
 );
 
-// Follow the "redirect" action in Turbo Streams
-Turbo.StreamActions.redirect = function () {
-  Turbo.visit(this.target);
-};
-
-// Display the error page if a turbo-frame is missing (DEV only)
-if (process.env.NODE_ENV === 'development') {
-  document.addEventListener('turbo:frame-missing', (event) => {
+// When a turbo-frame is missing content, follow the redirection if:
+//  - it's clearly a redirection
+//  - the response is not ok (should not happened in prod as the turbo-force-reload is read first
+//                            but useful in dev to see the symfony error page)
+document.addEventListener('turbo:frame-missing', (event) => {
+  if (event.detail.response.redirected || !event.detail.response.ok) {
     event.preventDefault();
     event.detail.visit(event.detail.response);
-  });
-}
+  }
+});
