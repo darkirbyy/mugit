@@ -62,7 +62,7 @@ check_path(){
 check_key(){
     if [ $3 $(grep -F "$2 $1:" "$SSH_FILE" | wc -l) = 0 ]; then
         >&2 echo "$4" 
-        exit $([ "$3" = "!" ] && echo "8" || echo "9")
+        exit $([ "$3" = "!" ] && echo "9" || echo "8")
     fi
 }
 

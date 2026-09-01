@@ -3,7 +3,7 @@
 <turbo-frame id="turboframe-repo-rename-{{ repoRenameData.oldName }}">
   {% set formName = 'repo-rename-' ~ repoRenameData.oldName %}
   {{ m.form_start(formName) }}
-  {{ m.form_text_field(formName, formData, 'new-name', 'repo.rename.label', repoRenameData.newName, true) }}
+  {{ m.form_text_field(formName, formData, 'new-name', 'repo.rename.label', repoRenameData.newName) }}
   <input type="hidden" name="old-name" value="{{ repoRenameData.oldName }}" />
   {{ m.form_end(formName, formData) }}
 </turbo-frame>

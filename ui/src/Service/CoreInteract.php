@@ -10,6 +10,7 @@ use App\DTO\RepoDeleteData;
 use App\DTO\RepoInfoData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysInfoData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
@@ -148,6 +149,34 @@ class CoreInteract implements CoreInteractInterface
 
             return new UserKeysInfoData($lineExploded[0], \DateTime::createFromTimestamp((int) $lineExploded[1]), count($lineExploded) > 2 ? $lineExploded[2] : null);
         }, $coreData->lineList);
+
+        return null;
+    }
+
+    #[\Override]
+    public function userKeysAdd(UserKeysAddData $userKeysAddData): ?ErrorData
+    {
+        $key = substr($userKeysAddData->fullKey, 12, 68);
+        $comment = substr($userKeysAddData->fullKey, 81);
+        $command = 'user key-add ' . $userKeysAddData->uuid . ' \'' . $key . '\' ' . $comment;
+        $coreData = $this->coreExec->exec($command);
+
+        if (null === $coreData) {
+            return new ErrorData('git.connectionFailed');
+        }
+
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
+
+            return new ErrorData(
+                match ($coreData->exitCode) {
+                    3 => 'user.keys.add.empty',
+                    4, 5 => 'user.keys.add.invalid',
+                    9 => 'user.keys.add.alreadyExist',
+                    default => 'user.keys.add.failed',
+                },
+            );
+        }
 
         return null;
     }

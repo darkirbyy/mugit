@@ -11,8 +11,7 @@
         {% set turboframeId = 'turboframe-user-keys-add' %}
         {{ m.button(buttonId, 'user.keys.list.addNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
         {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
-        <turbo-frame id="{{ turboframeId }}" loading="lazy" data-controller="turboframe">
-          {# src="{{ path('repo_create') }}" #}
+        <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('user_keys_add', { uuid: userKeysListData.uuid }) }}" data-controller="turboframe">
           {{ m.spinner(2, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
         </turbo-frame>
         {{ m.dropdown_end() }}

@@ -15,6 +15,16 @@ user:
       edit: Editer
       remove: Supprimer
       failed: Échec lors du calcul de la liste des clés SSH.
+    add:
+      label: Clé SSH
+      empty: La clé SSH est vide.
+      invalid: |-
+        La clé SSH n'est pas valide.
+        Le seul algorithme autorisé est ed25519.
+        Le commentaire peut contenir lettres, chiffres, espaces _, -, et @.
+      alreadyExist: La clé SSH existe déjà.
+      success: La clé SSH a été correctement ajoutée.
+      failed: Échec lors de l'ajout de la clé SSH.
     remove:
       label: La suppression est définitive, confirmer ?
       success: La clé SSH a été correctement supprimée.

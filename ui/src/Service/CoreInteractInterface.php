@@ -9,6 +9,7 @@ use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
 
@@ -18,9 +19,7 @@ use App\DTO\UserKeysRemoveData;
 interface CoreInteractInterface
 {
     public const REGEX_NAME = '^[a-zA-Z]([a-zA-Z0-9_-]){1,127}$';
-    public const REGEX_UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
-    public const REGEX_KEY = '^[a-zA-Z0-9/+=\\]{68}$';
-    public const REGEX_COMMENT = '^[a-zA-Z0-9_@ -]{0,255}$';
+    public const REGEX_FULL_KEY = '^ssh-ed25519 [a-zA-Z0-9\/+=\\\]{68}( [a-zA-Z0-9_@ -]{0,255}|)$';
 
     /**
      * List all repositories names (without the `git` suffix) and sizes (in Kio), sorted alphabetically.
@@ -46,6 +45,11 @@ interface CoreInteractInterface
      * List all SSH keys, date and comment for a given user.
      */
     public function userKeysList(UserKeysListData $userKeysListData): ?ErrorData;
+
+    /**
+     * Remove a new SSH keys for a given user.
+     */
+    public function userKeysAdd(UserKeysAddData $userKeysAddData): ?ErrorData;
 
     /**
      * Remove an existing SSH keys for a given user.

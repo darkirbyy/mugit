@@ -118,7 +118,7 @@
   {{ _self.tag_open('form') }} id="{{ formId }}" action="{{ path(app.current_route) }}" method="post" novalidate>
 {% endmacro %}
 
-{% macro form_text_field(formName, formData, fieldName, fieldTextKey, fieldValue, withSubmit = false) %}
+{% macro form_text_field(formName, formData, fieldName, fieldTextKey, fieldValue) %}
   {% set fieldId = 'form-' ~ formName ~ '-' ~ fieldName %}
   <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
     <div class="flex gap-1">
@@ -132,9 +132,7 @@
         value="{{ fieldValue }}"
         required
       />
-      {% if withSubmit %}
-        {{ _self.form_submit(formName, 'form.submit', 'ri-check-line') }}
-      {% endif %}
+      {{ _self.form_submit(formName, 'form.submit', 'ri-check-line') }}
     </div>
     {% set error = attribute(formData.errorList, fieldName)|default(null) %}
     {% if error is not empty %}

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Attribute\TurboframeOnly;
 use App\DTO\FlashData;
+use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
 use App\Service\CoreInteract;
@@ -30,7 +31,7 @@ class UserKeysController extends AbstractController
     }
 
     /**
-     * List all SSH keys of the current user.
+     * List all SSH keys for the current user.
      */
     #[TurboframeOnly('user_keys_index')]
     #[Route('/list', name: 'list', methods: ['GET'])]
@@ -43,7 +44,25 @@ class UserKeysController extends AbstractController
     }
 
     /**
-     * Remove one SSH keys  of the current user.
+     * Add one SSH key for the current user.
+     */
+    #[IsCsrfTokenValid('submit', methods: ['POST'])]
+    #[TurboframeOnly('user_keys_index')]
+    #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
+    public function add(#[ValueResolver('data')] UserKeysAddData $userKeysAddData, FormHandler $formHandler): Response
+    {
+        $formData = $formHandler->handle($userKeysAddData, 'userKeysAdd');
+        if ($formData->proceed) {
+            $this->addFlash('success', new FlashData('user.keys.add.success'));
+
+            return $this->redirectToRoute('user_keys_index');
+        }
+
+        return $this->render('user/keys/_add.html.twig', ['userKeysAddData' => $userKeysAddData, 'formData' => $formData]);
+    }
+
+    /**
+     * Remove one SSH keys for the current user.
      */
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('user_keys_index')]

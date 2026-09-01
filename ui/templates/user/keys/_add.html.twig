@@ -1,0 +1,12 @@
+{% import 'theme/macro.html.twig' as m %}
+
+<turbo-frame id="turboframe-user-keys-add">
+  {% set extra %}
+    {% set formName = 'user-keys-add' %}
+    {{ m.form_start(formName) }}
+    {{ m.form_text_field(formName, formData, 'full-key', 'user.keys.add.label', userKeysAddData.fullKey) }}
+    <input type="hidden" name="uuid" value="{{ userKeysAddData.uuid }}" />
+    {{ m.form_end(formName, formData) }}
+  {% endset %}
+  {{ m.dropdown_item('button-user-keys-add-new', 'button', 'user.keys.list.addNew', 'ri-add-line', null, extra, true) }}
+</turbo-frame>

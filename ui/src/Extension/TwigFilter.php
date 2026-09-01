@@ -46,7 +46,7 @@ class TwigFilter
     #[AsTwigFilter(name: 'user_keys_replace_ellipsis')]
     public function userKeysReplaceEllipsis(string $key, int $start, int $end): string
     {
-        return substr($key, 0, $start) . '...' . substr($key, strlen($key) - $end, $end);
+        return substr($key, 0, $start) . ' ... ' . substr($key, strlen($key) - $end, $end);
     }
 
     /**
