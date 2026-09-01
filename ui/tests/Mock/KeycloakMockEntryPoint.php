@@ -35,6 +35,7 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
 
             return new RedirectResponse($url);
         }
+
         return $this->inner->start($request, $authException);
     }
 
@@ -54,10 +55,15 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
     public function createUser(bool $isAdmin): KeycloakMockUser
     {
         $number = 1;
-        $uuid = UuidV4::fromString('11111111-1111-4111-8111-' . 111111111111 * $number);
+        $uuid = UuidV4::fromString(self::userNumberToUuid(1));
         $username = 'user' . $number;
         $avatarPath = $this->packages->getUrl('build/tests/avatar' . $number . '.png');
 
         return new KeycloakMockUser($uuid, $username, $avatarPath, $isAdmin);
+    }
+
+    public static function userNumberToUuid(int $number): string
+    {
+        return '11111111-1111-4111-8111-' . str_repeat((string) $number, 12);
     }
 }

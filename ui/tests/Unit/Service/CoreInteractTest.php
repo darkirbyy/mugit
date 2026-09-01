@@ -10,6 +10,9 @@ use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserKeysAddData;
+use App\DTO\UserKeysListData;
+use App\DTO\UserKeysRemoveData;
 use App\Service\CoreExecInterface;
 use App\Service\CoreInteract;
 use PHPUnit\Framework\Attributes as PU;
@@ -72,6 +75,9 @@ final class CoreInteractTest extends TestCase
             'repo create' => ['repoCreate', new RepoCreateData('repo-1')],
             'repo rename' => ['repoRename', new RepoRenameData('repo-1', 'repo-2')],
             'repo delete' => ['repoDelete', new RepoDeleteData('repo-1')],
+            'user keys list' => ['userKeysList', new UserKeysListData('uuid')],
+            'user keys add' => ['userKeysAdd', new UserKeysAddData('uuid', 'key')],
+            'user keys remove' => ['userKeysRemove', new UserKeysRemoveData('uuid', 'key')],
         ];
     }
 }

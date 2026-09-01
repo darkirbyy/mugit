@@ -24,14 +24,16 @@ final class SuiteStart implements StartedSubscriber
         if (in_array($event->testSuite()->name(), TestsExtension::SUITE_REQUIRE_CORE)) {
             $coreDataPath = Path::join($coreRootPath, $_ENV['CORE_DATA']);
 
+            // Clear all git directories
             $finder->directories()->name('*.git')->depth('== 0')->in($coreDataPath);
-            if (!$finder->hasResults()) {
-                return;
+            if ($finder->hasResults()) {
+                foreach ($finder as $file) {
+                    $filesystem->remove($file->getPathname());
+                }
             }
 
-            foreach ($finder as $file) {
-                $filesystem->remove($file->getPathname());
-            }
+            // Clear the authorized_keys file
+            $filesystem->dumpFile(Path::join($coreDataPath, '.ssh', 'authorized_keys'), '');
         }
     }
 }

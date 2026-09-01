@@ -8,7 +8,7 @@ use App\Tests\Extension\CoreAwareTrait;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-final class CoreAPITest extends KernelTestCase
+final class CoreAPIRepoTest extends KernelTestCase
 {
     use CoreAwareTrait;
 
@@ -24,6 +24,19 @@ final class CoreAPITest extends KernelTestCase
     {
         parent::tearDown();
         self::coreReset();
+    }
+
+    #[PU\Test]
+    public function repoList(): void
+    {
+        self::coreRepoAdd('repo-1', 'repo-2');
+
+        $coreData = self::$coreExec->exec('repo list');
+
+        $this->assertSame(0, $coreData->exitCode);
+        $this->assertCount(2, $coreData->lineList);
+        $this->assertStringStartsWith('repo-1', $coreData->lineList[0]);
+        $this->assertStringStartsWith('repo-2', $coreData->lineList[1]);
     }
 
     #[PU\Test]
@@ -72,7 +85,7 @@ final class CoreAPITest extends KernelTestCase
     public static function repoFailValues(): array
     {
         return [
-            'no subcommand' => ['', 1],
+            'missing subcommand' => ['', 1],
             'invalid subcommand' => ['remove', 2],
             'create, empty name' => ['create', 3],
             'create, invalid name' => ['create repo@3', 4],
