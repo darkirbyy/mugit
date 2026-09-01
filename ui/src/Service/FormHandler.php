@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\String\ByteString;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Very simplified version of the Symfony form handler, sufficient for this app.
+ */
 class FormHandler
 {
     public function __construct(private RequestStack $requestStack, private ValidatorInterface $validator, private CoreInteractInterface $coreInteract) {}

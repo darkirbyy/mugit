@@ -39,4 +39,13 @@ class TwigFilter
 
         return round($size, 2) . self::UNITS[$unitIndex];
     }
+
+    /**
+     * Replnce the middle part of a full key with an ellipsis.
+     */
+    #[AsTwigFilter(name: 'user_keys_replace_ellipsis')]
+    public function userKeysReplaceEllipsis(string $key, int $start, int $end): string
+    {
+        return substr($key, 0, $start) . '...' . substr($key, strlen($key) - $end, $end);
+    }
 }

@@ -7,7 +7,7 @@ GIT_DIR="/home/git"
 SSH_FILE="$GIT_DIR/.ssh/authorized_keys"
 NAME_REGEX="^[a-zA-Z]([a-zA-Z0-9_-]){1,127}$"
 NAME_HELP="The names must start with a letter, and can only use letters, digits, and the symbols '-' or '_', with 128 characters maximum."
-UUID_REGEX="^[0-9a-f]{8}-[0-9a-f]{4}-[13-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+UUID_REGEX="^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 UUID_HELP="The uuids must use the standard format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' where x is a digit or a letter between 'a' and 'f'."
 KEY_REGEX="^[a-zA-Z0-9/+=\\]{68}$"
 KEY_HELP="The keys must be generated with the ed25519 algorithm. To be parsed correctly, they must given 

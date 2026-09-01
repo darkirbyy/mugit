@@ -120,7 +120,7 @@
           </div>
         </li>
         {{ m.dropdown_separator() }}
-        {{ m.dropdown_item('link-navbar-my-ssh-key', 'a', 'layout.navbar.mySSHKeys', 'ri-key-2-line', { href: '#' }) }}
+        {{ m.dropdown_item('link-navbar-my-ssh-key', 'a', 'layout.navbar.mySSHKeys', 'ri-key-2-line', { href: path('user_keys_index') }) }}
         {% set extra %}
           <ul data-controller="switch-theme">
             {% for theme, icon in { light: 'ri-sun-line', dark: 'ri-moon-line', auto: 'ri-settings-line' } %}

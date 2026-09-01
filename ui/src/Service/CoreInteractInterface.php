@@ -9,6 +9,7 @@ use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserKeysListData;
 
 /**
  * API layer to the core.
@@ -16,7 +17,7 @@ use App\DTO\RepoRenameData;
 interface CoreInteractInterface
 {
     public const REGEX_NAME = '^[a-zA-Z]([a-zA-Z0-9_-]){1,127}$';
-    public const REGEX_UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[13-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$';
+    public const REGEX_UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
     public const REGEX_KEY = '^[a-zA-Z0-9/+=\\]{68}$';
     public const REGEX_COMMENT = '^[a-zA-Z0-9_@ -]{0,255}$';
 
@@ -39,4 +40,9 @@ interface CoreInteractInterface
      * Delete an existing repository named $name.
      */
     public function repoDelete(RepoDeleteData $repoDeleteData): ?ErrorData;
+
+    /**
+     * List all SSH keys, date and comment for a given user.
+     */
+    public function userKeysList(UserKeysListData $userKeysListData): ?ErrorData;
 }

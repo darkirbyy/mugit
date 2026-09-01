@@ -2,9 +2,22 @@
 # Page-specific translations #####
 ##################################
 
+user:
+  keys:
+    title: Toutes mes clés SSH
+    list:
+      addNew: Ajouter une nouvelle clé SSH
+      refresh: Rafraichir
+      noKey: Aucune clé SSH
+      key: Clé
+      dateAdded: Date d'ajout
+      comment: Commentaire
+      edit: Editer
+      delete: Supprimer
+      failed: Échec lors du calcul de la liste des clés SSH.
+
 repo:
   title: Tous les dépôts
-  connectionFailed: Échec lors de la connexion au serveur git.
   list:
     createNew: Créer un nouveau dépôt
     refresh: Rafraichir
@@ -60,6 +73,9 @@ form:
   submit: Valider
   delete: Supprimer
 
+git:
+  connectionFailed: Échec lors de la connexion au serveur git.
+
 layout:
   name: μGit
   navbar:
@@ -90,12 +106,10 @@ layout:
     env:
       dev: dev
       test: test
-      stag: qualif
       prod: prod
 
 aria:
   skipToContent: Aller au contenu
   toggleNavigation: Basculer la navigation
-  loading: Chargement en cours
   avatar: Avatar de {name}
   help: Aide

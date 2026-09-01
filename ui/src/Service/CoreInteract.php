@@ -10,6 +10,8 @@ use App\DTO\RepoDeleteData;
 use App\DTO\RepoInfoData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserKeysInfoData;
+use App\DTO\UserKeysListData;
 use Psr\Log\LoggerInterface;
 
 class CoreInteract implements CoreInteractInterface
@@ -23,7 +25,7 @@ class CoreInteract implements CoreInteractInterface
         $coreData = $this->coreExec->exec($command);
 
         if (null === $coreData) {
-            return new ErrorData('repo.connectionFailed');
+            return new ErrorData('git.connectionFailed');
         }
 
         if ($coreData->exitCode > 0) {
@@ -33,7 +35,7 @@ class CoreInteract implements CoreInteractInterface
         }
 
         if (array_any($coreData->lineList, fn($line) => 2 != count(explode(' ', $line)))) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned one ore mote line(s) that could not be parsed.');
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned one ore more line(s) that could not be parsed.');
 
             return new ErrorData('repo.list.failed');
         }
@@ -54,7 +56,7 @@ class CoreInteract implements CoreInteractInterface
         $coreData = $this->coreExec->exec($command);
 
         if (null === $coreData) {
-            return new ErrorData('repo.connectionFailed');
+            return new ErrorData('git.connectionFailed');
         }
 
         if ($coreData->exitCode > 0) {
@@ -80,7 +82,7 @@ class CoreInteract implements CoreInteractInterface
         $coreData = $this->coreExec->exec($command);
 
         if (null === $coreData) {
-            return new ErrorData('repo.connectionFailed');
+            return new ErrorData('git.connectionFailed');
         }
 
         if ($coreData->exitCode > 0) {
@@ -106,7 +108,7 @@ class CoreInteract implements CoreInteractInterface
         $coreData = $this->coreExec->exec($command);
 
         if (null === $coreData) {
-            return new ErrorData('repo.connectionFailed');
+            return new ErrorData('git.connectionFailed');
         }
 
         if ($coreData->exitCode > 0) {
@@ -114,6 +116,37 @@ class CoreInteract implements CoreInteractInterface
 
             return new ErrorData('repo.delete.failed');
         }
+
+        return null;
+    }
+
+    #[\Override]
+    public function userKeysList(UserKeysListData $userKeysListData): ?ErrorData
+    {
+        $command = 'user key-list ' . $userKeysListData->uuid->toString();
+        $coreData = $this->coreExec->exec($command);
+
+        if (null === $coreData) {
+            return new ErrorData('git.connectionFailed');
+        }
+
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
+
+            return new ErrorData('user.keys.list.failed');
+        }
+
+        if (array_any($coreData->lineList, fn($line) => 2 > count(explode(' ', $line)))) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned one ore more line(s) that could not be parsed.');
+
+            return new ErrorData('user.keys.list.failed');
+        }
+
+        $userKeysListData->userKeysInfoDataList = array_map(function ($line) {
+            $lineExploded = explode(' ', $line);
+
+            return new UserKeysInfoData($lineExploded[0], \DateTime::createFromTimestamp((int) $lineExploded[1]), count($lineExploded) > 2 ? $lineExploded[2] : null);
+        }, $coreData->lineList);
 
         return null;
     }

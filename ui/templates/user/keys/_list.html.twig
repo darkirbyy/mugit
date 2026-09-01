@@ -1,0 +1,64 @@
+{% import 'theme/macro.html.twig' as m %}
+
+<turbo-frame id="turboframe-user-keys-list">
+  {% if errorData is not null %}
+    {{ m.flash('flash-error-user-keys-list', 'error', errorData.textKey, 'full', true, false) }}
+  {% else %}
+    <div class="rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
+      <div class="flex min-w-2xs items-center justify-end gap-1 border-b border-zinc-500 px-2 py-2">
+        {% set buttonId = 'button-user-keys-add' %}
+        {% set dropdownId = 'dropdown-user-keys-add' %}
+        {% set turboframeId = 'turboframe-user-keys-add' %}
+        {{ m.button(buttonId, 'user.keys.list.addNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
+        {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
+        <turbo-frame id="{{ turboframeId }}" loading="lazy" data-controller="turboframe">
+          {# src="{{ path('repo_create') }}" #}
+          {{ m.spinner(2, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
+        </turbo-frame>
+        {{ m.dropdown_end() }}
+        {{ m.button('button-user-keys-refresh', 'user.keys.list.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
+      </div>
+      <div class="overflow-auto">
+        <table class="w-full text-left">
+          <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
+            <tr>
+              <th scope="col" class="px-4 pr-2">{{ 'user.keys.list.key'|trans }}</th>
+              <th scope="col" class="px-4 py-2">{{ 'user.keys.list.dateAdded'|trans }}</th>
+              <th scope="col" class="px-4 py-2">{{ 'user.keys.list.comment'|trans }}</th>
+              <th scope="col" class="w-8 px-2 py-2" aria-label="{{ 'user.keys.list.edit'|trans }}"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for userKeysInfoData in userKeysListData.userKeysInfoDataList %}
+              <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
+                <td class="px-4 py-2 font-medium">{{ userKeysInfoData.key|user_keys_replace_ellipsis(15, 5) }}</td>
+                <td class="px-4 py-2">{{ userKeysInfoData.dateAdded|format_datetime('short') }}</td>
+                <td class="px-4 py-2">{{ userKeysInfoData.comment }}</td>
+                <td class="px-2 py-2 text-left">
+                  {% set buttonId = 'button-user-keys-edit-' ~ userKeysInfoData.dateAdded.timestamp %}
+                  {% set dropdownId = 'dropdown-user-keys-edit-' ~ userKeysInfoData.dateAdded.timestamp %}
+                  {% set turboframeDeleteId = 'turboframe-user-keys-delete-' ~ userKeysInfoData.dateAdded.timestamp %}
+                  {{ m.button(buttonId, 'user.keys.list.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
+                  {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
+                  {% set extra %}
+                    <turbo-frame id="{{ turboframeDeleteId }}" loading="lazy" data-controller="turboframe">
+                      {# src="{{ path('repo_delete', { name: repoInfoData.name }) }}" #}
+                      {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
+                    </turbo-frame>
+                  {% endset %}
+                  {% set buttonId = 'button-user-keys-delete-' ~ userKeysInfoData.dateAdded.timestamp %}
+                  {{ m.dropdown_item(buttonId, 'button', 'user.keys.list.delete', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
+                  {{ m.dropdown_end() }}
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="4" class="px-4 py-2 text-sm italic">{{ 'user.keys.list.noKey'|trans }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+</turbo-frame>
