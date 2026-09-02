@@ -26,7 +26,6 @@
             <td colspan="3"></td>
             <td class="px-2 py-2 text-left">
               {% set buttonId = 'button-admin-users-expand-' ~ userInfoData.uuid %}
-              {% set turboframeRemoveId = 'turboframe-admin-users-edit-' ~ userInfoData.uuid %}
               {{ m.button(buttonId, 'button.expand', 'ri-arrow-right-s-line', 'off', { 'data-accordion-target': 'button' }) }}
             </td>
           </tr>

@@ -124,11 +124,11 @@
         {% if is_granted('ROLE_ADMIN') %}
           {% set extra %}
             <ul>
-              {{ m.dropdown_item('button-navbar-tools-keys', 'a', 'layout.navbar.tools.users', 'ri-user-settings-line', { href: path('admin_users_index') }) }}
-              {{ m.dropdown_item('button-navbar-tools-logs', 'a', 'layout.navbar.tools.logs', 'ri-chat-history-line', { href: '#' }) }}
+              {{ m.dropdown_item('button-navbar-tools-keys', 'a', 'layout.navbar.tool.users', 'ri-user-settings-line', { href: path('admin_users_index') }) }}
+              {{ m.dropdown_item('button-navbar-tools-logs', 'a', 'layout.navbar.tool.logs', 'ri-chat-history-line', { href: '#' }) }}
             </ul>
           {% endset %}
-          {{ m.dropdown_item('button-navbar-admin', 'button', 'layout.navbar.admin', 'ri-lock-2-line', [], extra) }}
+          {{ m.dropdown_item('button-navbar-admin', 'button', 'layout.navbar.administrate', 'ri-lock-2-line', [], extra) }}
         {% endif %}
         {% set extra %}
           <ul data-controller="switch-theme">

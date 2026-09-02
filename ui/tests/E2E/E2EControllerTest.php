@@ -46,10 +46,17 @@ abstract class E2EControllerTest extends PantherTestCase
         $this->client->submitForm($formId . '-submit', $values, 'POST', ['HTTP_Turbo_Frame' => 'true']);
     }
 
-    public function waitForTurboframe(string ...$turboframeIdList): void
+    public function waitForTurboframeLoaded(string ...$turboframeIdList): void
     {
         foreach ($turboframeIdList as $turboframeId) {
             $this->client->waitForAttributeToContain('turbo-frame[id="' . $turboframeId . '"]', 'complete', 'true');
+        }
+    }
+
+    public function waitForTurboframeReplace(string ...$turboframeIdList): void
+    {
+        foreach ($turboframeIdList as $turboframeId) {
+            $this->client->waitForStaleness('turbo-frame[id="' . $turboframeId . '"]');
         }
     }
 

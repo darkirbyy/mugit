@@ -105,7 +105,8 @@ layout:
   name: μGit
   navbar:
     admin: Admin
-    tools:
+    administrate: Administrateur
+    tool:
       users: Gestion des utilisateurs
       logs: Journal d'évènement
     mySSHKeys: Mes clés SSH

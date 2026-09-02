@@ -24,7 +24,6 @@ final class AdminUsersControllerTest extends FuncControllerTest
     {
         $this->login(true);
         self::coreUserAdd('comment 1', 'comment 2');
-        self::coreUserAdd('', null, 'comment 3');
 
         $this->client->request('GET', '/admin/users/list', [], [], ['HTTP_Turbo_Frame' => 'true']);
 
@@ -37,7 +36,6 @@ final class AdminUsersControllerTest extends FuncControllerTest
     {
         $this->login(true);
         self::coreUserAdd('comment 1', 'comment 2');
-        self::coreUserAdd('', null, 'comment 3');
 
         $user1Uuid = self::coreUserNumberToUuid(1);
         $this->client->request('GET', '/admin/users/keys?uuid=' . $user1Uuid, [], [], ['HTTP_Turbo_Frame' => 'true']);
@@ -51,7 +49,6 @@ final class AdminUsersControllerTest extends FuncControllerTest
     {
         $this->login(true);
         self::coreUserAdd('comment 1', 'comment 2');
-        self::coreUserAdd('', null, 'comment 3');
 
         $user2Uuid = self::coreUserNumberToUuid(2);
         $user2Key1 = self::coreUserGenerateFakeKey(2, 1);

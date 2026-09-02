@@ -30,7 +30,7 @@ final class CoreAPIUserKeysTest extends KernelTestCase
     public function userList(): void
     {
         self::coreUserAdd('comment 1', 'comment 2');
-        self::coreUserAdd('');
+        self::coreUserAdd(''); // double call to place the second key of user 1 after and check the sort + uniq combination
 
         $coreData = self::$coreExec->exec('user list');
 
