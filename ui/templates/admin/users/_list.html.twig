@@ -4,36 +4,34 @@
   {% if errorData is not null %}
     {{ m.flash('flash-error-admin-users-list', 'error', errorData.textKey, 'full', true, false) }}
   {% else %}
-    <div class="rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
-      <div class="flex min-w-2xs items-center justify-end gap-1 border-b border-zinc-500 px-2 py-2">
-        {{ m.button('button-admin-users-refresh', 'admin.users.list.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
-      </div>
-      <div class="overflow-auto">
-        <table class="w-full text-left">
-          <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
-            <tr>
-              <th scope="col" class="px-4 py-3">{{ 'admin.users.list.uuid'|trans }}</th>
-              <th scope="col" class="w-8 px-2 py-3" aria-label="{{ 'admin.users.list.edit'|trans }}"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for userInfoData in userListData.userInfoDataList %}
-              <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
-                <td class="px-4 py-2">{{ userInfoData.uuid }}</td>
-                <td class="px-2 py-2 text-left">
-                  {% set buttonId = 'button-admin-users-edit-' ~ userInfoData.uuid %}
-                  {% set turboframeRemoveId = 'turboframe-admin-users-edit-' ~ userInfoData.uuid %}
-                  {{ m.button(buttonId, 'admin.users.list.edit', 'ri-arrow-right-s-line', 'off') }}
-                </td>
-              </tr>
-            {% else %}
-              <tr>
-                <td colspan="4" class="px-4 py-2 text-sm italic">{{ 'user.keys.list.noKey'|trans }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    {% set bar %}
+      {{ m.button('button-admin-users-refresh', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
+    {% endset %}
+
+    {% set head %}
+      <tr>
+        <th scope="col" class="px-4 py-3">{{ 'admin.users.list.uuid'|trans }}</th>
+        <th scope="col" class="w-8 px-2 py-3" aria-label="{{ 'button.expand'|trans }}"></th>
+      </tr>
+    {% endset %}
+
+    {% set body %}
+      {% for userInfoData in userListData.userInfoDataList %}
+        <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
+          <td class="px-4 py-2">{{ userInfoData.uuid }}</td>
+          <td class="px-2 py-2 text-left">
+            {% set buttonId = 'button-admin-users-edit-' ~ userInfoData.uuid %}
+            {% set turboframeRemoveId = 'turboframe-admin-users-edit-' ~ userInfoData.uuid %}
+            {{ m.button(buttonId, 'button.expand', 'ri-arrow-right-s-line', 'off') }}
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="4" class="px-4 py-2 text-sm italic">{{ 'user.keys.list.noKey'|trans }}</td>
+        </tr>
+      {% endfor %}
+    {% endset %}
+
+    {{ m.table(bar, head, body) }}
   {% endif %}
 </turbo-frame>

@@ -10,12 +10,10 @@ user:
       Par défaut, les clés sont générées dans '/home/<user>/.ssh'. Copier/coller le contenu de la clé publique (fichier finissant par .pub) ici.
     list:
       addNew: Ajouter une nouvelle clé SSH
-      refresh: Rafraichir
       noKey: Aucune clé SSH
       key: Clé
       dateAdded: Date d'ajout
       comment: Commentaire
-      edit: Editer
       remove: Supprimer
       failed: Échec lors du calcul de la liste des clés SSH.
     add:
@@ -37,13 +35,11 @@ repo:
   title: Les dépôts
   list:
     createNew: Créer un nouveau dépôt
-    refresh: Rafraichir
     noRepo: Aucun dépôt
     name: Nom
     humanReadableSize: Taille
     humanReadableSizeHelp: Un dépôt ne peut excéder {repoMaxSizeMio}Mio
     cloneURL: URL
-    edit: Editer
     rename: Renommer
     delete: Supprimer
     copyURLToClipboard: Copier l'URL dans le presse-papier
@@ -79,8 +75,6 @@ admin:
   users:
     title: Gestion des utilisateurs
     list:
-      refresh: Rafraichir
-      expand: Déplier
       uuid: UUID
 
 error:
@@ -94,9 +88,12 @@ error:
 ##################################
 # Common translations ############
 ##################################
-form:
+button:
+  refresh: Rafraichir
   submit: Valider
+  edit: Editer
   delete: Supprimer
+  expand: Déplier
 
 git:
   connectionFailed: Échec lors de la connexion au serveur git.

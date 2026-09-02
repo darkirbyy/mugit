@@ -113,6 +113,7 @@
 {# ####################################### #}
 {# ############# FORM #################### #}
 {# ####################################### #}
+
 {% macro form_start(formName) %}
   {% set formId = 'form-' ~ formName %}
   {{ _self.tag_open('form') }} id="{{ formId }}" action="{{ path(app.current_route) }}" method="post" novalidate>
@@ -166,6 +167,28 @@
   {# Hidden fields #}
   <input type="hidden" name="_token" data-controller="csrf-protection" value="{{ csrf_token('submit') }}" />
   {{ _self.tag_close('form') }}>
+{% endmacro %}
+
+{# ####################################### #}
+{# ############# TABLE ################### #}
+{# ####################################### #}
+
+{% macro table(bar, head, body) %}
+  <div class="rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
+    <div class="flex min-w-2xs items-center justify-end gap-1 border-b border-zinc-500 px-2 py-2">
+      {{ bar|raw }}
+    </div>
+    <div class="overflow-auto">
+      <table class="w-full text-left">
+        <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
+          {{ head|raw }}
+        </thead>
+        <tbody>
+          {{ body|raw }}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endmacro %}
 
 {# ####################################### #}
