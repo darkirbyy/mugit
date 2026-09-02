@@ -12,6 +12,7 @@ use App\DTO\RepoRenameData;
 use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
+use App\DTO\UserListData;
 
 /**
  * API layer to the core.
@@ -40,6 +41,11 @@ interface CoreInteractInterface
      * Delete an existing repository named $name.
      */
     public function repoDelete(RepoDeleteData $repoDeleteData): ?ErrorData;
+
+    /**
+     * List all SSH keys, date and comment for a given user.
+     */
+    public function userList(UserListData $userListData): ?ErrorData;
 
     /**
      * List all SSH keys, date and comment for a given user.

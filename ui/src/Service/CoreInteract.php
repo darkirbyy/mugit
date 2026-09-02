@@ -10,10 +10,12 @@ use App\DTO\RepoDeleteData;
 use App\DTO\RepoInfoData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserInfoData;
 use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysInfoData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
+use App\DTO\UserListData;
 use Psr\Log\LoggerInterface;
 
 class CoreInteract implements CoreInteractInterface
@@ -118,6 +120,29 @@ class CoreInteract implements CoreInteractInterface
 
             return new ErrorData('repo.delete.failed');
         }
+
+        return null;
+    }
+
+    #[\Override]
+    public function userList(UserListData $userListData): ?ErrorData
+    {
+        $command = 'user list';
+        $coreData = $this->coreExec->exec($command);
+
+        if (null === $coreData) {
+            return new ErrorData('git.connectionFailed');
+        }
+
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
+
+            return new ErrorData('user.list.failed');
+        }
+
+        $userListData->userInfoDataList = array_map(function ($line) {
+            return new UserInfoData($line);
+        }, $coreData->lineList);
 
         return null;
     }

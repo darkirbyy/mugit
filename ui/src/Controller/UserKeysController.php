@@ -7,7 +7,7 @@ use App\DTO\FlashData;
 use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
-use App\Service\CoreInteract;
+use App\Service\CoreInteractInterface;
 use App\Service\FormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +35,7 @@ class UserKeysController extends AbstractController
      */
     #[TurboframeOnly('user_keys_index')]
     #[Route('/list', name: 'list', methods: ['GET'])]
-    public function list(CoreInteract $coreInteract): Response
+    public function list(CoreInteractInterface $coreInteract): Response
     {
         $userKeysListData = new UserKeysListData($this->getUser()->getId());
         $errorData = $coreInteract->userKeysList($userKeysListData);

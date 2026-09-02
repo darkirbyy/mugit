@@ -4,7 +4,7 @@
 
 user:
   keys:
-    title: Toutes mes clés SSH
+    title: Mes clés SSH
     help: |-
       Pour générer une paire de clés SSH, utiliser la commande 'ssh-keygen' sur Linux. Seul l'algorithme ed25519 est autorisé, utiliser l'option '-t ed25519' si besoin.
       Par défaut, les clés sont générées dans '/home/<user>/.ssh'. Copier/coller le contenu de la clé publique (fichier finissant par .pub) ici.
@@ -34,7 +34,7 @@ user:
       failed: Échec lors de la suppression de cette clé SSH.
 
 repo:
-  title: Tous les dépôts
+  title: Les dépôts
   list:
     createNew: Créer un nouveau dépôt
     refresh: Rafraichir
@@ -75,6 +75,14 @@ repo:
     success: Le dépôt a été correctement supprimé.
     failed: Échec lors de la suppression de ce dépôt.
 
+admin:
+  users:
+    title: Gestion des utilisateurs
+    list:
+      refresh: Rafraichir
+      expand: Déplier
+      uuid: UUID
+
 error:
   title: Erreur {code}
   backToHome: Retour à l'accueil
@@ -97,15 +105,18 @@ layout:
   name: μGit
   navbar:
     admin: Admin
+    tools:
+      users: Gestion des utilisateurs
+      logs: Journal d'évènement
     mySSHKeys: Mes clés SSH
     appearance: Apparance
-    myAccount: Mon compte
-    backToHub: Retour au Hub
-    signOut: Se déconnecter
     theme:
       light: Clair
       dark: Sombre
       auto: Système
+    myAccount: Mon compte
+    backToHub: Retour au Hub
+    signOut: Se déconnecter
   flash:
     info: Information
     success: Succès

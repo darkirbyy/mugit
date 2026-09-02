@@ -8,7 +8,7 @@ use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
-use App\Service\CoreInteract;
+use App\Service\CoreInteractInterface;
 use App\Service\FormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +37,7 @@ class RepoController extends AbstractController
      */
     #[TurboframeOnly('repo_index')]
     #[Route('/list', name: 'list', methods: ['GET'])]
-    public function list(CoreInteract $coreInteract): Response
+    public function list(CoreInteractInterface $coreInteract): Response
     {
         $repoListData = new RepoListData();
         $errorData = $coreInteract->repoList($repoListData);

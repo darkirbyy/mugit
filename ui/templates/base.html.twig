@@ -121,12 +121,20 @@
         </li>
         {{ m.dropdown_separator() }}
         {{ m.dropdown_item('link-navbar-my-ssh-key', 'a', 'layout.navbar.mySSHKeys', 'ri-key-2-line', { href: path('user_keys_index') }) }}
+        {% if is_granted('ROLE_ADMIN') %}
+          {% set extra %}
+            <ul>
+              {{ m.dropdown_item('button-navbar-tools-keys', 'a', 'layout.navbar.tools.users', 'ri-user-settings-line', { href: path('admin_users_index') }) }}
+              {{ m.dropdown_item('button-navbar-tools-logs', 'a', 'layout.navbar.tools.logs', 'ri-chat-history-line', { href: '#' }) }}
+            </ul>
+          {% endset %}
+          {{ m.dropdown_item('button-navbar-admin', 'button', 'layout.navbar.admin', 'ri-lock-2-line', [], extra) }}
+        {% endif %}
         {% set extra %}
           <ul data-controller="switch-theme">
             {% for theme, icon in { light: 'ri-sun-line', dark: 'ri-moon-line', auto: 'ri-settings-line' } %}
-              {{
-                m.dropdown_item('button-navbar-theme-' ~ theme, 'button', 'layout.navbar.theme.' ~ theme, icon, { 'data-switch-theme-target': 'button ' ~ theme }, 'ri-check-line')
-              }}
+              {% set attr = { 'data-switch-theme-target': 'button ' ~ theme } %}
+              {{ m.dropdown_item('button-navbar-theme-' ~ theme, 'button', 'layout.navbar.theme.' ~ theme, icon, attr, 'ri-check-line') }}
             {% endfor %}
           </ul>
         {% endset %}

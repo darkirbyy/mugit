@@ -24,13 +24,15 @@
         <table class="w-full text-left" data-controller="copy-clipboard" data-copy-clipboard-copied-text-value="{{ 'repo.list.copied'|trans }}">
           <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
             <tr>
-              <th scope="col" class="px-4 pr-2">{{ 'repo.list.name'|trans }}</th>
-              <th scope="col" class="px-4 py-2 whitespace-nowrap">
+              <th scope="col" class="px-4 py-3">{{ 'repo.list.name'|trans }}</th>
+              <th scope="col" class="px-4 py-3 whitespace-nowrap">
                 {{ 'repo.list.humanReadableSize'|trans }}
-                <span class="text-base font-medium">{{ m.button('button-repo-help-size', 'repo.list.humanReadableSizeHelp', 'ri-question-line', 'tooltip') }}</span>
+                <span class="text-base font-medium">
+                  {{ m.button('button-repo-help-size', 'repo.list.humanReadableSizeHelp', 'ri-question-line', 'tooltip', { class: ['py-0!'] }) }}
+                </span>
               </th>
-              <th scope="col" class="px-4 py-2">{{ 'repo.list.cloneURL'|trans }}</th>
-              <th scope="col" class="w-8 px-2 py-2" aria-label="{{ 'repo.list.edit'|trans }}"></th>
+              <th scope="col" class="px-4 py-3">{{ 'repo.list.cloneURL'|trans }}</th>
+              <th scope="col" class="w-8 px-2 py-3" aria-label="{{ 'repo.list.edit'|trans }}"></th>
             </tr>
           </thead>
           <tbody>
