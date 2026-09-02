@@ -81,10 +81,10 @@
       {% endif %}
     </li>
   {% else %}
-    <li class="py-0.5" data-controller="dropdown-extra" data-dropdown-extra-auto-open-value="{{ autoOpen ? 'true' : 'false' }}">
-      {% set attr = attr|html_attr_merge({ 'data-dropdown-extra-target': 'button' }) %}
+    <li class="py-0.5" data-controller="accordion" data-accordion-auto-open-value="{{ autoOpen ? 'true' : 'false' }}" data-accordion-menu-item-value="true">
+      {% set attr = attr|html_attr_merge({ 'data-accordion-target': 'button' }) %}
       <button {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, 'ri-arrow-right-s-line') }}</button>
-      <div class="hidden" data-dropdown-extra-target="content">
+      <div class="hidden" data-accordion-target="content">
         <div class="mb-0.5 border-l-6 border-zinc-300 pt-0.5 pl-1 dark:border-zinc-800">
           {{ extra|raw }}
         </div>
@@ -133,7 +133,7 @@
         value="{{ fieldValue }}"
         required
       />
-      {{ _self.form_submit(formName, 'form.submit', 'ri-check-line') }}
+      {{ _self.form_submit(formName, 'button.submit', 'ri-check-line') }}
     </div>
     {% set error = attribute(formData.errorList, fieldName)|default(null) %}
     {% if error is not empty %}
@@ -183,9 +183,7 @@
         <thead class="border-b border-zinc-500 bg-zinc-300 font-bold dark:bg-zinc-800">
           {{ head|raw }}
         </thead>
-        <tbody>
-          {{ body|raw }}
-        </tbody>
+        {{ body|raw }}
       </table>
     </div>
   </div>

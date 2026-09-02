@@ -88,7 +88,7 @@
         </button>
 
         {# Menu dropdown #}
-        {{ m.dropdown_start('dropdown-navbar-menu', { class: ['w-full sm:w-auto min-w-60 sm:rounded'], 'data-controller': 'dropdown-main' }) }}
+        {{ m.dropdown_start('dropdown-navbar-menu', { class: ['w-full sm:w-auto min-w-60 sm:rounded'], 'data-controller': 'dropdown' }) }}
         <li>
           <div class="flex flex-row items-center gap-3 py-0.5">
             <div class="py-1 pl-2">
@@ -111,7 +111,7 @@
             <div class="self-start">
               <button
                 class="rounded px-2 py-1 focus-within:bg-zinc-500/25 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-500/25 dark:focus-within:outline-zinc-200"
-                data-action="click->dropdown-main#close"
+                data-action="click->dropdown#close"
                 aria-label="{{ 'layout.flash.close'|trans }}"
               >
                 <span class="ri-close-line text-lg" aria-hidden="true"></span>

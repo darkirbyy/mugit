@@ -19,6 +19,11 @@ export default class extends Controller {
     this.restoreSpinner();
   }
 
+  replace(event) {
+    const elementToReplace = this.element.closest('[data-turboframe-replace]');
+    elementToReplace.outerHTML = event.detail.newFrame.querySelector('[data-turboframe-replace]').innerHTML;
+  }
+
   restoreSpinner() {
     // hide all child
     Array.from(this.element.children).forEach((child) => {

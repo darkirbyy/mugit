@@ -1,16 +1,17 @@
 {% import 'theme/macro.html.twig' as m %}
 
-<turbo-frame id="turboframe-repo-delete-{{ repoDeleteData.name }}">
-  {% set formName = 'repo-delete-' ~ repoDeleteData.name %}
+<turbo-frame id="turboframe-admin-users-remove-{{ userKeysRemoveData.key|user_keys_hash }}">
+  {% set formName = 'admin-users-remove-' ~ (userKeysRemoveData.key|user_keys_hash) %}
   {{ m.form_start(formName) }}
   <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
     <div class="flex items-center gap-1 text-red-900 dark:text-red-400">
       <div class="flex-1 px-1">
-        {{ 'repo.delete.label'|trans }}
+        {{ 'user.keys.remove.label'|trans }}
       </div>
       {{ m.form_submit(formName, 'button.delete', 'ri-delete-bin-line') }}
     </div>
   </div>
-  <input type="hidden" name="name" value="{{ repoDeleteData.name }}" />
+  <input type="hidden" name="key" value="{{ userKeysRemoveData.key }}" />
+  <input type="hidden" name="uuid" value="{{ userKeysRemoveData.uuid }}" />
   {{ m.form_end(formName, formData) }}
 </turbo-frame>

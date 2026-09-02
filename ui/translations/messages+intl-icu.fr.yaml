@@ -75,6 +75,7 @@ admin:
   users:
     title: Gestion des utilisateurs
     list:
+      noUser: Aucun utilisateur n'a enregistré de clé SSH
       uuid: UUID
 
 error:
@@ -90,10 +91,10 @@ error:
 ##################################
 button:
   refresh: Rafraichir
+  expand: Déplier
   submit: Valider
   edit: Editer
   delete: Supprimer
-  expand: Déplier
 
 git:
   connectionFailed: Échec lors de la connexion au serveur git.

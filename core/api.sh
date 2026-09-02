@@ -191,7 +191,7 @@ elif [ $command = "user" ]; then
         echo "$COMMENT_HELP"
         exit 0
     elif [ $subcommand = "list" ]; then
-        output=$(cat "$SSH_FILE" | cut -d' ' -f3 | cut -d':' -f1 | uniq 2>&1)
+        output=$(cat "$SSH_FILE" | cut -d' ' -f3 | cut -d':' -f1 | sort | uniq 2>&1)
         if [ $? = 0 ]; then
             echo "$output"
             exit 0

@@ -30,7 +30,8 @@ final class CoreAPIUserKeysTest extends KernelTestCase
     #[PU\Test]
     public function userList(): void
     {
-        self::coreUserAdd(['comment 1', ''], 'comment 2');
+        self::coreUserAdd('comment 1', 'comment 2');
+        self::coreUserAdd('');
 
         $coreData = self::$coreExec->exec('user list');
 

@@ -3,11 +3,17 @@
 namespace App\Controller;
 
 use App\Attribute\TurboframeOnly;
+use App\DTO\FlashData;
+use App\DTO\UserKeysListData;
+use App\DTO\UserKeysRemoveData;
 use App\DTO\UserListData;
 use App\Service\CoreInteractInterface;
+use App\Service\FormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
@@ -37,5 +43,35 @@ class AdminUsersController extends AbstractController
         $errorData = $coreInteract->userList($userListData);
 
         return $this->render('admin/users/_list.html.twig', ['userListData' => $userListData, 'errorData' => $errorData]);
+    }
+
+    /**
+     * List all users having registred at least one key.
+     */
+    #[TurboframeOnly('admin_users_index')]
+    #[Route('/keys', name: 'keys', methods: ['GET'])]
+    public function keys(#[ValueResolver('data')] UserKeysListData $userKeysListData, CoreInteractInterface $coreInteract): Response
+    {
+        $errorData = $coreInteract->userKeysList($userKeysListData);
+
+        return $this->render('admin/users/_keys.html.twig', ['userKeysListData' => $userKeysListData, 'errorData' => $errorData]);
+    }
+
+    /**
+     * Remove one SSH keys for the given user.
+     */
+    #[IsCsrfTokenValid('submit', methods: ['POST'])]
+    #[TurboframeOnly('admin_users_index')]
+    #[Route('/remove', name: 'remove', methods: ['GET', 'POST'])]
+    public function remove(#[ValueResolver('data')] UserKeysRemoveData $userKeysRemoveData, FormHandler $formHandler): Response
+    {
+        $formData = $formHandler->handle($userKeysRemoveData, 'userKeysRemove');
+        if ($formData->proceed) {
+            $this->addFlash('success', new FlashData('user.keys.remove.success'));
+
+            return $this->redirectToRoute('admin_users_index');
+        }
+
+        return $this->render('admin/users/_remove.html.twig', ['userKeysRemoveData' => $userKeysRemoveData, 'formData' => $formData]);
     }
 }

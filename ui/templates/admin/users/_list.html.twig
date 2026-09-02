@@ -11,24 +11,46 @@
     {% set head %}
       <tr>
         <th scope="col" class="px-4 py-3">{{ 'admin.users.list.uuid'|trans }}</th>
+        <th scope="col" class="px-4 py-3">{{ 'user.keys.list.key'|trans }}</th>
+        <th scope="col" class="px-4 py-3">{{ 'user.keys.list.dateAdded'|trans }}</th>
+        <th scope="col" class="px-4 py-3">{{ 'user.keys.list.comment'|trans }}</th>
         <th scope="col" class="w-8 px-2 py-3" aria-label="{{ 'button.expand'|trans }}"></th>
       </tr>
     {% endset %}
 
     {% set body %}
       {% for userInfoData in userListData.userInfoDataList %}
-        <tr class="border-zinc-500 {{ not loop.last ? ' border-b' }}">
-          <td class="px-4 py-2">{{ userInfoData.uuid }}</td>
-          <td class="px-2 py-2 text-left">
-            {% set buttonId = 'button-admin-users-edit-' ~ userInfoData.uuid %}
-            {% set turboframeRemoveId = 'turboframe-admin-users-edit-' ~ userInfoData.uuid %}
-            {{ m.button(buttonId, 'button.expand', 'ri-arrow-right-s-line', 'off') }}
-          </td>
-        </tr>
+        <tbody data-controller="accordion">
+          <tr class="border-zinc-500 {{ not loop.first ? ' border-t' }}">
+            <td class="px-4 py-2">{{ userInfoData.uuid }}</td>
+            <td colspan="3"></td>
+            <td class="px-2 py-2 text-left">
+              {% set buttonId = 'button-admin-users-expand-' ~ userInfoData.uuid %}
+              {% set turboframeRemoveId = 'turboframe-admin-users-edit-' ~ userInfoData.uuid %}
+              {{ m.button(buttonId, 'button.expand', 'ri-arrow-right-s-line', 'off', { 'data-accordion-target': 'button' }) }}
+            </td>
+          </tr>
+          {% set turboframeId = 'turboframe-admin-users-keys-' ~ userInfoData.uuid %}
+          <tr data-accordion-target="content" data-turboframe-replace="true">
+            <td colspan="5">
+              <turbo-frame
+                id="{{ turboframeId }}"
+                loading="lazy"
+                src="{{ path('admin_users_keys', { uuid: userInfoData.uuid }) }}"
+                data-controller="turboframe"
+                data-action="turbo:before-frame-render->turboframe#replace"
+              >
+                {{ m.spinner(2, false, 'px-4 pb-2 gap-2 grid-cols-1') }}
+              </turbo-frame>
+            </td>
+          </tr>
+        </tbody>
       {% else %}
-        <tr>
-          <td colspan="4" class="px-4 py-2 text-sm italic">{{ 'user.keys.list.noKey'|trans }}</td>
-        </tr>
+        <tbody>
+          <tr>
+            <td colspan="4" class="px-4 py-2 text-sm italic">{{ 'admin.users.list.noUser'|trans }}</td>
+          </tr>
+        </tbody>
       {% endfor %}
     {% endset %}
 

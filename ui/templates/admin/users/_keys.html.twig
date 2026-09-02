@@ -1,0 +1,41 @@
+{% import 'theme/macro.html.twig' as m %}
+
+{# NOTE:
+It's necessary to wrap the rows with table and tbody tags, otherwire the html parser on turbo drive side
+will strip all tags, and mess the render. The turboframe->replace action will select the tbody innerHTML anyway.
+#}
+
+<turbo-frame id="{{ 'turboframe-admin-users-keys-' ~ userKeysListData.uuid }}">
+  <table>
+    <tbody data-turboframe-replace="trues">
+      {% for userKeysInfoData in userKeysListData.userKeysInfoDataList %}
+        <tr data-accordion-target="content">
+          <td></td>
+          <td class="px-4 py-2 font-medium">{{ userKeysInfoData.key|user_keys_replace_ellipsis(15, 5) }}</td>
+          <td class="px-4 py-2">{{ userKeysInfoData.dateAdded|format_datetime('short') }}</td>
+          <td class="px-4 py-2">{{ userKeysInfoData.comment }}</td>
+          <td class="px-2 py-2 text-left">
+            {% set buttonId = 'button-admin-users-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
+            {% set dropdownId = 'dropdown-admin-users-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
+            {% set turboframeRemoveId = 'turboframe-admin-users-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
+            {{ m.button(buttonId, 'button.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
+            {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
+            {% set extra %}
+              <turbo-frame
+                id="{{ turboframeRemoveId }}"
+                loading="lazy"
+                src="{{ path('admin_users_remove', { uuid: userKeysListData.uuid, key: userKeysInfoData.key }) }}"
+                data-controller="turboframe"
+              >
+                {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
+              </turbo-frame>
+            {% endset %}
+            {% set buttonId = 'button-admin-users-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
+            {{ m.dropdown_item(buttonId, 'button', 'user.keys.list.remove', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
+            {{ m.dropdown_end() }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</turbo-frame>
