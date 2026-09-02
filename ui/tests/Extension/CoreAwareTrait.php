@@ -43,12 +43,17 @@ trait CoreAwareTrait
         return 'AAAA' . str_repeat((string) $userNumber, 32) . str_repeat((string) $keyNumber, 32);
     }
 
+    public static function coreUserNumberToUuid(int $number): string
+    {
+        return KeycloakMockEntryPoint::userNumberToUuid($number);
+    }
+
     public static function coreUserAdd(string|array|null ...$userCommentsList): void
     {
         $filesystem = new Filesystem();
         $lines = [];
         foreach ($userCommentsList as $userNumber => $userComments) {
-            $userUuid = KeycloakMockEntryPoint::userNumberToUuid($userNumber + 1);
+            $userUuid = self::coreUserNumberToUuid($userNumber + 1);
             foreach ((array) $userComments as $keyNumber => $userComment) {
                 $key = self::coreUserGenerateFakeKey($userNumber + 1, $keyNumber + 1);
                 $lines[] = 'ssh-ed25519 ' . $key . ' ' . $userUuid . ':' . time() . ':' . $userComment;

@@ -3,6 +3,8 @@
 ##################################
 
 user:
+  list:
+    failed: Échec lors du calcul de la liste des utilisateurs.
   keys:
     title: Mes clés SSH
     help: |-

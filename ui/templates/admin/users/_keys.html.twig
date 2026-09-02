@@ -15,22 +15,22 @@ will strip all tags, and mess the render. The turboframe->replace action will se
           <td class="px-4 py-2">{{ userKeysInfoData.dateAdded|format_datetime('short') }}</td>
           <td class="px-4 py-2">{{ userKeysInfoData.comment }}</td>
           <td class="px-2 py-2 text-left">
-            {% set buttonId = 'button-admin-users-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
-            {% set dropdownId = 'dropdown-admin-users-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
-            {% set turboframeRemoveId = 'turboframe-admin-users-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
+            {% set buttonId = 'button-admin-users-keys-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
+            {% set dropdownId = 'dropdown-admin-users-keys-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
+            {% set turboframeRemoveId = 'turboframe-user-keys-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
             {{ m.button(buttonId, 'button.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
             {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
             {% set extra %}
               <turbo-frame
                 id="{{ turboframeRemoveId }}"
                 loading="lazy"
-                src="{{ path('admin_users_remove', { uuid: userKeysListData.uuid, key: userKeysInfoData.key }) }}"
+                src="{{ path('admin_users_keys_remove', { uuid: userKeysListData.uuid, key: userKeysInfoData.key }) }}"
                 data-controller="turboframe"
               >
                 {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
               </turbo-frame>
             {% endset %}
-            {% set buttonId = 'button-admin-users-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
+            {% set buttonId = 'button-admin-users-keys-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
             {{ m.dropdown_item(buttonId, 'button', 'user.keys.list.remove', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
             {{ m.dropdown_end() }}
           </td>

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Inte;
 
 use App\Tests\Extension\CoreAwareTrait;
-use App\Tests\Mock\KeycloakMockEntryPoint;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -37,8 +36,8 @@ final class CoreAPIUserKeysTest extends KernelTestCase
 
         $this->assertSame(0, $coreData->exitCode);
         $this->assertCount(2, $coreData->lineList);
-        $this->assertSame(KeycloakMockEntryPoint::userNumberToUuid(1), $coreData->lineList[0]);
-        $this->assertSame(KeycloakMockEntryPoint::userNumberToUuid(2), $coreData->lineList[1]);
+        $this->assertSame(self::coreUserNumberToUuid(1), $coreData->lineList[0]);
+        $this->assertSame(self::coreUserNumberToUuid(2), $coreData->lineList[1]);
     }
 
     #[PU\Test]
@@ -46,7 +45,7 @@ final class CoreAPIUserKeysTest extends KernelTestCase
     {
         self::coreUserAdd(['comment 1', '']);
 
-        $user1Uuid = KeycloakMockEntryPoint::userNumberToUuid(1);
+        $user1Uuid = self::coreUserNumberToUuid(1);
         $coreData = self::$coreExec->exec('user key-list ' . $user1Uuid);
 
         $this->assertSame(0, $coreData->exitCode);
@@ -62,8 +61,8 @@ final class CoreAPIUserKeysTest extends KernelTestCase
     {
         self::coreUserAdd(null, 'comment 2');
 
-        $user1Uuid = KeycloakMockEntryPoint::userNumberToUuid(1);
-        $user2Uuid = KeycloakMockEntryPoint::userNumberToUuid(2);
+        $user1Uuid = self::coreUserNumberToUuid(1);
+        $user2Uuid = self::coreUserNumberToUuid(2);
         $user1Key1 = self::coreUserGenerateFakeKey(1, 1);
         $user2Key1 = self::coreUserGenerateFakeKey(2, 1);
         $coreData = self::$coreExec->exec('user key-add ' . $user1Uuid . ' \'' . $user1Key1 . '\' \'comment 1\'');
@@ -82,8 +81,8 @@ final class CoreAPIUserKeysTest extends KernelTestCase
     {
         self::coreUserAdd(['comment 1', ''], 'comment 2');
 
-        $user1Uuid = KeycloakMockEntryPoint::userNumberToUuid(1);
-        $user2Uuid = KeycloakMockEntryPoint::userNumberToUuid(2);
+        $user1Uuid = self::coreUserNumberToUuid(1);
+        $user2Uuid = self::coreUserNumberToUuid(2);
         $user1Key1 = self::coreUserGenerateFakeKey(1, 1);
         $user1Key2 = self::coreUserGenerateFakeKey(1, 2);
         $user2Key1 = self::coreUserGenerateFakeKey(2, 1);
@@ -103,8 +102,8 @@ final class CoreAPIUserKeysTest extends KernelTestCase
     {
         self::coreUserAdd(['comment 1', ''], 'comment 2');
 
-        $user1Uuid = KeycloakMockEntryPoint::userNumberToUuid(1);
-        $user2Uuid = KeycloakMockEntryPoint::userNumberToUuid(2);
+        $user1Uuid = self::coreUserNumberToUuid(1);
+        $user2Uuid = self::coreUserNumberToUuid(2);
         $user1Key1 = self::coreUserGenerateFakeKey(1, 1);
         $user1Key2 = self::coreUserGenerateFakeKey(1, 2);
         $user2Key1 = self::coreUserGenerateFakeKey(2, 1);
@@ -134,7 +133,7 @@ final class CoreAPIUserKeysTest extends KernelTestCase
 
     public static function userFailValues(): array
     {
-        $user1Uuid = KeycloakMockEntryPoint::userNumberToUuid(1);
+        $user1Uuid = self::coreUserNumberToUuid(1);
         $user1Key2 = self::coreUserGenerateFakeKey(1, 2);
         $user1Key3 = self::coreUserGenerateFakeKey(1, 3);
 

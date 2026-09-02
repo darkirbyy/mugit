@@ -55,7 +55,7 @@ final class UserKeysControllerTest extends FuncControllerTest
     }
 
     #[PU\Test]
-    public function userKeysRemove(): void
+    public function userKeysRemoveSuccess(): void
     {
         $this->login(true);
         self::coreUserAdd('comment 1', 'comment 2');
@@ -71,6 +71,25 @@ final class UserKeysControllerTest extends FuncControllerTest
         $this->client->submitForm('form-user-keys-remove-' . $keyHash . '-submit', [], 'POST', ['HTTP_Turbo_Frame' => 'true']);
 
         $this->assertResponseRedirects('/user/keys');
+    }
+
+    #[PU\Test]
+    public function userKeysRemoveAnotherUser(): void
+    {
+        $this->login(true);
+        self::coreUserAdd('comment 1', 'comment 2');
+
+        $key = self::coreUserGenerateFakeKey(2, 1);
+        $keyHash = md5($key);
+        $this->client->request('GET', '/user/keys/remove?key=' . $key, [], [], ['HTTP_Turbo_Frame' => 'true']);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('turbo-frame[id="turboframe-user-keys-remove-' . $keyHash . '"]');
+        $this->assertSelectorExists('form[action="/user/keys/remove"]');
+
+        $this->client->submitForm('form-user-keys-remove-' . $keyHash . '-submit', ['uuid' => self::coreUserNumberToUuid(2)], 'POST', ['HTTP_Turbo_Frame' => 'true']);
+
+        $this->assertResponseIsSuccessful(); // successful = no redirect = fail to delete key = expected
     }
 
     #[PU\Test]

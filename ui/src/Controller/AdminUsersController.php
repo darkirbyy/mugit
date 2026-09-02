@@ -26,7 +26,7 @@ class AdminUsersController extends AbstractController
     /**
      * Index page of the users.
      */
-    #[Route('/', name: 'index', methods: ['GET'])]
+    #[Route('', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render('admin/users/index.html.twig');
@@ -62,8 +62,8 @@ class AdminUsersController extends AbstractController
      */
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('admin_users_index')]
-    #[Route('/remove', name: 'remove', methods: ['GET', 'POST'])]
-    public function remove(#[ValueResolver('data')] UserKeysRemoveData $userKeysRemoveData, FormHandler $formHandler): Response
+    #[Route('/keys/remove', name: 'keys_remove', methods: ['GET', 'POST'])]
+    public function keys_remove(#[ValueResolver('data')] UserKeysRemoveData $userKeysRemoveData, FormHandler $formHandler): Response
     {
         $formData = $formHandler->handle($userKeysRemoveData, 'userKeysRemove');
         if ($formData->proceed) {
@@ -72,6 +72,6 @@ class AdminUsersController extends AbstractController
             return $this->redirectToRoute('admin_users_index');
         }
 
-        return $this->render('admin/users/_remove.html.twig', ['userKeysRemoveData' => $userKeysRemoveData, 'formData' => $formData]);
+        return $this->render('user/keys/_remove.html.twig', ['userKeysRemoveData' => $userKeysRemoveData, 'formData' => $formData]);
     }
 }
