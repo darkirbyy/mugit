@@ -133,7 +133,6 @@ jobs:
           ui/templates/
           ui/translations/
           ui/vendor/
-          ui/composer.json
           ui/.env
           ui/.env.${{ inputs.environment }}
 
