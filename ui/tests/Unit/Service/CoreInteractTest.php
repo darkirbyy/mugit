@@ -6,6 +6,8 @@ namespace App\Tests\Unit\Service;
 
 use App\DTO\CoreData;
 use App\DTO\ErrorData;
+use App\DTO\LogListData;
+use App\DTO\LogSizeData;
 use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
@@ -37,7 +39,7 @@ final class CoreInteractTest extends TestCase
 
     #[PU\Test]
     #[PU\DataProvider('coreValues')]
-    public function coreError(string $coreMethod, mixed $input): void
+    public function coreError(string $coreMethod, mixed $input, mixed $execReturn): void
     {
         $this->logger->expects($this->never())->method($this->anything());
         $this->coreExec->expects($this->once())->method('exec')->willReturn(null);
@@ -49,7 +51,7 @@ final class CoreInteractTest extends TestCase
 
     #[PU\Test]
     #[PU\DataProvider('coreValues')]
-    public function nonZeroExitCode(string $coreMethod, mixed $input): void
+    public function nonZeroExitCode(string $coreMethod, mixed $input, mixed $execReturn): void
     {
         $this->logger->expects($this->once())->method('error');
         $this->coreExec->expects($this->once())->method('exec')->willReturn(new CoreData(1, []));
@@ -61,10 +63,10 @@ final class CoreInteractTest extends TestCase
 
     #[PU\Test]
     #[PU\DataProvider('coreValues')]
-    public function success(string $coreMethod, mixed $input): void
+    public function success(string $coreMethod, mixed $input, mixed $execReturn): void
     {
         $this->logger->expects($this->never())->method($this->anything());
-        $this->coreExec->expects($this->once())->method('exec')->willReturn(new CoreData(0, ['Line 1']));
+        $this->coreExec->expects($this->once())->method('exec')->willReturn(new CoreData(0, $execReturn));
 
         $errorData = $this->coreInteract->$coreMethod($input);
         $this->assertNull($errorData);
@@ -73,15 +75,18 @@ final class CoreInteractTest extends TestCase
     public static function coreValues(): array
     {
         return [
-            'repo list' => ['repoList', new RepoListData()],
-            'repo create' => ['repoCreate', new RepoCreateData('repo-1')],
-            'repo rename' => ['repoRename', new RepoRenameData('repo-1', 'repo-2')],
-            'repo delete' => ['repoDelete', new RepoDeleteData('repo-1')],
-            'user list' => ['userList', new UserListData()],
-            'user keys list' => ['userKeysList', new UserKeysListData('uuid')],
-            'user keys add' => ['userKeysAdd', new UserKeysAddData('uuid', 'key')],
-            'user keys remove' => ['userKeysRemove', new UserKeysRemoveData('uuid', 'key')],
-            'user delete' => ['userDelete', new UserDeleteData('uuid')],
+            'repo list' => ['repoList', new RepoListData(), ['repo-1 521', 'repo-2 12']],
+            'repo create' => ['repoCreate', new RepoCreateData('repo-1'), []],
+            'repo rename' => ['repoRename', new RepoRenameData('repo-1', 'repo-2'), []],
+            'repo delete' => ['repoDelete', new RepoDeleteData('repo-1'), []],
+            'user list' => ['userList', new UserListData(), ['user1', 'user2']],
+            'user keys list' => ['userKeysList', new UserKeysListData('uuid'), ['user1 2025 comment 1']],
+            'user keys add' => ['userKeysAdd', new UserKeysAddData('uuid', 'key'), []],
+            'user keys remove' => ['userKeysRemove', new UserKeysRemoveData('uuid', 'key'), []],
+            'user delete' => ['userDelete', new UserDeleteData('uuid'), []],
+            'log size' => ['logSize', new LogSizeData(), ['5']],
+            'log list' => ['logList', new LogListData(20, 10), ['2025 user1 command 1']],
+            'log purge' => ['logPurge', null, []],
         ];
     }
 }

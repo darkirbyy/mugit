@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\ErrorData;
+use App\DTO\LogListData;
+use App\DTO\LogSizeData;
 use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
@@ -67,4 +69,19 @@ interface CoreInteractInterface
      * Remove an existing SSH keys for a given user.
      */
     public function userDelete(UserDeleteData $userDeleteData): ?ErrorData;
+
+    /**
+     * Count the number of logs.
+     */
+    public function logSize(LogSizeData $logSizeData): ?ErrorData;
+
+    /**
+     * List a subset of the logs with the date, the uuid and the command executed.
+     */
+    public function logList(LogListData $logListData): ?ErrorData;
+
+    /**
+     * Purge all logs.
+     */
+    public function logPurge(): ?ErrorData;
 }

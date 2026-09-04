@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\ErrorData;
+use App\DTO\LogInfoData;
+use App\DTO\LogListData;
+use App\DTO\LogSizeData;
 use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoInfoData;
@@ -240,6 +243,83 @@ class CoreInteract implements CoreInteractInterface
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
 
             return new ErrorData('user.delete.failed');
+        }
+
+        return null;
+    }
+
+    #[\Override]
+    public function logSize(LogSizeData $logSizeData): ?ErrorData
+    {
+        $command = 'log size';
+        $coreData = $this->coreExec->exec($command);
+
+        if (null === $coreData) {
+            return new ErrorData('git.connectionFailed');
+        }
+
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
+
+            return new ErrorData('admin.log.size.failed');
+        }
+
+        if (1 !== count($coreData->lineList) && !is_int($coreData->lineList[0])) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a line that could not be parsed.');
+
+            return new ErrorData('admin.log.size.failed');
+        }
+
+        $logSizeData->size = (int) $coreData->lineList[0];
+
+        return null;
+    }
+
+    #[\Override]
+    public function logList(LogListData $logListData): ?ErrorData
+    {
+        $command = 'log list ' . ($logListData->offset ?? 1) . ' ' . ($logListData->length ?? 50);
+        $coreData = $this->coreExec->exec($command);
+
+        if (null === $coreData) {
+            return new ErrorData('git.connectionFailed');
+        }
+
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
+
+            return new ErrorData('admin.log.list.failed');
+        }
+
+        if (array_any($coreData->lineList, fn($line) => 3 !== count(explode(' ', $line, 3)))) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned one ore more line(s) that could not be parsed.');
+
+            return new ErrorData('admin.log.list.failed');
+        }
+
+        $logListData->logInfoDataList = array_map(function ($line) {
+            $lineExploded = explode(' ', $line, 3);
+
+            return new LogInfoData(\DateTime::createFromTimestamp((int) $lineExploded[0]), $lineExploded[1], $lineExploded[2]);
+        }, $coreData->lineList);
+
+        return null;
+    }
+
+    #[\Override]
+    public function logPurge(): ?ErrorData
+    {
+        $command = 'log purge';
+        $coreData = $this->coreExec->exec($command);
+
+        if (null === $coreData) {
+            return new ErrorData('git.connectionFailed');
+        }
+
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
+
+            return new ErrorData('admin.log.purge.failed');
         }
 
         return null;
