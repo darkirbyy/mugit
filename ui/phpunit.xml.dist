@@ -21,6 +21,7 @@
         </testsuite>
         <testsuite name="inte">
             <directory>tests/Inte</directory>
+            <exclude>tests/Inte/CoreAPITest.php</exclude>
         </testsuite>
         <testsuite name="func">
             <directory>tests/Func</directory>

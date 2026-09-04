@@ -24,7 +24,7 @@ final class TestsExtension implements Extension
         } else {
             $suiteNameList = $this->getAllSuiteNames($configuration);
         }
-        $facade->registerSubscribers(new RunnerStart($suiteNameList), new SuiteStart(), new RunnerFinish($suiteNameList));
+        $facade->registerSubscribers(new RunnerStart($suiteNameList), new RunnerFinish($suiteNameList));
     }
 
     private function getAllSuiteNames(Configuration $configuration): array

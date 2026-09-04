@@ -21,14 +21,7 @@ abstract class E2EControllerTest extends PantherTestCase
     {
         parent::setUp();
         $this->client = static::createPantherClient();
-        self::coreInit();
-    }
-
-    #[\Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        self::coreReset();
+        self::coreInitAndReset();
     }
 
     public function clickElement(string $elementId): void

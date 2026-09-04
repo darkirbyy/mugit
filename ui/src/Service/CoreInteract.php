@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\DTO\CoreData;
 use App\DTO\ErrorData;
 use App\DTO\LogInfoData;
 use App\DTO\LogListData;
@@ -30,16 +31,8 @@ class CoreInteract implements CoreInteractInterface
     public function repoList(RepoListData $repoListData): ?ErrorData
     {
         $command = 'repo list';
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData('repo.list.failed');
+        if (($coreData = $this->executeCommand($command, 'repo.list.failed')) instanceof ErrorData) {
+            return $coreData;
         }
 
         if (array_any($coreData->lineList, fn($line) => 2 != count(explode(' ', $line)))) {
@@ -61,23 +54,9 @@ class CoreInteract implements CoreInteractInterface
     public function repoCreate(RepoCreateData $repoCreateData): ?ErrorData
     {
         $command = 'repo create ' . $repoCreateData->name;
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData(
-                match ($coreData->exitCode) {
-                    3 => 'repo.create.empty',
-                    4 => 'repo.create.invalid',
-                    7 => 'repo.create.alreadyExist',
-                    default => 'repo.create.failed',
-                },
-            );
+        $exitCodeToErrorTextKey = [3 => 'repo.create.empty', 4 => 'repo.create.invalid', 7 => 'repo.create.alreadyExist'];
+        if (($coreData = $this->executeCommand($command, 'repo.create.failed', $exitCodeToErrorTextKey)) instanceof ErrorData) {
+            return $coreData;
         }
 
         return null;
@@ -87,23 +66,9 @@ class CoreInteract implements CoreInteractInterface
     public function repoRename(RepoRenameData $repoRenameData): ?ErrorData
     {
         $command = 'repo rename ' . $repoRenameData->oldName . ' ' . $repoRenameData->newName;
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData(
-                match ($coreData->exitCode) {
-                    3 => 'repo.rename.empty',
-                    4 => 'repo.rename.invalid',
-                    7 => 'repo.rename.alreadyExist',
-                    default => 'repo.rename.failed',
-                },
-            );
+        $exitCodeToErrorTextKey = [3 => 'repo.rename.empty', 4 => 'repo.rename.invalid', 7 => 'repo.rename.alreadyExist'];
+        if (($coreData = $this->executeCommand($command, 'repo.rename.failed', $exitCodeToErrorTextKey)) instanceof ErrorData) {
+            return $coreData;
         }
 
         return null;
@@ -113,16 +78,8 @@ class CoreInteract implements CoreInteractInterface
     public function repoDelete(RepoDeleteData $repoDeleteData): ?ErrorData
     {
         $command = 'repo delete ' . $repoDeleteData->name;
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData('repo.delete.failed');
+        if (($coreData = $this->executeCommand($command, 'repo.delete.failed')) instanceof ErrorData) {
+            return $coreData;
         }
 
         return null;
@@ -132,16 +89,8 @@ class CoreInteract implements CoreInteractInterface
     public function userList(UserListData $userListData): ?ErrorData
     {
         $command = 'user list';
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData('user.list.failed');
+        if (($coreData = $this->executeCommand($command, 'user.list.failed')) instanceof ErrorData) {
+            return $coreData;
         }
 
         $userListData->userInfoDataList = array_map(function ($line) {
@@ -155,16 +104,8 @@ class CoreInteract implements CoreInteractInterface
     public function userKeysList(UserKeysListData $userKeysListData): ?ErrorData
     {
         $command = 'user key-list ' . $userKeysListData->uuid;
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData('user.keys.list.failed');
+        if (($coreData = $this->executeCommand($command, 'user.keys.list.failed')) instanceof ErrorData) {
+            return $coreData;
         }
 
         if (array_any($coreData->lineList, fn($line) => 2 > count(explode(' ', $line)))) {
@@ -188,23 +129,9 @@ class CoreInteract implements CoreInteractInterface
         $key = substr($userKeysAddData->fullKey, 12, 68);
         $comment = substr($userKeysAddData->fullKey, 81);
         $command = 'user key-add ' . $userKeysAddData->uuid . ' \'' . $key . '\' \'' . $comment . '\'';
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData(
-                match ($coreData->exitCode) {
-                    3 => 'user.keys.add.empty',
-                    4, 5 => 'user.keys.add.invalid',
-                    9 => 'user.keys.add.alreadyExist',
-                    default => 'user.keys.add.failed',
-                },
-            );
+        $exitCodeToErrorTextKey = [3 => 'user.keys.add.empty', 4 => 'user.keys.add.invalid', 5 => 'user.keys.add.invalid', 9 => 'user.keys.add.alreadyExist'];
+        if (($coreData = $this->executeCommand($command, 'user.keys.add.failed', $exitCodeToErrorTextKey)) instanceof ErrorData) {
+            return $coreData;
         }
 
         return null;
@@ -214,16 +141,8 @@ class CoreInteract implements CoreInteractInterface
     public function userKeysRemove(UserKeysRemoveData $userKeysRemoveData): ?ErrorData
     {
         $command = 'user key-remove ' . $userKeysRemoveData->uuid . ' ' . $userKeysRemoveData->key;
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData('user.keys.remove.failed');
+        if (($coreData = $this->executeCommand($command, 'user.keys.remove.failed')) instanceof ErrorData) {
+            return $coreData;
         }
 
         return null;
@@ -233,16 +152,8 @@ class CoreInteract implements CoreInteractInterface
     public function userDelete(UserDeleteData $userDeleteData): ?ErrorData
     {
         $command = 'user delete ' . $userDeleteData->uuid;
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData('user.delete.failed');
+        if (($coreData = $this->executeCommand($command, 'user.delete.failed')) instanceof ErrorData) {
+            return $coreData;
         }
 
         return null;
@@ -252,16 +163,8 @@ class CoreInteract implements CoreInteractInterface
     public function logSize(LogSizeData $logSizeData): ?ErrorData
     {
         $command = 'log size';
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData('admin.log.size.failed');
+        if (($coreData = $this->executeCommand($command, 'admin.log.size.failed')) instanceof ErrorData) {
+            return $coreData;
         }
 
         if (1 !== count($coreData->lineList) && !is_int($coreData->lineList[0])) {
@@ -278,17 +181,10 @@ class CoreInteract implements CoreInteractInterface
     #[\Override]
     public function logList(LogListData $logListData): ?ErrorData
     {
+        // todo : default values
         $command = 'log list ' . ($logListData->offset ?? 1) . ' ' . ($logListData->length ?? 50);
-        $coreData = $this->coreExec->exec($command);
-
-        if (null === $coreData) {
-            return new ErrorData('git.connectionFailed');
-        }
-
-        if ($coreData->exitCode > 0) {
-            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
-
-            return new ErrorData('admin.log.list.failed');
+        if (($coreData = $this->executeCommand($command, 'admin.log.list.failed')) instanceof ErrorData) {
+            return $coreData;
         }
 
         if (array_any($coreData->lineList, fn($line) => 3 !== count(explode(' ', $line, 3)))) {
@@ -310,6 +206,15 @@ class CoreInteract implements CoreInteractInterface
     public function logPurge(): ?ErrorData
     {
         $command = 'log purge';
+        if (($coreData = $this->executeCommand($command, 'admin.log.purge.failed')) instanceof ErrorData) {
+            return $coreData;
+        }
+
+        return null;
+    }
+
+    private function executeCommand(string $command, string $defaultErrorTextKey, ?array $exitCodeToErrorTextKey = null): ErrorData|CoreData
+    {
         $coreData = $this->coreExec->exec($command);
 
         if (null === $coreData) {
@@ -319,9 +224,13 @@ class CoreInteract implements CoreInteractInterface
         if ($coreData->exitCode > 0) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
 
-            return new ErrorData('admin.log.purge.failed');
+            if (null != $exitCodeToErrorTextKey and array_key_exists($coreData->exitCode, $exitCodeToErrorTextKey)) {
+                return new ErrorData($exitCodeToErrorTextKey[$coreData->exitCode]);
+            }
+
+            return new ErrorData($defaultErrorTextKey);
         }
 
-        return null;
+        return $coreData;
     }
 }

@@ -20,14 +20,7 @@ abstract class FuncControllerTest extends WebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
-        self::coreInit();
-    }
-
-    #[\Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        self::coreReset();
+        self::coreInitAndReset();
     }
 
     public function login(bool $isAdmin): void

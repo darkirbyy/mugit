@@ -4,28 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Inte;
 
-use App\Tests\Extension\CoreAwareTrait;
 use PHPUnit\Framework\Attributes as PU;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-final class CoreAPIRepoTest extends KernelTestCase
+final class CoreAPIRepoTest extends CoreAPITest
 {
-    use CoreAwareTrait;
-
-    #[\Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        self::coreInit();
-    }
-
-    #[\Override]
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        self::coreReset();
-    }
-
     #[PU\Test]
     public function repoList(): void
     {
