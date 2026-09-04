@@ -9,6 +9,7 @@ use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserDeleteData;
 use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
@@ -61,4 +62,9 @@ interface CoreInteractInterface
      * Remove an existing SSH keys for a given user.
      */
     public function userKeysRemove(UserKeysRemoveData $userKeysRemoveData): ?ErrorData;
+
+    /**
+     * Remove an existing SSH keys for a given user.
+     */
+    public function userDelete(UserDeleteData $userDeleteData): ?ErrorData;
 }

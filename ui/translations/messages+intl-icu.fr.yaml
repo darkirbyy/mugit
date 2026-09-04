@@ -32,7 +32,9 @@ user:
       label: La suppression est définitive, confirmer ?
       success: La clé SSH a été correctement supprimée.
       failed: Échec lors de la suppression de cette clé SSH.
-
+  delete:
+    failed: Échec lors de la suppression des toutes les clés de l'utilisateur.
+    
 repo:
   title: Les dépôts
   list:

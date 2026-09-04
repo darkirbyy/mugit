@@ -10,6 +10,7 @@ use App\DTO\RepoDeleteData;
 use App\DTO\RepoInfoData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserDeleteData;
 use App\DTO\UserInfoData;
 use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysInfoData;
@@ -220,6 +221,25 @@ class CoreInteract implements CoreInteractInterface
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
 
             return new ErrorData('user.keys.remove.failed');
+        }
+
+        return null;
+    }
+
+    #[\Override]
+    public function userDelete(UserDeleteData $userDeleteData): ?ErrorData
+    {
+        $command = 'user delete ' . $userDeleteData->uuid;
+        $coreData = $this->coreExec->exec($command);
+
+        if (null === $coreData) {
+            return new ErrorData('git.connectionFailed');
+        }
+
+        if ($coreData->exitCode > 0) {
+            $this->logger->error(self::class . ':: the command `' . $command . '` returned a non zero exit code (' . $coreData->exitCode . ').');
+
+            return new ErrorData('user.delete.failed');
         }
 
         return null;

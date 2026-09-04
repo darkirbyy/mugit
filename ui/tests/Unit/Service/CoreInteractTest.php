@@ -10,6 +10,7 @@ use App\DTO\RepoCreateData;
 use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
+use App\DTO\UserDeleteData;
 use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
@@ -80,6 +81,7 @@ final class CoreInteractTest extends TestCase
             'user keys list' => ['userKeysList', new UserKeysListData('uuid')],
             'user keys add' => ['userKeysAdd', new UserKeysAddData('uuid', 'key')],
             'user keys remove' => ['userKeysRemove', new UserKeysRemoveData('uuid', 'key')],
+            'user delete' => ['userDelete', new UserDeleteData('uuid')],
         ];
     }
 }

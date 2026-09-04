@@ -8,7 +8,7 @@ use App\Tests\Extension\CoreAwareTrait;
 use PHPUnit\Framework\Attributes as PU;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-final class CoreAPIUserKeysTest extends KernelTestCase
+final class CoreAPIUserTest extends KernelTestCase
 {
     use CoreAwareTrait;
 
