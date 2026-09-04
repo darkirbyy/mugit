@@ -11,6 +11,6 @@
       {{ m.form_submit(formName, 'button.delete', 'ri-delete-bin-line') }}
     </div>
   </div>
-  <input type="hidden" name="name" value="{{ repoDeleteData.name }}" />
+  {{ m.form_hidden_field(formName, formData, 'name', repoDeleteData.name) }}
   {{ m.form_end(formName, formData) }}
 </turbo-frame>

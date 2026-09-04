@@ -7,7 +7,7 @@ will strip all tags, and mess the render. The turboframe->replace action will se
 
 <turbo-frame id="{{ 'turboframe-admin-users-keys-' ~ userKeysListData.uuid }}">
   <table>
-    <tbody data-turboframe-replace="trues">
+    <tbody data-turboframe-replace="true">
       {% for userKeysInfoData in userKeysListData.userKeysInfoDataList %}
         <tr data-accordion-target="content">
           <td></td>

@@ -142,6 +142,17 @@
   </div>
 {% endmacro %}
 
+{% macro form_hidden_field(formName, formData, fieldName, fieldValue) %}
+  <div>
+    <input type="hidden" name="{{ fieldName }}" value="{{ fieldValue }}" />
+
+    {% set error = attribute(formData.errorList, fieldName)|default(null) %}
+    {% if error is not empty %}
+      {{ _self.flash('flash-error-' ~ formName ~ '-' ~ fieldName, 'error', error.textKey, 'mini') }}
+    {% endif %}
+  </div>
+{% endmacro %}
+
 {% macro form_submit(formName, submitTextKey, submitIcon) %}
   <button
     type="submit"

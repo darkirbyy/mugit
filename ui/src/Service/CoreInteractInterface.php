@@ -23,6 +23,8 @@ use App\DTO\UserListData;
 interface CoreInteractInterface
 {
     public const REGEX_NAME = '^[a-zA-Z]([a-zA-Z0-9_-]){1,127}$';
+    public const REGEX_UUID = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
+    public const REGEX_KEY = '^[a-zA-Z0-9\/+=\\\]{68}$';
     public const REGEX_FULL_KEY = '^ssh-ed25519 [a-zA-Z0-9\/+=\\\]{68}( [a-zA-Z0-9_@ -]{0,255}|)$';
 
     /**

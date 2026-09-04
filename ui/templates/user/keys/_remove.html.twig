@@ -11,7 +11,7 @@
       {{ m.form_submit(formName, 'button.delete', 'ri-delete-bin-line') }}
     </div>
   </div>
-  <input type="hidden" name="key" value="{{ userKeysRemoveData.key }}" />
-  <input type="hidden" name="uuid" value="{{ userKeysRemoveData.uuid }}" />
+  {{ m.form_hidden_field(formName, formData, 'key', userKeysRemoveData.key) }}
+  {{ m.form_hidden_field(formName, formData, 'uuid', userKeysRemoveData.uuid) }}
   {{ m.form_end(formName, formData) }}
 </turbo-frame>

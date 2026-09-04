@@ -17,7 +17,7 @@ class FormHandler
 {
     public function __construct(private RequestStack $requestStack, private ValidatorInterface $validator, private CoreInteractInterface $coreInteract) {}
 
-    public function handle(mixed $data, string $coreMethod): FormData
+    public function handle(object $data, string $coreMethod): FormData
     {
         // Pass if not POST request (i.e. form not submitted)
         if ('POST' != $this->requestStack->getMainRequest()->getMethod()) {
