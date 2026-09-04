@@ -3,7 +3,7 @@
 The project is divided in two parts, with the idea that each part can be used independently, or run on a different machine (not tested !).  
 To achieve that, here is the API between the CORE and the UI.
 
-## General consideration
+## I/O consideration
 
 - Each line MUST end with '\n'.  
 - Exit code MUST be 0 on success, anything between 1 and 10 on error (see [Exit code](#exit-code)).  
@@ -12,6 +12,7 @@ To achieve that, here is the API between the CORE and the UI.
 - Valid uuids for the users: MUST use the standard format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' where x is a digit or a letter between 'a' and 'f'.  
 - Valid public keys for the users: MUST be generated with the ed25519 algorithm, without the 'ssh-ed25519' prefix nor the optional comment suffix ; MUST be enclosed in simple quotes ; MUST be extacly 68 characters.  
 - Valid comments for the users: MUST only contains letters, digits, spaces and symbols '-', '_' or '@' ; multiple spaces MUST be reduced to only one by the API ; MUST be maximum 255 characters.
+- Valid number for the logs: offset MUST be an integer between 1 and 10^16, length MUST be an integer between 1 and 10^5.
 
 ## Commands
 
@@ -34,6 +35,13 @@ To achieve that, here is the API between the CORE and the UI.
 - `user key-remove <uuid> <key>` : remove an existing key `<key>` for the user `<uuid>`
 - `user delete <uuid>` : delete all registered keys of the user `<uuid>`
 
+### Log sub-command
+
+- `log help` : print the log sub-command help
+- `log size` : print the size of the logs file
+- `log list` : list `[length]` logs starting at `[offset]`, with timestamp, user uuid and command executed
+- `log purge` : purge all logs
+
 ## Exit code
 
 - `0` : success
@@ -47,6 +55,14 @@ To achieve that, here is the API between the CORE and the UI.
 - `8` : key does not exist
 - `9` : key already exists
 - `10` : other error
+
+## Logging
+
+The core is not aware of the user making the call since it's using a root SSH connection. Set the variable `USER_UUID` after connecting to enable proper logging ; if not set or malformed, logging is disabled.
+Only actions causing write operations are logged, namely :
+
+- repo create|rename|delete
+- user key-add|key-remove|delete
 
 ## PHP Interface
 

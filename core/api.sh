@@ -5,13 +5,17 @@ GIT_UID=$(id -u git)
 GIT_GID=$(id -g git)
 GIT_DIR="/home/git"
 SSH_FILE="$GIT_DIR/.ssh/authorized_keys"
+LOG_FILE="$GIT_DIR/logs"
 NAME_REGEX="^[a-zA-Z]([a-zA-Z0-9_-]){1,127}$"
 NAME_HELP="The names must start with a letter, and can only use letters, digits, and the symbols '-' or '_', with 128 characters maximum."
 UUID_REGEX="^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 UUID_HELP="The uuids must use the standard format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' where x is a digit or a letter between 'a' and 'f'."
 KEY_REGEX="^[a-zA-Z0-9/+=\\]{68}$"
 KEY_HELP="The keys must be generated with the ed25519 algorithm. To be parsed correctly, they must given 
-  without the 'ssh-ed25519' prefix nor the optional comment suffix and enclosed in simple quote, with 68 characters exactly. "
+  without the 'ssh-ed25519' prefix nor the optional comment suffix and enclosed in simple quote, with 68 characters exactly."
+LOG_OFFSET_REGEX="^(|[1-9][0-9]{0,15}|10000000000000000)$"
+LOG_LENGTH_REGEX="^(|[1-9][0-9]{0,3}|10000)$"
+LOG_HELP="The offset must be between 1 and 10^16 (default to 1). The length must be between 1 and 10^4 (default to 100)."
 COMMENT_REGEX="^[a-zA-Z0-9_@ -]{0,255}$"
 COMMENT_HELP="The comments can only use letters, digits, spaces and the symbols '-', '_' or '@', with 255 characters maximum."
 
@@ -42,7 +46,7 @@ check_argument(){
     fi
 }
 
-# Syntax : check_option "$argument" "$regex" "$help"
+# Syntax : check_option "$option" "$regex" "$help"
 check_option(){
     if echo $1 | grep -vqE "$2"; then
         >&2 echo "Invalid option(s). $3" 
@@ -66,15 +70,24 @@ check_key(){
     fi
 }
 
-# Syntax : report_error "$error" "$message"
-report_error(){
-    >&2 echo "$2 Error :" 
-    >&2 echo "$1" 
-    exit 10
+# Syntax : handle_output "$output" "$success" "$failure" "$log"
+handle_output(){
+    if [ $? = 0 ]; then
+        [ -z "$2" ] && echo "$1" || echo "$2"
+        if [ "$4" = "true" ] && echo "$USER_UUID" | grep -qE "$UUID_REGEX"; then
+            echo "$(date +%s) $USER_UUID $full_command" >> "$LOG_FILE"  
+        fi
+        exit 0
+    else
+        >&2 echo "$3 Error:" 
+        >&2 echo "$1" 
+        exit 10
+    fi
 }
 
+full_command="$@"
 command=$1
-check_command "$command" "help,repo,user" "command" "Type 'help' to print list of available commands."
+check_command "$command" "help,repo,user,log" "command" "Type 'help' to print list of available commands."
 
 if   [ $command = "help" ]; then
     echo "Available commands:"
@@ -98,17 +111,9 @@ elif [ $command = "repo" ]; then
         echo ""
         echo "$NAME_HELP"
         exit 0
-    fi
-
-    if [ $subcommand = "list" ]; then
+    elif [ $subcommand = "list" ]; then
         output=$(du -d 1 $GIT_DIR | grep -E '\.git$' | sed -E 's#([0-9]+).*/([a-zA-Z0-9_-]+)\.git#\2 \1#g' | sort 2>&1)
-        if [ $? = 0 ]; then
-            echo "$output"
-            exit 0
-        else
-            report_error "$output" "Failed to list the repositories."
-        fi
-        exit 0
+        handle_output "$output" ""  "Failed to list the repositories." "false"
     elif [ $subcommand = "create" ]; then
         shift
 
@@ -121,12 +126,7 @@ elif [ $command = "repo" ]; then
         uid=$(id -u git)
         gid=$(id -g git)
         output=$(git init --bare $path 2>&1 && chown -R $GIT_UID:$GIT_GID $path 2>&1)
-        if [ $? = 0 ]; then
-            echo "Created empty repository '$name'."
-            exit 0
-        else
-           report_error "$output" "Failed to create the repository."
-        fi
+        handle_output "$output" "Created empty repository '$name'." "Failed to create the repository." "true"
     elif [ $subcommand = "rename" ]; then
         shift
 
@@ -141,12 +141,7 @@ elif [ $command = "repo" ]; then
         check_path "$newpath" "" "The new name '$newname' is already used by an existing repository."
 
         output=$(mv -f "$oldpath" "$newpath" 2>&1)
-        if [ $? = 0 ]; then
-            echo "Renamed repository from '$oldname' to '$newname'."
-            exit 0
-        else
-            report_error "$output" "Failed to rename the repository."
-        fi
+        handle_output "$output" "Renamed repository from '$oldname' to '$newname'." "Failed to rename the repository." "true"
     elif [ $subcommand = "delete" ]; then
         shift
 
@@ -157,12 +152,7 @@ elif [ $command = "repo" ]; then
         check_path "$path" "!" "The name '$name' does not correspond to an existing repository."
 
         output=$(rm -rf "$path" 2>&1)
-        if [ $? = 0 ]; then
-            echo "Deleted repository '$name'."
-            exit 0
-        else
-            report_error "$output" "Failed to delete the repository."
-        fi
+        handle_output "$output" "Deleted repository '$name'." "Failed to delete the repository." "true"
     fi
 elif [ $command = "user" ]; then
 	shift
@@ -192,12 +182,7 @@ elif [ $command = "user" ]; then
         exit 0
     elif [ $subcommand = "list" ]; then
         output=$(cat "$SSH_FILE" | cut -d' ' -f3 | cut -d':' -f1 | sort | uniq 2>&1)
-        if [ $? = 0 ]; then
-            echo "$output"
-            exit 0
-        else
-            report_error "$output" "Failed to list the users."
-        fi
+        handle_output "$output" "" "Failed to list the users." "false"
     elif [ $subcommand = "key-list" ]; then
         shift
         uuid=$1
@@ -205,12 +190,7 @@ elif [ $command = "user" ]; then
         
         key_regex_adapt=$(echo "$KEY_REGEX" | tr -d '^$')
         output=$(cat "$SSH_FILE" | grep -E "ssh-ed25519 $key_regex_adapt $uuid:" | cut -d' ' -f2- | sed -E "s#$uuid:##" | tr ':' ' ' 2>&1)
-        if [ $? = 0 ] || [ $? = 1 ]; then
-            echo "$output"
-            exit 0
-        else
-            report_error "$output" "Failed to list the keys."
-        fi
+        handle_output "$output" "" "Failed to list the keys." "false"
     elif [ $subcommand = "key-add" ]; then
         shift
         uuid=$1
@@ -223,13 +203,7 @@ elif [ $command = "user" ]; then
         timestamp=$(date +%s)
 
         output=$(echo "ssh-ed25519 $key $uuid:$timestamp:$comment" >> "$SSH_FILE" 2>&1)
-         if [ $? = 0 ]; then
-            echo "Added key '$key' for the user '$uuid'."
-            exit 0
-        else
-            report_error "$output" "Failed to add the key."
-        fi
-        exit 0
+        handle_output "$output" "Added key '$key' for the user '$uuid'." "Failed to add the key." "true"
     elif [ $subcommand = "key-remove" ]; then
         shift
         uuid=$1
@@ -239,13 +213,7 @@ elif [ $command = "user" ]; then
         check_key "$uuid" "$key" "" "The key '$key' does not exist for the user '$uuid'."
 
         output=$(sed -i "\#^ssh-ed25519 $key $uuid\:#d" "$SSH_FILE" 2>&1)
-         if [ $? = 0 ]; then
-            echo "Deleted key '$key' for the user '$uuid'."
-            exit 0
-        else
-            report_error "$output" "Failed to delete the key."
-        fi
-        exit 0
+        handle_output "$output" "Removed key '$key' for the user '$uuid'." "Failed to remove the key." "true"
     elif [ $subcommand = "delete" ]; then
         shift
         uuid=$1
@@ -253,12 +221,49 @@ elif [ $command = "user" ]; then
 
         key_regex_adapt=$(echo "$KEY_REGEX" | tr -d '^$')
         output=$(sed -i -E "\#^ssh-ed25519 $key_regex_adapt $uuid\:#d" "$SSH_FILE" 2>&1)
-         if [ $? = 0 ]; then
-            echo "Deleted all keys for the user '$uuid'."
-            exit 0
-        else
-            report_error "$output" "Failed to delete the keys."
-        fi
+        handle_output "$output" "Deleted all keys for the user '$uuid'." "Failed to delete the keys." "true"
+    fi
+elif [ $command = "log" ]; then
+	shift
+
+    if [ ! -e "$LOG_FILE" ]; then
+        touch "$LOG_FILE"
+        chown $GIT_UID:$GIT_GID "$LOG_FILE"
+    fi
+
+    subcommand=$1
+    check_command "$subcommand" "help,size,list,purge" "sub-command" "Type 'log help' to print the list of available sub-commands."
+
+    if [ $subcommand = "help" ]; then
+        echo "Manage logs. Available sub-commands:"
+        echo " - log help                      print this help"
+        echo " - log size                      print the size of the logs file"
+        echo " - log list [offset] [length]    list [length] logs starting at [offset], with timestamp, user uuid and command executed"
+        echo " - log purge                     purge all the logs"
+        echo ""
+        echo "$LOG_HELP"
         exit 0
+    elif [ $subcommand = "size" ]; then
+        # todo : redirect error ?
+        output=$(wc -l "$LOG_FILE" | cut -d' ' -f1 2>&1)
+        handle_output "$output" "" "Failed to count the logs size." "false"
+    elif [ $subcommand = "list" ]; then
+        shift
+        offset=$1
+        check_option "$offset" "$LOG_OFFSET_REGEX" "$LOG_HELP"
+        shift
+        length=$1
+        check_option "$length" "$LOG_LENGTH_REGEX" "$LOG_HELP"
+
+        [ -z $offset ] && offset=1
+        [ -z $length ] && length=50
+        end=$(($offset + $length - 1))
+
+        output=$(sed -n "$offset,$end"p "$LOG_FILE" 2>&1)
+        handle_output "$output" "" "Failed to list the logs." "false"
+    elif [ $subcommand = "purge" ]; then
+        # todo : redirect error ?
+        output=$(echo -n > "$LOG_FILE")
+        handle_output "$output" "Purged all logs." "Failed to purge the logs." "false"
     fi
 fi
