@@ -37,7 +37,7 @@ class HomeController extends AbstractController
         }
 
         $security->logout(false);
-        $security->login($keycloakMockEntryPoint->createUser($isAdmin));
+        $security->login($keycloakMockEntryPoint->createFakeUser(1, $isAdmin));
 
         $url = $request->headers->get('referer', '/');
 

@@ -9,6 +9,7 @@ use phpseclib4\Crypt\PublicKeyLoader;
 use phpseclib4\Exception\BaseException;
 use phpseclib4\Net\SSH2;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class CoreExecSSH implements CoreExecInterface
@@ -17,6 +18,7 @@ class CoreExecSSH implements CoreExecInterface
         #[Autowire('%core.host_pubkey%')] private string $coreHostPubkey,
         #[Autowire('%core.root_prikey%')] private string $coreRootPrikey,
         private SSH2 $ssh,
+        private Security $security,
         private LoggerInterface $logger,
     ) {}
 
@@ -27,7 +29,7 @@ class CoreExecSSH implements CoreExecInterface
             return null;
         }
 
-        $output = $this->ssh->exec('./api.sh ' . $command);
+        $output = $this->ssh->exec('export USER_UUID=' . $this->security->getUser()->getId() . '; ./api.sh ' . $command);
         $exitStatus = $this->ssh->getExitStatus();
 
         $lineList = array_filter(explode("\n", $output));

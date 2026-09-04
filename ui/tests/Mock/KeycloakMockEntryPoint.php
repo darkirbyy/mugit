@@ -41,7 +41,7 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
 
     public function loginFakeUser(SessionInterface $session, bool $isAdmin): UserInterface
     {
-        $user = $this->createUser($isAdmin);
+        $user = $this->createFakeUser(1, $isAdmin);
 
         $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
@@ -52,18 +52,22 @@ class KeycloakMockEntryPoint implements AuthenticationEntryPointInterface
         return $user;
     }
 
-    public function createUser(bool $isAdmin): KeycloakMockUser
+    public function createFakeUser(int $userNumber, bool $isAdmin): KeycloakMockUser
     {
-        $number = 1;
         $uuid = UuidV4::fromString(self::userNumberToUuid(1));
-        $username = 'user' . $number;
-        $avatarPath = $this->packages->getUrl('build/tests/avatar' . $number . '.png');
+        $username = 'user' . $userNumber;
+        $avatarPath = $this->packages->getUrl('build/tests/avatar' . $userNumber . '.png');
 
         return new KeycloakMockUser($uuid, $username, $avatarPath, $isAdmin);
     }
 
-    public static function userNumberToUuid(int $number): string
+    public static function createTestUser(int $userNumber, bool $isAdmin): KeycloakMockUser
     {
-        return '11111111-1111-4111-8111-' . str_repeat((string) $number, 12);
+        return new KeycloakMockUser(UuidV4::fromString(self::userNumberToUuid($userNumber)), 'test', '', $isAdmin);
+    }
+
+    public static function userNumberToUuid(int $userNumber): string
+    {
+        return '11111111-1111-4111-8111-' . str_repeat((string) $userNumber, 12);
     }
 }

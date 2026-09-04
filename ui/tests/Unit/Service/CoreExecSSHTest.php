@@ -6,18 +6,23 @@ namespace App\Tests\Unit\Service;
 
 use App\DTO\CoreData;
 use App\Service\CoreExecSSH;
+use App\Tests\Mock\KeycloakMockEntryPoint;
 use phpseclib4\Crypt\EC;
 use phpseclib4\Exception\TimeoutException;
 use phpseclib4\Net\SSH2;
 use PHPUnit\Framework\Attributes as PU;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 final class CoreExecSSHTest extends TestCase
 {
     private static string $prikey;
-    private LoggerInterface $logger;
+    private static UserInterface $mockUser;
     private SSH2 $ssh;
+    private Security $security;
+    private LoggerInterface $logger;
     private CoreExecSSH $coreExecSSH;
 
     #[\Override]
@@ -25,15 +30,17 @@ final class CoreExecSSHTest extends TestCase
     {
         parent::setUpBeforeClass();
         self::$prikey = EC::createKey('Ed25519')->toString('openssh');
+        self::$mockUser = KeycloakMockEntryPoint::createTestUser(1, false);
     }
 
     #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
-        $this->logger = $this->createMock(LoggerInterface::class);
         $this->ssh = $this->createMock(SSH2::class);
-        $this->coreExecSSH = new CoreExecSSH('host-pubkey-true', self::$prikey, $this->ssh, $this->logger);
+        $this->security = $this->createMock(Security::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->coreExecSSH = new CoreExecSSH('host-pubkey-true', self::$prikey, $this->ssh, $this->security, $this->logger);
     }
 
     #[PU\Test]
@@ -42,6 +49,7 @@ final class CoreExecSSHTest extends TestCase
         $this->ssh->expects($this->once())->method('isAuthenticated')->willReturn(true);
         $this->ssh->expects($this->once())->method('exec')->willReturn('Line1');
         $this->ssh->expects($this->once())->method('getExitStatus')->willReturn(0);
+        $this->security->expects($this->once())->method('getUser')->willReturn(self::$mockUser);
         $this->logger->expects($this->once())->method('info');
 
         $coreData = $this->coreExecSSH->exec('');
@@ -54,6 +62,7 @@ final class CoreExecSSHTest extends TestCase
     {
         $this->ssh->expects($this->once())->method('isAuthenticated')->willReturn(false);
         $this->ssh->expects($this->once())->method('getServerPublicHostKey')->willReturn('host-pubkey-false');
+        $this->security->expects($this->never())->method($this->anything());
         $this->logger->expects($this->once())->method('error');
 
         $coreData = $this->coreExecSSH->exec('');
@@ -67,6 +76,7 @@ final class CoreExecSSHTest extends TestCase
         $this->ssh->expects($this->once())->method('isAuthenticated')->willReturn(false);
         $this->ssh->expects($this->once())->method('getServerPublicHostKey')->willReturn('host-pubkey-true');
         $this->ssh->expects($this->once())->method('login')->willReturn(false);
+        $this->security->expects($this->never())->method($this->anything());
         $this->logger->expects($this->once())->method('error');
 
         $coreData = $this->coreExecSSH->exec('');
@@ -80,6 +90,7 @@ final class CoreExecSSHTest extends TestCase
         $this->ssh->expects($this->once())->method('isAuthenticated')->willReturn(false);
         $this->ssh->expects($this->once())->method('getServerPublicHostKey')->willReturn('host-pubkey-true');
         $this->ssh->expects($this->once())->method('login')->willThrowException(new TimeoutException());
+        $this->security->expects($this->never())->method($this->anything());
         $this->logger->expects($this->once())->method('error');
 
         $coreData = $this->coreExecSSH->exec('');
@@ -95,6 +106,7 @@ final class CoreExecSSHTest extends TestCase
         $this->ssh->expects($this->once())->method('login')->willReturn(true);
         $this->ssh->expects($this->once())->method('exec')->willReturn('Line1');
         $this->ssh->expects($this->once())->method('getExitStatus')->willReturn(0);
+        $this->security->expects($this->once())->method('getUser')->willReturn(self::$mockUser);
         $this->logger->expects($this->once())->method('info');
 
         $coreData = $this->coreExecSSH->exec('');
@@ -110,6 +122,7 @@ final class CoreExecSSHTest extends TestCase
         $this->ssh->expects($this->once())->method('login')->willReturn(true);
         $this->ssh->expects($this->once())->method('exec')->willReturn("Line1\nLine2\nLine3");
         $this->ssh->expects($this->once())->method('getExitStatus')->willReturn(2);
+        $this->security->expects($this->once())->method('getUser')->willReturn(self::$mockUser);
         $this->logger->expects($this->once())->method('info');
 
         $coreData = $this->coreExecSSH->exec('');

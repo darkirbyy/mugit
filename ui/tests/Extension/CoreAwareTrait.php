@@ -56,9 +56,9 @@ trait CoreAwareTrait
         }
     }
 
-    public static function coreUserNumberToUuid(int $number): string
+    public static function coreUserNumberToUuid(int $userNumber): string
     {
-        return KeycloakMockEntryPoint::userNumberToUuid($number);
+        return KeycloakMockEntryPoint::userNumberToUuid($userNumber);
     }
 
     public static function coreUserGenerateFakeKey(int $userNumber, int $keyNumber): string
