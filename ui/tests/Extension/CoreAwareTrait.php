@@ -15,6 +15,7 @@ trait CoreAwareTrait
     private static string $coreRootPath;
     private static string $coreDataPath;
     private static string $coreAuthorizedKeysFilepath;
+    private static string $coreLogFilepath;
     private static CoreExecInterface $coreExec;
 
     public static function coreInit(): void
@@ -22,6 +23,7 @@ trait CoreAwareTrait
         self::$coreRootPath = realpath(__DIR__ . '/../../../core');
         self::$coreDataPath = Path::join(self::$coreRootPath, $_ENV['CORE_DATA']);
         self::$coreAuthorizedKeysFilepath = Path::join(self::$coreDataPath, '.ssh', 'authorized_keys');
+        self::$coreLogFilepath = Path::join(self::$coreDataPath, 'logs');
         self::$coreExec = self::getContainer()->get(CoreExecInterface::class);
     }
 
@@ -38,14 +40,14 @@ trait CoreAwareTrait
         }
     }
 
-    public static function coreUserGenerateFakeKey(int $userNumber, int $keyNumber): string
-    {
-        return 'AAAA' . str_repeat((string) $userNumber, 32) . str_repeat((string) $keyNumber, 32);
-    }
-
     public static function coreUserNumberToUuid(int $number): string
     {
         return KeycloakMockEntryPoint::userNumberToUuid($number);
+    }
+
+    public static function coreUserGenerateFakeKey(int $userNumber, int $keyNumber): string
+    {
+        return 'AAAA' . str_repeat((string) $userNumber, 32) . str_repeat((string) $keyNumber, 32);
     }
 
     public static function coreUserAdd(string|array|null ...$userCommentsList): void
@@ -69,6 +71,24 @@ trait CoreAwareTrait
         return $filesystem->readFile(self::$coreAuthorizedKeysFilepath);
     }
 
+    public static function coreLogAdd(int $userNumber, string ...$logCommandList): void
+    {
+        $filesystem = new Filesystem();
+        $uuid = self::coreUserNumberToUuid($userNumber);
+        $lines = [];
+        foreach ($logCommandList as $logCommand) {
+            $lines[] = time() . ' ' . $uuid . ' ' . $logCommand;
+        }
+        $filesystem->appendToFile(self::$coreLogFilepath, implode("\n", $lines) . "\n", true);
+    }
+
+    public static function coreLogContent(): string
+    {
+        $filesystem = new Filesystem();
+
+        return $filesystem->readFile(self::$coreLogFilepath);
+    }
+
     public static function coreReset(): void
     {
         $finder = new Finder();
@@ -82,7 +102,8 @@ trait CoreAwareTrait
             }
         }
 
-        // Clear the authorized_keys file
+        // Clear the authorized_keys and log files
         $filesystem->dumpFile(self::$coreAuthorizedKeysFilepath, '');
+        $filesystem->dumpFile(self::$coreLogFilepath, '');
     }
 }

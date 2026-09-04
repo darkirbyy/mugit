@@ -22,6 +22,7 @@ final class SuiteStart implements StartedSubscriber
 
         // INTE, FUNC, E2E ONLY : clean up core data directory before the suite statr
         if (in_array($event->testSuite()->name(), TestsExtension::SUITE_REQUIRE_CORE)) {
+            // todo factor with core aware trait -> reset
             $coreDataPath = Path::join($coreRootPath, $_ENV['CORE_DATA']);
 
             // Clear all git directories
@@ -32,8 +33,9 @@ final class SuiteStart implements StartedSubscriber
                 }
             }
 
-            // Clear the authorized_keys file
+            // Clear the authorized_keys and log files
             $filesystem->dumpFile(Path::join($coreDataPath, '.ssh', 'authorized_keys'), '');
+            $filesystem->dumpFile(Path::join($coreDataPath, 'logs'), '');
         }
     }
 }
