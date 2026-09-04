@@ -8,6 +8,7 @@ use App\DTO\ErrorData;
 use App\DTO\FormData;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\String\ByteString;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -17,7 +18,7 @@ class FormHandler
 {
     public function __construct(private RequestStack $requestStack, private ValidatorInterface $validator, private CoreInteractInterface $coreInteract) {}
 
-    public function handle(object $data, string $coreMethod): FormData
+    public function handle(?object $data, string $coreMethod): FormData
     {
         // Pass if not POST request (i.e. form not submitted)
         if ('POST' != $this->requestStack->getMainRequest()->getMethod()) {
@@ -25,7 +26,7 @@ class FormHandler
         }
 
         // Check form validation errors
-        $validationErrorList = $this->validator->validate($data);
+        $validationErrorList = null != $data ? $this->validator->validate($data) : new ConstraintViolationList();
         if ($validationErrorList->count() > 0) {
             $formErrorList = [];
             foreach ($validationErrorList as $validationError) {

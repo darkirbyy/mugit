@@ -1,0 +1,49 @@
+{% import 'theme/macro.html.twig' as m %}
+
+<turbo-frame id="turboframe-admin-logs-list">
+  {% if errorData is not null %}
+    {{ m.flash('flash-error-admin-logs-list', 'error', errorData.textKey, 'full', true, false) }}
+  {% else %}
+    {% set bar %}
+      {% set buttonId = 'button-admin-logs-purge' %}
+      {% set dropdownId = 'dropdown-admin-logs-purge' %}
+      {% set turboframeId = 'turboframe-admin-logs-purge' %}
+      {{ m.button(buttonId, 'log.list.purgeStart', 'ri-delete-bin-2-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
+      {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
+      {% set extra %}
+        <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('admin_logs_purge') }}" data-controller="turboframe">
+          {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
+        </turbo-frame>
+      {% endset %}
+      {{ m.dropdown_item('button-admin-logs-purge-start', 'button', 'log.list.purgeStart', 'ri-delete-bin-2-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra, true) }}
+      {{ m.dropdown_end() }}
+      {{ m.button('button-admin-logs-refresh', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
+    {% endset %}
+
+    {% set head %}
+      <tr>
+        <th scope="col" class="px-4 py-3">{{ 'log.list.date'|trans }}</th>
+        <th scope="col" class="px-4 py-3">{{ 'log.list.uuid'|trans }}</th>
+        <th scope="col" class="px-4 py-3 whitespace-nowrap">{{ 'log.list.command'|trans }}</th>
+      </tr>
+    {% endset %}
+
+    {% set body %}
+      <tbody>
+        {% for logInfoData in logListData.logInfoDataList %}
+          <tr class="border-zinc-500 {{ not loop.first ? ' border-t' }}">
+            <td class="px-4 py-2 font-medium whitespace-nowrap">{{ logInfoData.date|format_datetime('short') }}</td>
+            <td class="px-4 py-2">{{ logInfoData.uuid }}</td>
+            <td class="px-4 py-2">{{ logInfoData.command }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="3" class="px-4 py-2 text-sm italic">{{ 'log.list.noLog'|trans }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    {% endset %}
+
+    {{ m.table(bar, head, body) }}
+  {% endif %}
+</turbo-frame>

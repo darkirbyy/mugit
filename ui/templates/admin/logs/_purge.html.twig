@@ -1,0 +1,15 @@
+{% import 'theme/macro.html.twig' as m %}
+
+<turbo-frame id="turboframe-admin-logs-purge">
+  {% set formName = 'admin-logs-purge' %}
+  {{ m.form_start(formName) }}
+  <div class="flex min-w-2xs flex-col gap-0.5 pt-0.5">
+    <div class="flex items-center gap-1 text-red-900 dark:text-red-400">
+      <div class="flex-1 px-1">
+        {{ 'log.purge.label'|trans }}
+      </div>
+      {{ m.form_submit(formName, 'button.delete', 'ri-delete-bin-line') }}
+    </div>
+  </div>
+  {{ m.form_end(formName, formData) }}
+</turbo-frame>

@@ -13,8 +13,9 @@ services:
     restart: unless-stopped
     environment:
       - TZ=${TIMEZONE:-Etc/UTC}
-      - UI_ADDR=${CORE_NETWORK_UI_ADDR:-localhost}
+      - NETWORK_UI_ADDR=${CORE_NETWORK_UI_ADDR:-localhost}
       - REPO_MAX_SIZE_MIO=${CORE_REPO_MAX_SIZE_MIO:-500}
+      - LOG_DEFAULT_LENGTH=${CORE_LOG_DEFAULT_LENGTH:-50}
     ports:
       - ${CORE_PORT:-22}:22
     volumes:

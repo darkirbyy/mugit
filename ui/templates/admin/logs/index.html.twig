@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% import 'theme/macro.html.twig' as m %}
+
+{% set title = 'log.title'|trans %}
+
+{% block main %}
+  <turbo-frame id="turboframe-admin-logs-list" src="{{ path('admin_logs_list') }}" data-controller="turboframe">
+    {{ m.spinner(10, true, 'p-3 gap-3 grid-cols-1', 'h-8') }}
+  </turbo-frame>
+{% endblock %}

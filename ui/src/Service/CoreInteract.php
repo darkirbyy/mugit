@@ -22,10 +22,11 @@ use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
 use App\DTO\UserListData;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class CoreInteract implements CoreInteractInterface
 {
-    public function __construct(private LoggerInterface $logger, private CoreExecInterface $coreExec) {}
+    public function __construct(#[Autowire('%core.log_default_length%')] private int $coreDefaultLength, private LoggerInterface $logger, private CoreExecInterface $coreExec) {}
 
     #[\Override]
     public function repoList(RepoListData $repoListData): ?ErrorData
@@ -181,8 +182,7 @@ class CoreInteract implements CoreInteractInterface
     #[\Override]
     public function logList(LogListData $logListData): ?ErrorData
     {
-        // todo : default values
-        $command = 'log list ' . ($logListData->offset ?? 1) . ' ' . ($logListData->length ?? 50);
+        $command = 'log list ' . ($logListData->offset ?? 1) . ' ' . ($logListData->length ?? $this->coreDefaultLength);
         if (($coreData = $this->executeCommand($command, 'log.list.failed')) instanceof ErrorData) {
             return $coreData;
         }

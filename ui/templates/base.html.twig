@@ -125,7 +125,7 @@
           {% set extra %}
             <ul>
               {{ m.dropdown_item('button-navbar-tools-keys', 'a', 'layout.navbar.tool.users', 'ri-user-settings-line', { href: path('admin_users_index') }) }}
-              {{ m.dropdown_item('button-navbar-tools-logs', 'a', 'layout.navbar.tool.logs', 'ri-chat-history-line', { href: '#' }) }}
+              {{ m.dropdown_item('button-navbar-tools-logs', 'a', 'layout.navbar.tool.logs', 'ri-chat-history-line', { href: path('admin_logs_index') }) }}
             </ul>
           {% endset %}
           {{ m.dropdown_item('button-navbar-admin', 'button', 'layout.navbar.administrate', 'ri-lock-2-line', [], extra) }}

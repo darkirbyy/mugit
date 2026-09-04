@@ -83,12 +83,16 @@ log:
   size:
     failed: Échec lors de calcul du nombre d'évènements dans le journal.
   list:
+    purgeStart: Purger tous les évènements
+    noLog: Aucun évènement
     date: Date
     uuid: UUID
-    executedCommand: Commande exécutée
+    command: Commande
     invalid: La pagination demandée pour le journal d'évènement dépasse les limites.
     failed: Échec lors du calcul d'une sous-liste des évènements du journal.
   purge:
+    label: La purge est définitive, confirmer ?
+    success: Le journal d'évènement a été correctement purgé.
     failed: Échec lors de la purge du journal d'évènements.
 
 error:

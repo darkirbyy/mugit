@@ -34,7 +34,7 @@ final class CoreInteractTest extends TestCase
     {
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->coreExec = $this->createMock(CoreExecInterface::class);
-        $this->coreInteract = new CoreInteract($this->logger, $this->coreExec);
+        $this->coreInteract = new CoreInteract(10, $this->logger, $this->coreExec);
     }
 
     #[PU\Test]

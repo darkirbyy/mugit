@@ -24,7 +24,7 @@ final class CoreAPILogTest extends CoreAPITest
     #[PU\DataProvider('logListValues')]
     public function logList(?int $offset, ?int $length, ?int $expectedStart, int $expectedLength): void
     {
-        self::coreLogAdd(1, ...array_map(fn(int $i) => 'command ' . $i, range(1, 100)));
+        self::coreLogAdd(1, ...array_map(fn(int $i) => 'command ' . $i, range(1, 20)));
 
         $coreData = self::$coreExec->exec('log list ' . $offset . ' ' . $length);
 
@@ -61,11 +61,11 @@ final class CoreAPILogTest extends CoreAPITest
     public static function logListValues(): array
     {
         return [
-            'default' => [null, null, 1, 50],
-            'offset ok' => [10, null, 10, 50],
-            'offset ok, length ok' => [90, 5, 90, 5],
-            'offset overflow, length ok' => [101, 5, null, 0],
-            'offset ok, length overflow' => [90, 15, 90, 11],
+            'default' => [null, null, 1, 10],
+            'offset ok' => [5, null, 5, 10],
+            'offset ok, length ok' => [10, 5, 10, 5],
+            'offset overflow, length ok' => [21, 5, null, 0],
+            'offset ok, length overflow' => [15, 10, 15, 6],
         ];
     }
 

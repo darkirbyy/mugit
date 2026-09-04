@@ -256,7 +256,7 @@ elif [ $command = "log" ]; then
         check_option "$length" "$LOG_LENGTH_REGEX" "$LOG_HELP"
 
         [ -z $offset ] && offset=1
-        [ -z $length ] && length=50
+        [ -z $length ] && length=$LOG_DEFAULT_LENGTH
         end=$(($offset + $length - 1))
 
         output=$(sed -n "$offset,$end"p "$LOG_FILE" 2>&1)

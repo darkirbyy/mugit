@@ -20,6 +20,7 @@ parameters:
     core.connection_timeout: '%env(int:CORE_CONNECTION_TIMEOUT)%'
     core.repo_max_size_mio: '%env(int:CORE_REPO_MAX_SIZE_MIO)%'
     core.repo_warn_size_percent: '%env(int:CORE_REPO_WARN_SIZE_PERCENT)%'
+    core.log_default_length: '%env(int:CORE_LOG_DEFAULT_LENGTH)%'
     mock.keycloak_enable: '%env(bool:MOCK_KEYCLOAK_ENABLE)%'
 
 imports:
