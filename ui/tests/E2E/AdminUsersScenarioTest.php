@@ -24,9 +24,9 @@ final class AdminUsersScenarioTest extends E2EControllerTest
         $this->waitForTurboframeLoaded('turboframe-admin-users-list');
 
         // Check title content, table header and cell content
-        $this->assertPageTitleContains('admin.users.title');
-        $this->assertSelectorTextContains('h1', 'admin.users.title');
-        $this->assertAnySelectorTextContains('th', 'admin.users.list.uuid');
+        $this->assertPageTitleContains('user.list.title');
+        $this->assertSelectorTextContains('h1', 'user.list.title');
+        $this->assertAnySelectorTextContains('th', 'user.list.uuid');
         $this->assertAnySelectorTextContains('th', 'user.keys.list.key');
         $this->assertAnySelectorTextContains('th', 'user.keys.list.dateAdded');
         $this->assertAnySelectorTextContains('th', 'user.keys.list.comment');

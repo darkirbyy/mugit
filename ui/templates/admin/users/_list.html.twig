@@ -10,7 +10,7 @@
 
     {% set head %}
       <tr>
-        <th scope="col" class="px-4 py-3">{{ 'admin.users.list.uuid'|trans }}</th>
+        <th scope="col" class="px-4 py-3">{{ 'user.list.uuid'|trans }}</th>
         <th scope="col" class="px-4 py-3">{{ 'user.keys.list.key'|trans }}</th>
         <th scope="col" class="px-4 py-3 whitespace-nowrap">{{ 'user.keys.list.dateAdded'|trans }}</th>
         <th scope="col" class="px-4 py-3">{{ 'user.keys.list.comment'|trans }}</th>
@@ -47,7 +47,7 @@
       {% else %}
         <tbody>
           <tr>
-            <td colspan="4" class="px-4 py-2 text-sm italic">{{ 'admin.users.list.noUser'|trans }}</td>
+            <td colspan="4" class="px-4 py-2 text-sm italic">{{ 'user.list.noUser'|trans }}</td>
           </tr>
         </tbody>
       {% endfor %}

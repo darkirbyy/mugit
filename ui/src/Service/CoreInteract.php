@@ -163,14 +163,14 @@ class CoreInteract implements CoreInteractInterface
     public function logSize(LogSizeData $logSizeData): ?ErrorData
     {
         $command = 'log size';
-        if (($coreData = $this->executeCommand($command, 'admin.log.size.failed')) instanceof ErrorData) {
+        if (($coreData = $this->executeCommand($command, 'log.size.failed')) instanceof ErrorData) {
             return $coreData;
         }
 
         if (1 !== count($coreData->lineList) && !is_int($coreData->lineList[0])) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a line that could not be parsed.');
 
-            return new ErrorData('admin.log.size.failed');
+            return new ErrorData('log.size.failed');
         }
 
         $logSizeData->size = (int) $coreData->lineList[0];
@@ -183,14 +183,14 @@ class CoreInteract implements CoreInteractInterface
     {
         // todo : default values
         $command = 'log list ' . ($logListData->offset ?? 1) . ' ' . ($logListData->length ?? 50);
-        if (($coreData = $this->executeCommand($command, 'admin.log.list.failed')) instanceof ErrorData) {
+        if (($coreData = $this->executeCommand($command, 'log.list.failed')) instanceof ErrorData) {
             return $coreData;
         }
 
         if (array_any($coreData->lineList, fn($line) => 3 !== count(explode(' ', $line, 3)))) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned one ore more line(s) that could not be parsed.');
 
-            return new ErrorData('admin.log.list.failed');
+            return new ErrorData('log.list.failed');
         }
 
         $logListData->logInfoDataList = array_map(function ($line) {
@@ -206,7 +206,7 @@ class CoreInteract implements CoreInteractInterface
     public function logPurge(): ?ErrorData
     {
         $command = 'log purge';
-        if (($coreData = $this->executeCommand($command, 'admin.log.purge.failed')) instanceof ErrorData) {
+        if (($coreData = $this->executeCommand($command, 'log.purge.failed')) instanceof ErrorData) {
             return $coreData;
         }
 

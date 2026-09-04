@@ -15,6 +15,7 @@ abstract class E2EControllerTest extends PantherTestCase
     use CoreAwareTrait;
 
     protected Client $client;
+    protected static int $TIMEOUT = 5;
 
     #[\Override]
     public function setUp(): void
@@ -42,21 +43,21 @@ abstract class E2EControllerTest extends PantherTestCase
     public function waitForTurboframeLoaded(string ...$turboframeIdList): void
     {
         foreach ($turboframeIdList as $turboframeId) {
-            $this->client->waitForAttributeToContain('turbo-frame[id="' . $turboframeId . '"]', 'complete', 'true');
+            $this->client->waitForAttributeToContain('turbo-frame[id="' . $turboframeId . '"]', 'complete', 'true', self::$TIMEOUT);
         }
     }
 
     public function waitForTurboframeReplace(string ...$turboframeIdList): void
     {
         foreach ($turboframeIdList as $turboframeId) {
-            $this->client->waitForStaleness('turbo-frame[id="' . $turboframeId . '"]');
+            $this->client->waitForStaleness('turbo-frame[id="' . $turboframeId . '"]', self::$TIMEOUT);
         }
     }
 
     public function waitForDiv(string ...$divIdList): void
     {
         foreach ($divIdList as $divId) {
-            $this->client->waitForVisibility('div[id="' . $divId . '"]');
+            $this->client->waitForVisibility('div[id="' . $divId . '"]', self::$TIMEOUT);
         }
     }
 }

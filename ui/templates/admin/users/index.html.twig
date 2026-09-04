@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% import 'theme/macro.html.twig' as m %}
 
-{% set title = 'admin.users.title'|trans %}
+{% set title = 'user.list.title'|trans %}
 
 {% block main %}
   <turbo-frame id="turboframe-admin-users-list" src="{{ path('admin_users_list') }}" data-controller="turboframe">

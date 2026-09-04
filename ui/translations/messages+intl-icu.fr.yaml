@@ -4,6 +4,9 @@
 
 user:
   list:
+    title: Gestion des utilisateurs
+    noUser: Aucun utilisateur n'a enregistré de clé SSH
+    uuid: UUID
     failed: Échec lors du calcul de la liste des utilisateurs.
   keys:
     title: Mes clés SSH
@@ -74,24 +77,19 @@ repo:
     label: La suppression est définitive, confirmer ?
     success: Le dépôt a été correctement supprimé.
     failed: Échec lors de la suppression de ce dépôt.
-
-admin:
-  users:
-    title: Gestion des utilisateurs
-    list:
-      noUser: Aucun utilisateur n'a enregistré de clé SSH
-      uuid: UUID
-  log:
-    title: Journal d'évènements
-    size:
-      failed: Échec lors de calcul du nombre d'évènements dans le journal.
-    list:
-      date: Date
-      uuid: UUID
-      executedCommand: Commande exécutée
-      failed: Échec lors du calcul d'une sous-liste des évènements du journal.
-    purge:
-      failed: Échec lors de la purge du journal d'évènements.
+    
+log:
+  title: Journal d'évènements
+  size:
+    failed: Échec lors de calcul du nombre d'évènements dans le journal.
+  list:
+    date: Date
+    uuid: UUID
+    executedCommand: Commande exécutée
+    invalid: La pagination demandée pour le journal d'évènement dépasse les limites.
+    failed: Échec lors du calcul d'une sous-liste des évènements du journal.
+  purge:
+    failed: Échec lors de la purge du journal d'évènements.
 
 error:
   title: Erreur {code}
