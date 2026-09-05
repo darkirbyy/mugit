@@ -32,7 +32,7 @@ class CoreExecSSH implements CoreExecInterface
         $output = $this->ssh->exec('export USER_UUID=' . $this->security->getUser()->getId() . '; ./api.sh ' . $command);
         $exitStatus = $this->ssh->getExitStatus();
 
-        $lineList = array_filter(explode("\n", $output));
+        $lineList = array_filter(explode("\n", $output), fn(string $line) => 0 !== strlen($line));
         $exitCode = false !== $exitStatus ? $exitStatus : 1;
 
         return new CoreData($exitCode, $lineList);

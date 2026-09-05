@@ -6,7 +6,7 @@ namespace App\Tests\E2E;
 
 use PHPUnit\Framework\Attributes as PU;
 
-final class AdminUsersScenarioTest extends E2EControllerTest
+final class AdminScenarioTest extends E2EControllerTest
 {
     #[PU\Test]
     public function adminUsersKeysRemove(): void
@@ -74,5 +74,55 @@ final class AdminUsersScenarioTest extends E2EControllerTest
         // Check sub-table content
         $this->assertAnySelectorTextNotContains('td', 'comment 2');
         $this->assertAnySelectorTextContains('td', 'AAAA2222');
+    }
+
+    #[PU\Test]
+    public function adminLogsNavigateThenPurge(): void
+    {
+        // Prepare core
+        self::coreLogAdd(1, ...array_map(fn(int $i) => 'command ' . $i, range(1, 23)));
+
+        // Start main request
+        $this->client->request('GET', '/switch?is-admin=true');
+        $this->client->request('GET', '/admin/logs');
+        $this->waitForTurboframeLoaded('turboframe-admin-logs-list');
+
+        // Check title content, table header and cell content
+        $this->assertPageTitleContains('log.title');
+        $this->assertSelectorTextContains('h1', 'log.title');
+        $this->assertAnySelectorTextContains('th', 'log.list.date');
+        $this->assertAnySelectorTextContains('th', 'log.list.uuid');
+        $this->assertAnySelectorTextContains('th', 'log.list.command');
+        $this->assertAnySelectorTextContains('td', 'command 1');
+        $this->assertAnySelectorTextContains('td', 'command 10');
+
+        // Click the next button
+        $this->clickElement('button-admin-logs-page-next');
+        $this->waitForTurboframeLoaded('turboframe-admin-logs-list');
+
+        // Check table updated content
+        $this->assertAnySelectorTextContains('td', 'command 11');
+        $this->assertAnySelectorTextContains('td', 'command 20');
+
+        // Click the purge button
+        $this->clickElement('button-admin-logs-purge');
+        $this->waitForDiv('dropdown-admin-logs-purge');
+        $this->waitForTurboframeLoaded('turboframe-admin-logs-purge');
+
+        // Check dropdown and label content
+        $this->assertAnySelectorTextContains('span', 'log.list.purgeStart');
+        $this->assertAnySelectorTextContains('div', 'log.purge.label');
+
+        // Submit form
+        $this->submitForm('form-admin-logs-purge');
+        $this->waitForDiv('flash-success-main-0');
+        $this->waitForTurboframeLoaded('turboframe-admin-logs-list');
+
+        // Check flash content and table updated cell content
+        $this->assertAnySelectorTextContains('div', 'log.purge.success');
+        $this->assertAnySelectorTextContains('td', 'log.list.noLog');
+        $this->assertAnySelectorTextNotContains('td', 'command 1');
+        $this->assertAnySelectorTextNotContains('td', 'command 11');
+        $this->assertAnySelectorTextNotContains('td', 'command 21');
     }
 }

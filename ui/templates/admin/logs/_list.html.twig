@@ -9,6 +9,7 @@
       {% set lengthCurrent = logListData.length|default(env.core.log_default_length) %}
       {% set pageCurrent = (offsetCurrent / lengthCurrent)|round(0, 'ceil') %}
       {% set pageMax = (logSizeData.size / lengthCurrent)|round(0, 'ceil') %}
+      {% set pageMax = max(1, pageMax) %}
       {% set offsetMax = (pageMax - 1) * lengthCurrent + 1 %}
 
       {% set mode = 'tooltip' ~ (offsetCurrent == 1 ? ' disabled') %}

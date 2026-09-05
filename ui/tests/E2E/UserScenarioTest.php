@@ -6,7 +6,7 @@ namespace App\Tests\E2E;
 
 use PHPUnit\Framework\Attributes as PU;
 
-final class UserKeysScenarioTest extends E2EControllerTest
+final class UserScenarioTest extends E2EControllerTest
 {
     #[PU\Test]
     public function userKeysAddFailThenSuccess(): void
