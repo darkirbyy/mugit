@@ -4,20 +4,20 @@
   {% if errorData is not null %}
     {{ m.flash('flash-error-user-keys-list', 'error', errorData.textKey, 'full', true, false) }}
   {% else %}
-    {% set bar %}
+    {% set barRight %}
       {% set buttonId = 'button-user-keys-add' %}
       {% set dropdownId = 'dropdown-user-keys-add' %}
       {% set turboframeId = 'turboframe-user-keys-add' %}
-      {{ m.button(buttonId, 'user.keys.list.addNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
+      {{ m.button(buttonId, 'b', 'user.keys.list.addNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
       {{ m.dropdown_start(dropdownId, { class: ['min-w-100'] }) }}
       {% set extra %}
         <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('user_keys_add', { uuid: userKeysListData.uuid }) }}" data-controller="turboframe">
           {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
         </turbo-frame>
       {% endset %}
-      {{ m.dropdown_item('button-user-keys-add-new', 'button', 'user.keys.list.addNew', 'ri-add-line', null, extra, true) }}
+      {{ m.dropdown_item('button-user-keys-add-new', 'b', 'user.keys.list.addNew', 'ri-add-line', null, extra, true) }}
       {{ m.dropdown_end() }}
-      {{ m.button('button-user-keys-refresh', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
+      {{ m.button('button-user-keys-refresh', 'b', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
     {% endset %}
 
     {% set head %}
@@ -40,7 +40,7 @@
               {% set buttonId = 'button-user-keys-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
               {% set dropdownId = 'dropdown-user-keys-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
               {% set turboframeRemoveId = 'turboframe-user-keys-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
-              {{ m.button(buttonId, 'button.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
+              {{ m.button(buttonId, 'b', 'button.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
               {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
               {% set extra %}
                 <turbo-frame
@@ -53,7 +53,7 @@
                 </turbo-frame>
               {% endset %}
               {% set buttonId = 'button-user-keys-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
-              {{ m.dropdown_item(buttonId, 'button', 'user.keys.list.remove', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
+              {{ m.dropdown_item(buttonId, 'b', 'user.keys.list.remove', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
               {{ m.dropdown_end() }}
             </td>
           </tr>
@@ -65,6 +65,6 @@
       </tbody>
     {% endset %}
 
-    {{ m.table(bar, head, body) }}
+    {{ m.table(null, barRight, head, body) }}
   {% endif %}
 </turbo-frame>

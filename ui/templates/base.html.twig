@@ -128,17 +128,17 @@
               {{ m.dropdown_item('button-navbar-tools-logs', 'a', 'layout.navbar.tool.logs', 'ri-chat-history-line', { href: path('admin_logs_index') }) }}
             </ul>
           {% endset %}
-          {{ m.dropdown_item('button-navbar-admin', 'button', 'layout.navbar.administrate', 'ri-lock-2-line', [], extra) }}
+          {{ m.dropdown_item('button-navbar-admin', 'b', 'layout.navbar.administrate', 'ri-lock-2-line', [], extra) }}
         {% endif %}
         {% set extra %}
           <ul data-controller="switch-theme">
             {% for theme, icon in { light: 'ri-sun-line', dark: 'ri-moon-line', auto: 'ri-settings-line' } %}
               {% set attr = { 'data-switch-theme-target': 'button ' ~ theme } %}
-              {{ m.dropdown_item('button-navbar-theme-' ~ theme, 'button', 'layout.navbar.theme.' ~ theme, icon, attr, 'ri-check-line') }}
+              {{ m.dropdown_item('button-navbar-theme-' ~ theme, 'b', 'layout.navbar.theme.' ~ theme, icon, attr, 'ri-check-line') }}
             {% endfor %}
           </ul>
         {% endset %}
-        {{ m.dropdown_item('button-navbar-appearance', 'button', 'layout.navbar.appearance', 'ri-palette-line', [], extra) }}
+        {{ m.dropdown_item('button-navbar-appearance', 'b', 'layout.navbar.appearance', 'ri-palette-line', [], extra) }}
         {{ m.dropdown_separator() }}
         {% set attr = { href: env.iam.base_url, 'data-turbo-prefetch': false } %}
         {{ m.dropdown_item('link-navbar-my-account', 'a', 'layout.navbar.myAccount', 'ri-user-line', attr, 'ri-external-link-line') }}

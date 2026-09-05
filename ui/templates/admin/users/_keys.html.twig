@@ -18,7 +18,7 @@ will strip all tags, and mess the render. The turboframe->replace action will se
             {% set buttonId = 'button-admin-users-keys-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
             {% set dropdownId = 'dropdown-admin-users-keys-edit-' ~ (userKeysInfoData.key|user_keys_hash) %}
             {% set turboframeRemoveId = 'turboframe-user-keys-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
-            {{ m.button(buttonId, 'button.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
+            {{ m.button(buttonId, 'b', 'button.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
             {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
             {% set extra %}
               <turbo-frame
@@ -31,7 +31,7 @@ will strip all tags, and mess the render. The turboframe->replace action will se
               </turbo-frame>
             {% endset %}
             {% set buttonId = 'button-admin-users-keys-remove-' ~ (userKeysInfoData.key|user_keys_hash) %}
-            {{ m.dropdown_item(buttonId, 'button', 'user.keys.list.remove', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
+            {{ m.dropdown_item(buttonId, 'b', 'user.keys.list.remove', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
             {{ m.dropdown_end() }}
           </td>
         </tr>

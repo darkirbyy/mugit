@@ -4,20 +4,20 @@
   {% if errorData is not null %}
     {{ m.flash('flash-error-repo-list', 'error', errorData.textKey, 'full', true, false) }}
   {% else %}
-    {% set bar %}
+    {% set barRight %}
       {% set buttonId = 'button-repo-create' %}
       {% set dropdownId = 'dropdown-repo-create' %}
       {% set turboframeId = 'turboframe-repo-create' %}
-      {{ m.button(buttonId, 'repo.list.createNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
+      {{ m.button(buttonId, 'b', 'repo.list.createNew', 'ri-add-large-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
       {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
       {% set extra %}
         <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('repo_create') }}" data-controller="turboframe">
           {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
         </turbo-frame>
       {% endset %}
-      {{ m.dropdown_item('button-repo-create-new', 'button', 'repo.list.createNew', 'ri-add-line', null, extra, true) }}
+      {{ m.dropdown_item('button-repo-create-new', 'b', 'repo.list.createNew', 'ri-add-line', null, extra, true) }}
       {{ m.dropdown_end() }}
-      {{ m.button('button-repo-refresh', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
+      {{ m.button('button-repo-refresh', 'b', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
     {% endset %}
 
     {% set head %}
@@ -25,7 +25,9 @@
         <th scope="col" class="px-4 py-3">{{ 'repo.list.name'|trans }}</th>
         <th scope="col" class="px-4 py-3 whitespace-nowrap">
           {{ 'repo.list.humanReadableSize'|trans }}
-          <span class="text-base font-medium">{{ m.button('button-repo-help-size', 'repo.list.humanReadableSizeHelp', 'ri-question-line', 'tooltip', { class: ['py-0!'] }) }}</span>
+          <span class="text-base font-medium">
+            {{ m.button('button-repo-help-size', 'b', 'repo.list.humanReadableSizeHelp', 'ri-question-line', 'tooltip', { class: ['py-0!'] }) }}
+          </span>
         </th>
         <th scope="col" class="px-4 py-3">{{ 'repo.list.cloneURL'|trans }}</th>
         <th scope="col" class="w-8 px-2 py-3" aria-label="{{ 'button.edit'|trans }}"></th>
@@ -33,7 +35,7 @@
     {% endset %}
 
     {% set body %}
-      <tbody>
+      <tbody data-controller="copy-clipboard" data-copy-clipboard-copied-text-value="{{ 'repo.list.copied'|trans }}">
         {% for repoInfoData in repoListData.repoInfoDataList %}
           <tr class="border-zinc-500 {{ not loop.first ? ' border-t' }}">
             <td class="px-4 py-2 font-medium whitespace-nowrap">{{ repoInfoData.name }}</td>
@@ -48,14 +50,14 @@
             <td class="px-4 py-2 whitespace-nowrap" data-copy-clipboard-target="cell">
               <span class="mr-1">{{ repoInfoData.name|repo_name_to_clone_URL }}</span>
               {% set buttonId = 'button-repo-copy-url-' ~ repoInfoData.name %}
-              {{ m.button(buttonId, 'repo.list.copyURLToClipboard', 'ri-file-copy-line', 'tooltip') }}
+              {{ m.button(buttonId, 'b', 'repo.list.copyURLToClipboard', 'ri-file-copy-line', 'tooltip') }}
             </td>
             <td class="px-2 py-2 text-left">
               {% set buttonId = 'button-repo-edit-' ~ repoInfoData.name %}
               {% set dropdownId = 'dropdown-repo-edit-' ~ repoInfoData.name %}
               {% set turboframeRenameId = 'turboframe-repo-rename-' ~ repoInfoData.name %}
               {% set turboframeDeleteId = 'turboframe-repo-delete-' ~ repoInfoData.name %}
-              {{ m.button(buttonId, 'button.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
+              {{ m.button(buttonId, 'b', 'button.edit', 'ri-more-2-line', 'off', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'left-start' }) }}
               {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
               {% set extra %}
                 <turbo-frame id="{{ turboframeRenameId }}" loading="lazy" src="{{ path('repo_rename', { 'old-name': repoInfoData.name }) }}" data-controller="turboframe">
@@ -63,7 +65,7 @@
                 </turbo-frame>
               {% endset %}
               {% set buttonId = 'button-repo-rename-' ~ repoInfoData.name %}
-              {{ m.dropdown_item(buttonId, 'button', 'repo.list.rename', 'ri-pencil-line', null, extra) }}
+              {{ m.dropdown_item(buttonId, 'b', 'repo.list.rename', 'ri-pencil-line', null, extra) }}
               {% if is_granted('ROLE_ADMIN') %}
                 {% set extra %}
                   <turbo-frame id="{{ turboframeDeleteId }}" loading="lazy" src="{{ path('repo_delete', { name: repoInfoData.name }) }}" data-controller="turboframe">
@@ -71,7 +73,7 @@
                   </turbo-frame>
                 {% endset %}
                 {% set buttonId = 'button-repo-delete-' ~ repoInfoData.name %}
-                {{ m.dropdown_item(buttonId, 'button', 'repo.list.delete', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
+                {{ m.dropdown_item(buttonId, 'b', 'repo.list.delete', 'ri-delete-bin-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra) }}
               {% endif %}
               {{ m.dropdown_end() }}
             </td>
@@ -84,8 +86,6 @@
       </tbody>
     {% endset %}
 
-    <div data-controller="copy-clipboard" data-copy-clipboard-copied-text-value="{{ 'repo.list.copied'|trans }}">
-      {{ m.table(bar, head, body) }}
-    </div>
+    {{ m.table(null, barRight, head, body) }}
   {% endif %}
 </turbo-frame>

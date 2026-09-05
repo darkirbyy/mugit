@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Attribute\TurboframeOnly;
 use App\DTO\FlashData;
 use App\DTO\LogListData;
+use App\DTO\LogSizeData;
 use App\Service\CoreInteractInterface;
 use App\Service\FormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,9 +38,11 @@ class AdminLogsController extends AbstractController
     #[Route('/list', name: 'list', methods: ['GET'])]
     public function list(#[ValueResolver('data')] LogListData $logListData, CoreInteractInterface $coreInteract): Response
     {
-        $errorData = $coreInteract->logList($logListData);
+        $logSizeData = new LogSizeData();
+        $errorData = $coreInteract->logSize($logSizeData);
+        $errorData = $errorData ?? $coreInteract->logList($logListData);
 
-        return $this->render('admin/logs/_list.html.twig', ['logListData' => $logListData, 'errorData' => $errorData]);
+        return $this->render('admin/logs/_list.html.twig', ['logSizeData' => $logSizeData, 'logListData' => $logListData, 'errorData' => $errorData]);
     }
 
     /**

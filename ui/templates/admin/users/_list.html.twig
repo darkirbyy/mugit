@@ -4,8 +4,9 @@
   {% if errorData is not null %}
     {{ m.flash('flash-error-admin-users-list', 'error', errorData.textKey, 'full', true, false) }}
   {% else %}
-    {% set bar %}
-      {{ m.button('button-admin-users-refresh', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
+    {% set barRight %}
+      <div></div>
+      {{ m.button('button-admin-users-refresh', 'b', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
     {% endset %}
 
     {% set head %}
@@ -26,7 +27,7 @@
             <td colspan="3"></td>
             <td class="px-2 py-2 text-left">
               {% set buttonId = 'button-admin-users-expand-' ~ userInfoData.uuid %}
-              {{ m.button(buttonId, 'button.expand', 'ri-arrow-right-s-line', 'off', { 'data-accordion-target': 'button' }) }}
+              {{ m.button(buttonId, 'b', 'button.expand', 'ri-arrow-right-s-line', 'off', { 'data-accordion-target': 'button' }) }}
             </td>
           </tr>
           {% set turboframeId = 'turboframe-admin-users-keys-' ~ userInfoData.uuid %}
@@ -53,6 +54,6 @@
       {% endfor %}
     {% endset %}
 
-    {{ m.table(bar, head, body) }}
+    {{ m.table(null, barRight, head, body) }}
   {% endif %}
 </turbo-frame>

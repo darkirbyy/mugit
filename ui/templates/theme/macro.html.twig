@@ -1,34 +1,47 @@
-{# HELP : textKey is the key before translation, mode must be :
-  - 'normal': text + no tooltip
-  - 'tooltip': no text + tooltip
-  - 'off': no text + no tooltip
+{# HELP : tag can be 'a' or 'b' (button), textKey is the key before translation, mode must be :
+  - first: 'normal' (text + no tooltip) or 'tooltip' (no text + tooltip) or 'off' (no text + no tooltip)
+  - second: 'disabled' (optionnally)
   #}
-{% macro button(id, textKey, icon = null, mode = 'normal', attr = null) %}
+{% macro button(id, tag, textKey, icon = null, mode = 'normal', attr = null) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
-  {% set class = 'rounded px-2 py-1 opacity-75 hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-800'|split(' ') %}
-  {% set class = class|merge('focus-within:bg-zinc-300 focus-within:opacity-100 dark:focus-within:bg-zinc-800'|split(' ')) %}
-  {% set class = class|merge('focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
-  {% set class = class|merge('focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
+  {% set class = 'rounded px-2 py-1 opacity-75'|split(' ') %}
 
-  {% if mode == 'tooltip' %}
+  {% if not (mode ends with 'disabled') %}
+    {% set class = class|merge('hover:cursor-pointer hover:bg-zinc-300 hover:opacity-100 dark:hover:bg-zinc-800'|split(' ')) %}
+    {% set class = class|merge('focus-within:bg-zinc-300 focus-within:opacity-100 dark:focus-within:bg-zinc-800'|split(' ')) %}
+    {% set class = class|merge('focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
+    {% set class = class|merge('focus-within:outline-2 focus-within:outline-zinc-800 dark:focus-within:outline-zinc-200'|split(' ')) %}
+  {% else %}
+    {% set class = class|merge('hover:cursor-not-allowed'|split(' ')) %}
+    {% set attr = attr|html_attr_merge({ disabled: 'true' }) %}
+  {% endif %}
+
+  {% if mode starts with 'tooltip' and not (mode ends with 'disabled') %}
     {% set class = class|merge('after:absolute after:translate-x-3 after:-translate-y-2 after:z-30 after:hidden after:rounded after:text-sm after:p-2'|split(' ')) %}
     {% set class = class|merge('after:border after:border-zinc-500 after:bg-zinc-300 dark:after:bg-zinc-800 whitespace-nowrap'|split(' ')) %}
     {% set class = class|merge('hover:after:inline-block focus-within:after:inline-block'|split(' ')) %}
     {% set attr = attr|html_attr_merge({ 'data-tooltip': textKey|trans }) %}
   {% endif %}
-  {% if mode == 'off' or mode == 'tooltip' %}
+  {% if mode starts with 'off' or mode starts with 'tooltip' %}
     {% set attr = attr|html_attr_merge({ 'aria-label': textKey|trans }) %}
   {% endif %}
   {% set attr = attr|html_attr_merge({ class: class, id: id }) %}
 
-  <button {{ html_attr(attr) }}>
-    {% if icon is not null %}
-      <span class="{{ icon }}" aria-hidden="true"></span>
-    {% endif %}
-    {% if mode == 'normal' %}
-      <span class="ml-1">{{ textKey|trans }}</span>
-    {% endif %}
-  </button>
+  {% if tag == 'a' %}
+    <a {{ html_attr(attr) }}>{{ _self.button_insert(textKey, icon, mode) }}</a>
+  {% else %}
+    <button {{ html_attr(attr) }}>{{ _self.button_insert(textKey, icon, mode) }}</button>
+  {% endif %}
+{% endmacro %}
+
+{# HELP : internal macro #}
+{% macro button_insert(textKey, icon = null, mode) %}
+  {% if icon is not null %}
+    <span class="{{ icon }}" aria-hidden="true"></span>
+  {% endif %}
+  {% if mode starts with 'normal' %}
+    <span class="ml-1">{{ textKey|trans }}</span>
+  {% endif %}
 {% endmacro %}
 
 {# HELP : textKey is the key before translation #}
@@ -60,10 +73,10 @@
   {{ _self.tag_close('div') }}>
 {% endmacro %}
 
-{# HELP : tag can be 'a' or 'button', textKey is the key before translation, extra can be:
+{# HELP : tag can be 'a' or 'b' (button), textKey is the key before translation, extra can be:
 - null: nothing addd
 - an icon (starting with 'ri-'): added at the end
-- some content: tag is forced to 'button', a responsive icon is added at the end, a stimulus controller is set
+- some content: tag is forced to 'b', a responsive icon is added at the end, a stimulus controller is set
 #}
 {% macro dropdown_item(id, tag, textKey, icon = null, attr = null, extra = null, autoOpen = false) %}
   {% set attr = { class: [] }|merge(attr|default([])) %}
@@ -74,10 +87,10 @@
 
   {% if extra is null or extra starts with 'ri-' %}
     <li class="py-0.5">
-      {% if tag == 'button' %}
-        <button {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, extra) }}</button>
-      {% else %}
+      {% if tag == 'a' %}
         <a {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, extra) }}</a>
+      {% else %}
+        <button {{ html_attr(attr) }}>{{ _self.dropdown_item_insert(textKey, icon, extra) }}</button>
       {% endif %}
     </li>
   {% else %}
@@ -184,10 +197,17 @@
 {# ############# TABLE ################### #}
 {# ####################################### #}
 
-{% macro table(bar, head, body) %}
+{% macro table(barLeft, barRight, head, body) %}
   <div class="rounded border border-zinc-500 bg-zinc-200 shadow-xs dark:bg-zinc-900">
-    <div class="flex min-w-2xs items-center justify-end gap-1 border-b border-zinc-500 px-2 py-2">
-      {{ bar|raw }}
+    <div class="flex w-full flex-col-reverse items-center {{ barLeft is not null ? ' justify-between' : 'justify-end' }} border-b border-zinc-500 sm:flex-row">
+      {% if barLeft is not null %}
+        <div class="flex items-center justify-center gap-1 p-2">
+          {{ barLeft|raw }}
+        </div>
+      {% endif %}
+      <div class="flex w-full items-center justify-between gap-1 {{ barLeft is not null ? 'border-b' }} border-zinc-500 p-2 sm:w-auto sm:border-b-0">
+        {{ barRight|raw }}
+      </div>
     </div>
     <div class="overflow-auto">
       <table class="w-full text-left">

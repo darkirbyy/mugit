@@ -15,6 +15,7 @@ twig:
             core:
                 repo_max_size_mio: '%core.repo_max_size_mio%'
                 repo_warn_size_percent: '%core.repo_warn_size_percent%'
+                log_default_length: '%core.log_default_length%'
             mock:
                 keycloak_enable: '%mock.keycloak_enable%'
             versioning:

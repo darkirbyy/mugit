@@ -4,20 +4,40 @@
   {% if errorData is not null %}
     {{ m.flash('flash-error-admin-logs-list', 'error', errorData.textKey, 'full', true, false) }}
   {% else %}
-    {% set bar %}
+    {% set barLeft %}
+      {% set offsetCurrent = logListData.offset|default(1) %}
+      {% set lengthCurrent = logListData.length|default(env.core.log_default_length) %}
+      {% set pageCurrent = (offsetCurrent / lengthCurrent)|round(0, 'ceil') %}
+      {% set pageMax = (logSizeData.size / lengthCurrent)|round(0, 'ceil') %}
+      {% set offsetMax = (pageMax - 1) * lengthCurrent + 1 %}
+
+      {% set mode = 'tooltip' ~ (offsetCurrent == 1 ? ' disabled') %}
+      {% set args = { offset: 1, length: lengthCurrent } %}
+      {{ m.button('button-admin-logs-page-first', 'a', 'button.page.first', 'ri-skip-left-line', mode, { href: path('admin_logs_list', args) }) }}
+      {% set args = { offset: offsetCurrent - lengthCurrent, length: lengthCurrent } %}
+      {{ m.button('button-admin-logs-page-previous', 'a', 'button.page.previous', 'ri-arrow-left-s-line', mode, { href: path('admin_logs_list', args) }) }}
+      <span class="px-2 opacity-75">{{ pageCurrent ~ ' / ' ~ pageMax }}</span>
+      {% set mode = 'tooltip' ~ (offsetCurrent == offsetMax ? ' disabled') %}
+      {% set args = { offset: offsetCurrent + lengthCurrent, length: lengthCurrent } %}
+      {{ m.button('button-admin-logs-page-next', 'a', 'button.page.next', 'ri-arrow-right-s-line', mode, { href: path('admin_logs_list', args) }) }}
+      {% set args = { offset: offsetMax, length: lengthCurrent } %}
+      {{ m.button('button-admin-logs-page-last', 'a', 'button.page.last', 'ri-skip-right-line', mode, { href: path('admin_logs_list', args) }) }}
+    {% endset %}
+
+    {% set barRight %}
       {% set buttonId = 'button-admin-logs-purge' %}
       {% set dropdownId = 'dropdown-admin-logs-purge' %}
       {% set turboframeId = 'turboframe-admin-logs-purge' %}
-      {{ m.button(buttonId, 'log.list.purgeStart', 'ri-delete-bin-2-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
+      {{ m.button(buttonId, 'b', 'log.list.purgeStart', 'ri-delete-bin-2-line', 'normal', { 'data-dropdown-toggle': dropdownId, 'data-dropdown-placement': 'bottom-end' }) }}
       {{ m.dropdown_start(dropdownId, { class: ['min-w-60'] }) }}
       {% set extra %}
         <turbo-frame id="{{ turboframeId }}" loading="lazy" src="{{ path('admin_logs_purge') }}" data-controller="turboframe">
           {{ m.spinner(1, false, 'p-1 gap-1 grid-cols-1 min-w-2xs') }}
         </turbo-frame>
       {% endset %}
-      {{ m.dropdown_item('button-admin-logs-purge-start', 'button', 'log.list.purgeStart', 'ri-delete-bin-2-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra, true) }}
+      {{ m.dropdown_item('button-admin-logs-purge-start', 'b', 'log.list.purgeStart', 'ri-delete-bin-2-line', { class: ['text-red-900', 'dark:text-red-400'] }, extra, true) }}
       {{ m.dropdown_end() }}
-      {{ m.button('button-admin-logs-refresh', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
+      {{ m.button('button-admin-logs-refresh', 'b', 'button.refresh', 'ri-reset-left-line', 'tooltip', { 'data-action': 'click->turboframe#reload' }) }}
     {% endset %}
 
     {% set head %}
@@ -44,6 +64,6 @@
       </tbody>
     {% endset %}
 
-    {{ m.table(bar, head, body) }}
+    {{ m.table(barLeft, barRight, head, body) }}
   {% endif %}
 </turbo-frame>

@@ -112,6 +112,11 @@ button:
   submit: Valider
   edit: Editer
   delete: Supprimer
+  page:
+    previous: Page précédente
+    next: Page suivante
+    first: Première page
+    last: Dernière page
 
 git:
   connectionFailed: Échec lors de la connexion au serveur git.
