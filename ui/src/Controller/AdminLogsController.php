@@ -7,7 +7,7 @@ use App\DTO\FlashData;
 use App\DTO\LogListData;
 use App\DTO\LogSizeData;
 use App\Service\CoreInteractInterface;
-use App\Service\FormHandler;
+use App\Service\ValidationHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
@@ -32,15 +32,15 @@ class AdminLogsController extends AbstractController
     }
 
     /**
-     * List subset of the logs.
+     * List a subset of the logs.
      */
     #[TurboframeOnly('admin_logs_index')]
     #[Route('/list', name: 'list', methods: ['GET'])]
-    public function list(#[ValueResolver('data')] LogListData $logListData, CoreInteractInterface $coreInteract): Response
+    public function list(#[ValueResolver('data')] LogListData $logListData, ValidationHandler $validationHandler, CoreInteractInterface $coreInteract): Response
     {
         $logSizeData = new LogSizeData();
         $errorData = $coreInteract->logSize($logSizeData);
-        $errorData = $errorData ?? $coreInteract->logList($logListData);
+        $errorData ??= $validationHandler->handleQuery($logListData, 'logList');
 
         return $this->render('admin/logs/_list.html.twig', ['logSizeData' => $logSizeData, 'logListData' => $logListData, 'errorData' => $errorData]);
     }
@@ -51,9 +51,9 @@ class AdminLogsController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('admin_logs_index')]
     #[Route('/purge', name: 'purge', methods: ['GET', 'POST'])]
-    public function purge(FormHandler $formHandler): Response
+    public function purge(ValidationHandler $validationHandler): Response
     {
-        $formData = $formHandler->handle(null, 'logPurge');
+        $formData = $validationHandler->handleForm(null, 'logPurge');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('log.purge.success'));
 

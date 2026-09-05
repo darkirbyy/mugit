@@ -7,8 +7,7 @@ use App\DTO\FlashData;
 use App\DTO\UserKeysAddData;
 use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
-use App\Service\CoreInteractInterface;
-use App\Service\FormHandler;
+use App\Service\ValidationHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
@@ -35,10 +34,10 @@ class UserKeysController extends AbstractController
      */
     #[TurboframeOnly('user_keys_index')]
     #[Route('/list', name: 'list', methods: ['GET'])]
-    public function list(CoreInteractInterface $coreInteract): Response
+    public function list(ValidationHandler $validationHandler): Response
     {
         $userKeysListData = new UserKeysListData($this->getUser()->getId());
-        $errorData = $coreInteract->userKeysList($userKeysListData);
+        $errorData = $validationHandler->handleQuery($userKeysListData, 'userKeysList');
 
         return $this->render('user/keys/_list.html.twig', ['userKeysListData' => $userKeysListData, 'errorData' => $errorData]);
     }
@@ -49,10 +48,10 @@ class UserKeysController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('user_keys_index')]
     #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
-    public function add(#[ValueResolver('data')] UserKeysAddData $userKeysAddData, FormHandler $formHandler): Response
+    public function add(#[ValueResolver('data')] UserKeysAddData $userKeysAddData, ValidationHandler $validationHandler): Response
     {
         $userKeysAddData->uuid = $this->getUser()->getId();
-        $formData = $formHandler->handle($userKeysAddData, 'userKeysAdd');
+        $formData = $validationHandler->handleForm($userKeysAddData, 'userKeysAdd');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('user.keys.add.success'));
 
@@ -68,10 +67,10 @@ class UserKeysController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('user_keys_index')]
     #[Route('/remove', name: 'remove', methods: ['GET', 'POST'])]
-    public function remove(#[ValueResolver('data')] UserKeysRemoveData $userKeysRemoveData, FormHandler $formHandler): Response
+    public function remove(#[ValueResolver('data')] UserKeysRemoveData $userKeysRemoveData, ValidationHandler $validationHandler): Response
     {
         $userKeysRemoveData->uuid = $this->getUser()->getId();
-        $formData = $formHandler->handle($userKeysRemoveData, 'userKeysRemove');
+        $formData = $validationHandler->handleForm($userKeysRemoveData, 'userKeysRemove');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('user.keys.remove.success'));
 

@@ -9,8 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class LogListData
 {
     public function __construct(
-        #[Assert\Range(min: 1, max: 10000000000000000, message: 'log.list.invalid')] public ?int $offset = null,
-        #[Assert\Range(min: 1, max: 100000, message: 'log.list.invalid')] public ?int $length = null,
+        #[Assert\Range(min: 1, max: 10000000000000000, notInRangeMessage: 'log.list.invalid')] public ?int $offset = null,
+        #[Assert\Range(min: 1, max: 100000, notInRangeMessage: 'log.list.invalid')] public ?int $length = null,
         public ?array $logInfoDataList = null,
     ) {}
 }

@@ -8,7 +8,7 @@ use App\DTO\UserKeysListData;
 use App\DTO\UserKeysRemoveData;
 use App\DTO\UserListData;
 use App\Service\CoreInteractInterface;
-use App\Service\FormHandler;
+use App\Service\ValidationHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
@@ -46,13 +46,13 @@ class AdminUsersController extends AbstractController
     }
 
     /**
-     * List all users having registred at least one key.
+     * List all keys of one given user.
      */
     #[TurboframeOnly('admin_users_index')]
     #[Route('/keys', name: 'keys', methods: ['GET'])]
-    public function keys(#[ValueResolver('data')] UserKeysListData $userKeysListData, CoreInteractInterface $coreInteract): Response
+    public function keys(#[ValueResolver('data')] UserKeysListData $userKeysListData, ValidationHandler $validationHandler): Response
     {
-        $errorData = $coreInteract->userKeysList($userKeysListData);
+        $errorData = $validationHandler->handleQuery($userKeysListData, 'userKeysList');
 
         return $this->render('admin/users/_keys.html.twig', ['userKeysListData' => $userKeysListData, 'errorData' => $errorData]);
     }
@@ -63,9 +63,9 @@ class AdminUsersController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('admin_users_index')]
     #[Route('/keys/remove', name: 'keys_remove', methods: ['GET', 'POST'])]
-    public function keys_remove(#[ValueResolver('data')] UserKeysRemoveData $userKeysRemoveData, FormHandler $formHandler): Response
+    public function keys_remove(#[ValueResolver('data')] UserKeysRemoveData $userKeysRemoveData, ValidationHandler $validationHandler): Response
     {
-        $formData = $formHandler->handle($userKeysRemoveData, 'userKeysRemove');
+        $formData = $validationHandler->handleForm($userKeysRemoveData, 'userKeysRemove');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('user.keys.remove.success'));
 

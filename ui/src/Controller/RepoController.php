@@ -9,7 +9,7 @@ use App\DTO\RepoDeleteData;
 use App\DTO\RepoListData;
 use App\DTO\RepoRenameData;
 use App\Service\CoreInteractInterface;
-use App\Service\FormHandler;
+use App\Service\ValidationHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
@@ -51,9 +51,9 @@ class RepoController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('repo_index')]
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    public function create(#[ValueResolver('data')] RepoCreateData $repoCreateData, FormHandler $formHandler): Response
+    public function create(#[ValueResolver('data')] RepoCreateData $repoCreateData, ValidationHandler $validationHandler): Response
     {
-        $formData = $formHandler->handle($repoCreateData, 'repoCreate');
+        $formData = $validationHandler->handleForm($repoCreateData, 'repoCreate');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('repo.create.success'));
 
@@ -69,9 +69,9 @@ class RepoController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('repo_index')]
     #[Route('/rename', name: 'rename', methods: ['GET', 'POST'])]
-    public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, FormHandler $formHandler): Response
+    public function rename(#[ValueResolver('data')] RepoRenameData $repoRenameData, ValidationHandler $validationHandler): Response
     {
-        $formData = $formHandler->handle($repoRenameData, 'repoRename');
+        $formData = $validationHandler->handleForm($repoRenameData, 'repoRename');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('repo.rename.success'));
 
@@ -88,9 +88,9 @@ class RepoController extends AbstractController
     #[IsCsrfTokenValid('submit', methods: ['POST'])]
     #[TurboframeOnly('repo_index')]
     #[Route('/delete', name: 'delete', methods: ['GET', 'POST'])]
-    public function delete(#[ValueResolver('data')] RepoDeleteData $repoDeleteData, FormHandler $formHandler): Response
+    public function delete(#[ValueResolver('data')] RepoDeleteData $repoDeleteData, ValidationHandler $validationHandler): Response
     {
-        $formData = $formHandler->handle($repoDeleteData, 'repoDelete');
+        $formData = $validationHandler->handleForm($repoDeleteData, 'repoDelete');
         if ($formData->proceed) {
             $this->addFlash('success', new FlashData('repo.delete.success'));
 
