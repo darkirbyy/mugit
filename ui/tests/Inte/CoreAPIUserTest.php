@@ -50,12 +50,14 @@ final class CoreAPIUserTest extends CoreAPITest
         $coreData = self::$coreExec->exec('user key-add ' . $user1Uuid . ' \'' . $user1Key1 . '\' \'comment 1\'');
 
         $authorizedKeysContent = self::coreAuthorizedKeysContent();
+        $logContent = self::coreLogContent();
         $this->assertSame(0, $coreData->exitCode);
         $this->assertSame(2, substr_count($authorizedKeysContent, "\n"));
         $this->assertStringContainsString('ssh-ed25519 ' . $user1Key1 . ' ' . $user1Uuid . ':', $authorizedKeysContent);
         $this->assertStringContainsString('comment 1', $authorizedKeysContent);
         $this->assertStringContainsString('ssh-ed25519 ' . $user2Key1 . ' ' . $user2Uuid . ':', $authorizedKeysContent);
         $this->assertStringContainsString('comment 2', $authorizedKeysContent);
+        $this->assertSame(1, substr_count($logContent, "\n"));
     }
 
     #[PU\Test]
@@ -71,12 +73,14 @@ final class CoreAPIUserTest extends CoreAPITest
         $coreData = self::$coreExec->exec('user key-remove ' . $user1Uuid . ' \'' . $user1Key1 . '\'');
 
         $authorizedKeysContent = self::coreAuthorizedKeysContent();
+        $logContent = self::coreLogContent();
         $this->assertSame(0, $coreData->exitCode);
         $this->assertSame(2, substr_count($authorizedKeysContent, "\n"));
         $this->assertStringNotContainsString('ssh-ed25519 ' . $user1Key1 . ' ' . $user1Uuid . ':', $authorizedKeysContent);
         $this->assertStringContainsString('ssh-ed25519 ' . $user1Key2 . ' ' . $user1Uuid . ':', $authorizedKeysContent);
         $this->assertStringContainsString('ssh-ed25519 ' . $user2Key1 . ' ' . $user2Uuid . ':', $authorizedKeysContent);
         $this->assertStringNotContainsString('comment 3', $authorizedKeysContent);
+        $this->assertSame(1, substr_count($logContent, "\n"));
     }
 
     #[PU\Test]
@@ -92,12 +96,14 @@ final class CoreAPIUserTest extends CoreAPITest
         $coreData = self::$coreExec->exec('user delete ' . $user1Uuid);
 
         $authorizedKeysContent = self::coreAuthorizedKeysContent();
+        $logContent = self::coreLogContent();
         $this->assertSame(0, $coreData->exitCode);
         $this->assertSame(1, substr_count($authorizedKeysContent, "\n"));
         $this->assertStringNotContainsString('ssh-ed25519 ' . $user1Key1 . ' ' . $user1Uuid . ':', $authorizedKeysContent);
         $this->assertStringNotContainsString('ssh-ed25519 ' . $user1Key2 . ' ' . $user1Uuid . ':', $authorizedKeysContent);
         $this->assertStringContainsString('ssh-ed25519 ' . $user2Key1 . ' ' . $user2Uuid . ':', $authorizedKeysContent);
         $this->assertStringContainsString('comment 2', $authorizedKeysContent);
+        $this->assertSame(1, substr_count($logContent, "\n"));
     }
 
     #[PU\Test]

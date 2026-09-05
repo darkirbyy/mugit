@@ -26,8 +26,11 @@ final class CoreAPIRepoTest extends CoreAPITest
     {
         $coreData = self::$coreExec->exec('repo create repo-1');
 
+        $logContent = self::coreLogContent();
         $this->assertSame(0, $coreData->exitCode);
         $this->assertDirectoryExists(self::coreRepoPath('repo-1'));
+        $this->assertDirectoryExists(self::coreRepoPath('repo-1'));
+        $this->assertSame(1, substr_count($logContent, "\n"));
     }
 
     #[PU\Test]
@@ -37,9 +40,11 @@ final class CoreAPIRepoTest extends CoreAPITest
 
         $coreData = self::$coreExec->exec('repo rename repo-1 repo-2');
 
+        $logContent = self::coreLogContent();
         $this->assertSame(0, $coreData->exitCode);
         $this->assertDirectoryDoesNotExist(self::coreRepoPath('repo-1'));
         $this->assertDirectoryExists(self::coreRepoPath('repo-2'));
+        $this->assertSame(1, substr_count($logContent, "\n"));
     }
 
     #[PU\Test]
@@ -48,9 +53,11 @@ final class CoreAPIRepoTest extends CoreAPITest
         self::coreRepoAdd('repo-1');
 
         $coreData = self::$coreExec->exec('repo delete repo-1');
+        $logContent = self::coreLogContent();
 
         $this->assertSame(0, $coreData->exitCode);
         $this->assertDirectoryDoesNotExist(self::coreRepoPath('repo-1'));
+        $this->assertSame(1, substr_count($logContent, "\n"));
     }
 
     #[PU\Test]

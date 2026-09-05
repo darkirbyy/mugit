@@ -55,7 +55,7 @@
           <tr class="border-zinc-500 {{ not loop.first ? ' border-t' }}">
             <td class="px-4 py-2 font-medium whitespace-nowrap">{{ logInfoData.date|format_datetime('short') }}</td>
             <td class="px-4 py-2">{{ logInfoData.uuid }}</td>
-            <td class="px-4 py-2">{{ logInfoData.command }}</td>
+            <td class="px-4 py-2">{{ logInfoData.command|logs_detect_key_and_replace_ellipsis(15, 5) }}</td>
           </tr>
         {% else %}
           <tr>

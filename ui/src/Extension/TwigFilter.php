@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Extension;
 
+use App\Service\CoreInteractInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Attribute\AsTwigFilter;
 
@@ -47,6 +48,22 @@ class TwigFilter
     public function userKeysReplaceEllipsis(string $key, int $start, int $end): string
     {
         return substr($key, 0, $start) . ' ... ' . substr($key, strlen($key) - $end, $end);
+    }
+
+    /**
+     * Detect a key in a command and apply 'userKeysReplaceEllipsis' function to it.
+     */
+    #[AsTwigFilter(name: 'logs_detect_key_and_replace_ellipsis')]
+    public function logsDetectKeyAndReplaceEllipsis(string $command, int $start, int $end): string
+    {
+        $commandExploded = explode(' ', $command);
+        foreach ($commandExploded as $index => $commandPart) {
+            if (preg_match('/' . CoreInteractInterface::REGEX_KEY . '/', $commandPart)) {
+                $commandExploded[$index] = $this->userKeysReplaceEllipsis($commandPart, $start, $end);
+            }
+        }
+
+        return implode(' ', $commandExploded);
     }
 
     /**
