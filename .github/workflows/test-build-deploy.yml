@@ -120,10 +120,10 @@ jobs:
         npm install
         npm run prod-build
 
-    - name: Upload build
+    - name: Upload ui build
       uses: actions/upload-artifact@v7
       with:
-        name: build-${{ inputs.version }}
+        name: build-ui-${{ inputs.version }}
         include-hidden-files: true
         path: |
           ui/bin/
@@ -136,6 +136,19 @@ jobs:
           ui/.env
           ui/.env.${{ inputs.environment }}
 
+    - name: Upload core build
+      uses: actions/upload-artifact@v7
+      with:
+        name: build-core-${{ inputs.version }}
+        include-hidden-files: true
+        path: |
+          core/config/
+          core/.env-example
+          core/api.sh
+          core/compose.yml
+          core/dockerfile
+          core/init-keys.sh
+
   deploy:
     needs: [test,build]
     runs-on: ubuntu-24.04
@@ -146,10 +159,10 @@ jobs:
       with:
         stack: dual
 
-    - name: Download build
+    - name: Download ui build
       uses: actions/download-artifact@v7
       with:
-        name: build-${{ inputs.version }}
+        name: build-ui-${{ inputs.version }}
         path: build
 
     - name: Deploy on server
@@ -171,7 +184,6 @@ jobs:
           touch ${{ secrets.SERV_PATH }}/.env.local.php && chmod 664 ${{ secrets.SERV_PATH }}/.env.local.php
           sudo /usr/bin/docker exec -u php-fpm php-fpm symfony-upgrade-app ${{ secrets.SERV_PATH }} ${{ inputs.environment }}
           sudo /usr/bin/docker exec -u php-fpm php-fpm opcache-clear-app ${{ secrets.SERV_PATH }} ${{ inputs.environment }}
-          sudo ${{ secrets.SERV_UPDATE_LOCATION }}/update.sh ${{ inputs.version }}
    
     - name: Update coverage badge
       if: inputs.environment == 'prod'

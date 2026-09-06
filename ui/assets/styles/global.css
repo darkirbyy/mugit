@@ -22,8 +22,3 @@
   color: #082403;
   background: repeating-linear-gradient(45deg, #85e771, #85e771 10px, #ace293 10px, #ace293 20px);
 }
-
-.app-env-stag {
-  color: #160701;
-  background: repeating-linear-gradient(45deg, #e77171, #e77171 10px, #f88282 10px, #f88282 20px);
-}
