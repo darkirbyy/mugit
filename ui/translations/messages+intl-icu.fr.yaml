@@ -123,6 +123,7 @@ git:
 
 layout:
   name: μGit
+  repo: Les dépôts
   navbar:
     admin: Admin
     administrate: Administrateur

@@ -8,6 +8,17 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-zinc-100: oklch(96% 0.001 286.375deg);
+  --color-zinc-200: oklch(91% 0.004 286.32deg);
+  --color-zinc-300: oklch(85.1% 0.006 286.286deg);
+  --color-zinc-500: oklch(45.2% 0.016 285.938deg);
+  --color-zinc-800: oklch(24.4% 0.006 286.033deg);
+  --color-zinc-900: oklch(19% 0.006 285.885deg);
+  --color-zinc-925: oklch(17% 0.006 285.885deg);
+  --color-zinc-950: oklch(13.1% 0.005 285.823deg);
+}
+
 [data-tooltip]:hover::after,
 [data-tooltip]:focus-within::after {
   content: attr(data-tooltip);

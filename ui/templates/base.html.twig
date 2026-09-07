@@ -10,7 +10,7 @@
     {% endif %}
     <meta name="turbo-prefetch" content="{{ env.turbo.enable_prefetch ? 'true' : 'false' }}" />
 
-    <link rel="icon" href="{{ asset('build/images/favicon.png') }}" />
+    <link rel="icon" href="{{ asset('build/images/logo.png') }}" />
 
     {% block stylesheets %}
       {{ encore_entry_link_tags('app') }}
@@ -23,7 +23,7 @@
       {{ title ~ ' - ' ~ ('layout.name'|trans) }}
     </title>
   </head>
-  <body class="flex min-h-screen flex-col bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+  <body class="dark:bg-zinc-925 flex min-h-screen flex-col bg-zinc-100 text-zinc-900 dark:text-zinc-100">
     {# DEBUG: Bar to show the environment, not visible in prod #}
     {% if env.app.env != 'prod' %}
       <div class="z-40 m-0 flex justify-around p-0 text-center font-bold app-env-{{ env.app.env }}">
@@ -59,14 +59,19 @@
     {# HEADER: contains the navbar #}
     <header class="flex items-center justify-between border-b border-zinc-500 bg-zinc-200 px-1 py-1 dark:bg-zinc-950">
       {# Header left part #}
-      <ul>
+      <ul class="flex flex-row items-center">
+        <li class="px-2 text-xl font-bold" aria-hidden="true">
+          <span class="relative top-2 mx-px inline-block h-4.5 rounded-xs bg-zinc-900 px-0.5 text-zinc-200 dark:bg-zinc-100 dark:text-zinc-950">
+            <span class="relative -top-2">μ</span>
+          </span>Git
+        </li>
         <li>
           <a
             id="link-header-home"
             href="{{ path('home_index') }}"
-            class="m-0.5 rounded px-2 py-1 font-bold focus-within:bg-zinc-300 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-300 dark:focus-within:bg-zinc-800 dark:focus-within:outline-zinc-200 dark:hover:bg-zinc-800"
+            class="m-0.5 h-6 rounded px-2 py-1 font-bold focus-within:bg-zinc-300 focus-within:outline-2 focus-within:outline-zinc-800 hover:cursor-pointer hover:bg-zinc-300 dark:focus-within:bg-zinc-800 dark:focus-within:outline-zinc-200 dark:hover:bg-zinc-800"
           >
-            {{ 'layout.name'|trans }}
+            {{ 'layout.repo'|trans }}
           </a>
         </li>
       </ul>
