@@ -17,7 +17,8 @@ services:
       - REPO_MAX_SIZE_MIO=${CORE_REPO_MAX_SIZE_MIO:-500}
       - LOG_DEFAULT_LENGTH=${CORE_LOG_DEFAULT_LENGTH:-50}
     ports:
-      - ${CORE_PORT:-22}:22
+      - ${CORE_SSH_PORT:-22}:22
+      - ${CORE_SOCKET_PORT:-8050}:8050
     volumes:
       - ${CORE_DATA:-./data/dev}:/home/git:rw
       - ./config/no-interactive-login:/home/git/git-shell-commands/no-interactive-login:rw
@@ -29,6 +30,7 @@ services:
       - ${CORE_KEYS:-./keys/dev}/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:rw
       - ${CORE_KEYS:-./keys/dev}/ssh_root_ed25519_key.pub:/root/.ssh/authorized_keys:rw
       - ./api.sh:/root/api.sh:ro
+      - ./socket.sh:/root/socket.sh:ro
     networks:
       - web-network
     healthcheck:

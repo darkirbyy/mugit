@@ -141,7 +141,7 @@ class CoreInteract implements CoreInteractInterface
     #[\Override]
     public function userKeysRemove(UserKeysRemoveData $userKeysRemoveData): ?ErrorData
     {
-        $command = 'user key-remove ' . $userKeysRemoveData->uuid . ' ' . $userKeysRemoveData->key;
+        $command = 'user key-remove ' . $userKeysRemoveData->uuid . ' \'' . $userKeysRemoveData->key . '\'';
         if (($coreData = $this->executeCommand($command, 'user.keys.remove.failed')) instanceof ErrorData) {
             return $coreData;
         }

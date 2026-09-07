@@ -4,7 +4,7 @@ ARG CORE_UID=1000
 ARG CORE_GID=1000
 
 RUN apk update && \
-    apk add --no-cache tzdata openssh-server git && \
+    apk add --no-cache tzdata openssh-server git socat && \
     rm -rf /var/cache/apk/*
 
 RUN addgroup --gid ${CORE_GID} git && \
