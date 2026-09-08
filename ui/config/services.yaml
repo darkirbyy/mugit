@@ -13,9 +13,6 @@ parameters:
     hub.base_url: '%env(string:HUB_BASE_URL)%'
     iam.base_url: '%env(string:IAM_BASE_URL)%'
     core.addr: '%env(string:CORE_ADDR)%'
-    core.ssh_port: '%env(int:CORE_SSH_PORT)%'
-    core.host_pubkey: '%env(string:CORE_HOST_PUBKEY)%'
-    core.root_prikey: '%env(string:CORE_ROOT_PRIKEY)%'
     core.socket_port: '%env(int:CORE_SOCKET_PORT)%'
     core.public_hostname: '%env(string:CORE_PUBLIC_HOSTNAME)%'
     core.connection_timeout: '%env(int:CORE_CONNECTION_TIMEOUT)%'
@@ -39,13 +36,6 @@ services:
 
     App\Service\CoreExecInterface: '@App\Service\CoreExecSocket'
 
-    phpseclib4\Net\SSH2:
-        factory: ['App\Extension\SSH2Factory', 'create']
-        arguments:
-            $host: '%core.addr%'
-            $port: '%core.ssh_port%'
-            $connectionTimeout: '%core.connection_timeout%'
-    
 when@dev: &services_dev
     services:
         App\Tests\Mock\KeycloakMockEntryPoint:

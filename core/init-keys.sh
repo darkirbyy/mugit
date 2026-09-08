@@ -9,25 +9,12 @@ if [ -z "$1" ] || [ ! -d "$1" ]; then
 fi
 
 # Checking if the keys are already present
-if [ -e "$1/ssh_host_ed25519_key" ] || [ -e "$1/ssh_root_ed25519_key" ]; then
+if [ -e "$1/ssh_host_ed25519_key" ]; then
     echo "The keys have already been generated, skipping."
     exit 0
 fi
 
-# Generating the server keys and a root keys access
+# Generating the server keys
 ssh-keygen -q -t ed25519 -f "$1/ssh_host_ed25519_key" -N '' -C '' 
-ssh-keygen -q -t ed25519 -f "$1/ssh_root_ed25519_key" -N '' -C '' 
-
-# Printing the variables for the UI .env.local/.env.test.local file
-host_pubkey=$(cat "$1/ssh_host_ed25519_key.pub" | xargs)
-root_prikey=$(cat "$1/ssh_root_ed25519_key")
-echo "############################################"
-echo "### VARIABLES ADDED BY init-keys.sh ########"
-echo "############################################"
-echo "CORE_HOST_PUBKEY=\"$host_pubkey\""
-echo "CORE_ROOT_PRIKEY=\"$root_prikey\""
-
-# Removing the root private key
-rm "$1/ssh_root_ed25519_key"
 
 exit 0

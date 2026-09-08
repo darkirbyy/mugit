@@ -27,7 +27,7 @@ echo "Creating dev mounted directories if not exist"
 mkdir -p "${CORE_DATA:-./data/dev}"
 mkdir -p "${CORE_KEYS:-./keys/dev}"
 echo "Generating dev keys if not exist"
-./init-keys.sh "${CORE_KEYS:-./keys/dev}" | sed -n '/###/,$p' >> ../ui/.env.local
+./init-keys.sh "${CORE_KEYS:-./keys/dev}"
 echo "Starting docker Core container"
 docker compose up -d
 cd ../ui

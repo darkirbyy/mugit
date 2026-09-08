@@ -66,4 +66,7 @@ Only actions causing write operations are logged, namely :
 
 ## PHP Interface
 
-To ease out the deployement of a new version of the API or a new communication layer, the UI defines a `CoreInteractInterface` and a `CoreExecInterface`. For the moment, there is only one implementation using the API and a SSH root connection.
+To ease out the deployement of a new version of the API or a new communication layer, the UI defines:
+
+- a `CoreInteractInterface`, having one implementation
+- a `CoreExecInterface`, having one implementation using a TCP socket

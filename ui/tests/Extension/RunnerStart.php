@@ -68,18 +68,10 @@ final class RunnerStart implements StartedSubscriber
 
             // Generating test keys if not exist
             $initKeysPath = Path::join($coreRootPath, 'init-keys.sh');
-            $envTestLocalPath = Path::join($uiRootPath, '.env.test.local');
             $process = new Process([$initKeysPath, $_ENV['CORE_KEYS']]);
             $process->run();
             if (!$process->isSuccessful()) {
                 throw new ProcessFailedException($process);
-            }
-            $output = preg_split('/###/', $process->getOutput(), 2);
-            $filesystem->appendToFile($envTestLocalPath, count($output) > 1 ? '###' . $output[1] : '');
-
-            // Reload env variables (because the previous script may have added some)
-            if (method_exists(Dotenv::class, 'bootEnv')) {
-                $dotenv->bootEnv(Path::join($uiRootPath, '.env'));
             }
 
             // Start the docker container

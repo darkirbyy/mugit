@@ -1,0 +1,4 @@
+services:
+  mugit:
+    ports:
+      - ${CORE_SOCKET_PORT:-8082}:8082

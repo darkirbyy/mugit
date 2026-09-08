@@ -148,6 +148,7 @@ jobs:
           core/compose.yml
           core/dockerfile
           core/init-keys.sh
+          core/socket.sh
 
   deploy:
     needs: [test,build]
