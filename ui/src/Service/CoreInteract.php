@@ -168,7 +168,7 @@ class CoreInteract implements CoreInteractInterface
             return $coreData;
         }
 
-        if (1 !== count($coreData->lineList) && !is_int($coreData->lineList[0])) {
+        if (1 !== count($coreData->lineList) || !ctype_digit($coreData->lineList[0])) {
             $this->logger->error(self::class . ':: the command `' . $command . '` returned a line that could not be parsed.');
 
             return new ErrorData('log.size.failed');
