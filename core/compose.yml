@@ -15,6 +15,7 @@ services:
       - TZ=${TIMEZONE:-Etc/UTC}
       - REPO_MAX_SIZE_MIO=${CORE_REPO_MAX_SIZE_MIO:-500}
       - LOG_DEFAULT_LENGTH=${CORE_LOG_DEFAULT_LENGTH:-50}
+      - SOCKET_PORT=${CORE_SOCKET_PORT:-8082}
     ports:
       - ${CORE_SSH_PORT:-22}:22
     volumes:

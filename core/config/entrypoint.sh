@@ -6,5 +6,5 @@ chown -R git:git /home/git/git-shell-commands
 
 echo "REPO_MAX_SIZE_MIO=$REPO_MAX_SIZE_MIO" > /etc/git/hooks.conf
 
-socat TCP4-LISTEN:8082,reuseaddr,fork EXEC:/root/socket.sh &
+socat TCP4-LISTEN:$SOCKET_PORT,reuseaddr,fork EXEC:/root/socket.sh &
 exec /usr/sbin/sshd -D -e "$@"
