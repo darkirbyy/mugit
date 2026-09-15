@@ -60,11 +60,14 @@ final class RunnerStart implements StartedSubscriber
         if (!empty(array_intersect($this->suiteNameList, TestsExtension::SUITE_REQUIRE_CORE))) {
             $coreDataPath = Path::join($coreRootPath, $_ENV['CORE_DATA']);
             $coreKeysPath = Path::join($coreRootPath, $_ENV['CORE_KEYS']);
+            $coreLogsPath = Path::join($coreRootPath, $_ENV['CORE_LOGS']);
 
             // Creating test mounted directories is not exist
             $filesystem->remove($coreDataPath);
+            $filesystem->remove($coreLogsPath);
             $filesystem->mkdir($coreDataPath);
             $filesystem->mkdir($coreKeysPath);
+            $filesystem->mkdir($coreLogsPath);
 
             // Generating test keys if not exist
             $initKeysPath = Path::join($coreRootPath, 'init-keys.sh');

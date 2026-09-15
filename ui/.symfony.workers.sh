@@ -26,6 +26,7 @@ fi
 echo "Creating dev mounted directories if not exist"
 mkdir -p "${CORE_DATA:-./data/dev}"
 mkdir -p "${CORE_KEYS:-./keys/dev}"
+mkdir -p "${CORE_LOGS:-./logs/dev}"
 echo "Generating dev keys if not exist"
 ./init-keys.sh "${CORE_KEYS:-./keys/dev}"
 echo "Starting docker Core container"

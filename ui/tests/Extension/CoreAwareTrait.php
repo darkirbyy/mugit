@@ -15,6 +15,7 @@ trait CoreAwareTrait
     protected static Finder $finder;
     protected static Filesystem $filesystem;
     protected static string $coreRootPath;
+    protected static string $coreLogsPath;
     protected static string $coreDataPath;
     protected static string $coreAuthorizedKeysFilepath;
     protected static string $coreLogFilepath;
@@ -27,8 +28,9 @@ trait CoreAwareTrait
         self::$filesystem = new Filesystem();
         self::$coreRootPath = realpath(__DIR__ . '/../../../core');
         self::$coreDataPath = Path::join(self::$coreRootPath, $_ENV['CORE_DATA']);
+        self::$coreLogsPath = Path::join(self::$coreRootPath, $_ENV['CORE_LOGS']);
         self::$coreAuthorizedKeysFilepath = Path::join(self::$coreDataPath, '.ssh', 'authorized_keys');
-        self::$coreLogFilepath = Path::join(self::$coreDataPath, 'logs');
+        self::$coreLogFilepath = Path::join(self::$coreLogsPath, 'api.log');
         self::$coreExec = self::getContainer()->get(CoreExecInterface::class);
 
         // Clear all git directories

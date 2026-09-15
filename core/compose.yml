@@ -8,6 +8,7 @@ services:
       args:
         CORE_UID: ${CORE_UID:-1000}
         CORE_GID: ${CORE_GID:-1000}
+        CORE_SOCKET_PORT: ${CORE_SOCKET_PORT:-8082}
     image: alpine:3.24-custom
     container_name: ${CORE_NAME:-mugit}
     restart: unless-stopped
@@ -20,22 +21,26 @@ services:
       - ${CORE_SSH_PORT:-22}:22
     volumes:
       - ${CORE_DATA:-./data/dev}:/home/git:rw
+      - ${CORE_KEYS:-./keys/dev}/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:rw
+      - ${CORE_KEYS:-./keys/dev}/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:rw
+      - ${CORE_LOGS:-./logs/dev}:/var/log/mugit:rw
       - ./config/no-interactive-login:/home/git/git-shell-commands/no-interactive-login:rw
       - ./config/entrypoint.sh:/entrypoint.sh:ro
+      - ./config/log-formatter.sh:/log-formatter.sh:ro
       - ./config/sshd_custom.conf:/etc/ssh/sshd_config.d/10_sshd_custom.conf:ro
       - ./config/gitconfig:/etc/gitconfig:ro
       - ./config/pre-receive:/etc/git/hooks/pre-receive:ro
-      - ${CORE_KEYS:-./keys/dev}/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:rw
-      - ${CORE_KEYS:-./keys/dev}/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:rw
       - ./api.sh:/root/api.sh:ro
       - ./socket.sh:/root/socket.sh:ro
     networks:
       - web-network
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 22"]
-      interval: 30s
+      interval: 5m
       timeout: 5s
-      retries: 3
+      start_period: 10s
+      start_interval: 5s
+      retries: 5
 
 networks:
   web-network:

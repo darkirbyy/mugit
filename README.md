@@ -18,7 +18,7 @@ In this section, all the paths and commands are relatives to the `core` sub-dire
 ### Core - Install
 
 - Copy the `.env-example` file into `.env` and customize the values if needed (the `compose.yml` file defines default values for all these variables).
-- Prepare the `data` and `keys` folder as specified in the `.env` file (default `./data/dev` and `./keys/dev`).
+- Prepare the `data`, `keys` and `logs` folders as specified in the `.env` file (default `./data/dev`, `./keys/dev`, `./logs/dev`).
 - Execute the `init-keys.sh` script, the only and first argument must be the folder for storing the keys, as specified before (default `./keys/dev`).
 
 The two last steps are automatically made when starting the UI web server (see [UI - Install](#ui---install)).
@@ -106,8 +106,8 @@ The workflow can be triggered manually in GitHub Actions or automatically when p
 > [!TIP]  
 > To deploy the core,
 >
-> - either download the artifact created during the workflow, and remove the `compose.override.yaml` used only in dev/test envrionments,
-> - or use git clone with a sparse checkout. Example:
+> - either download the artifact created during the workflow.
+> - or use git clone with a sparse checkout. Don't forget to remove the `compose.override.yaml` used only in dev/test envrionments. Example:
 >
 >   ```sh
 >    git clone --no-checkout git@github.com:darkirbyy/mugit.git
