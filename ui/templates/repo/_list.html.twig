@@ -48,9 +48,9 @@
               {% endif %}
             </td>
             <td class="px-4 py-2 whitespace-nowrap" data-copy-clipboard-target="cell">
-              <span class="mr-1">{{ repoInfoData.name|repo_name_to_clone_URL }}</span>
+              <span data-custom="clone-url" class="mr-1">{{ repoInfoData.name|repo_name_to_clone_URL }}</span>
               {% set buttonId = 'button-repo-copy-url-' ~ repoInfoData.name %}
-              {{ m.button(buttonId, 'b', 'repo.list.copyURLToClipboard', 'ri-file-copy-line', 'tooltip') }}
+              {{ m.button(buttonId, 'b', 'repo.list.copyURLToClipboard', 'ri-file-copy-line', 'tooltip', { 'data-custom': 'button' }) }}
             </td>
             <td class="px-2 py-2 text-left">
               {% set buttonId = 'button-repo-edit-' ~ repoInfoData.name %}

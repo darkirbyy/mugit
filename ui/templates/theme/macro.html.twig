@@ -37,7 +37,7 @@
 {# HELP : internal macro #}
 {% macro button_insert(textKey, icon = null, mode) %}
   {% if icon is not null %}
-    <span class="{{ icon }}" aria-hidden="true"></span>
+    <span data-custom="icon" class="{{ icon }}" aria-hidden="true"></span>
   {% endif %}
   {% if mode starts with 'normal' %}
     <span class="ml-1">{{ textKey|trans }}</span>
@@ -74,7 +74,7 @@
 {% endmacro %}
 
 {# HELP : tag can be 'a' or 'b' (button), textKey is the key before translation, extra can be:
-- null: nothing addd
+- null: nothing added
 - an icon (starting with 'ri-'): added at the end
 - some content: tag is forced to 'b', a responsive icon is added at the end, a stimulus controller is set
 #}
@@ -115,7 +115,7 @@
     {{ textKey|trans }}
   </span>
   {% if iconEnd is not null %}
-    <span><span class="{{ iconEnd }}" aria-hidden="true"></span></span>
+    <span data-custom="icon" class="{{ iconEnd }}" aria-hidden="true"></span>
   {% endif %}
 {% endmacro %}
 

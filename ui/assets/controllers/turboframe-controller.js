@@ -20,8 +20,8 @@ export default class extends Controller {
   }
 
   replace(event) {
-    const elementToReplace = this.element.closest('[data-turboframe-replace]');
-    elementToReplace.outerHTML = event.detail.newFrame.querySelector('[data-turboframe-replace]').innerHTML;
+    const elementToReplace = this.element.closest('[data-custom~=turboframe-replace]');
+    elementToReplace.outerHTML = event.detail.newFrame.querySelector('[data-custom~=turboframe-replace]').innerHTML;
   }
 
   restoreSpinner() {

@@ -244,7 +244,6 @@ elif [ $command = "log" ]; then
         echo "$LOG_HELP"
         exit 0
     elif [ $subcommand = "size" ]; then
-        # todo : redirect error ?
         output=$(wc -l "$LOG_FILE" | cut -d' ' -f1 2>&1)
         handle_output "$output" "" "Failed to count the logs size." "false"
     elif [ $subcommand = "list" ]; then
@@ -262,7 +261,6 @@ elif [ $command = "log" ]; then
         output=$(sed -n "$offset,$end"p "$LOG_FILE" 2>&1)
         handle_output "$output" "" "Failed to list the logs." "false"
     elif [ $subcommand = "purge" ]; then
-        # todo : redirect error ?
         output=$(echo -n > "$LOG_FILE")
         handle_output "$output" "Purged all logs." "Failed to purge the logs." "false"
     fi
