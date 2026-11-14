@@ -178,7 +178,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "7.4",
-            "ref": "c42fee7802181cdd50f61b8622715829f5d2335c"
+            "ref": "02d47835088cd548c827e5d53b3c4b361bca3390"
         },
         "files": [
             "config/packages/security.yaml",
@@ -186,12 +186,12 @@
         ]
     },
     "symfony/stimulus-bundle": {
-        "version": "3.3",
+        "version": "3.7",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "3.3",
-            "ref": "30f7461c215766d446f3c990b2b18f08ff51386e"
+            "ref": "7ce779ee74ea8d8aae6afed73e8438af5a392b30"
         },
         "files": [
             "assets/controllers.json",
@@ -236,12 +236,12 @@
         }
     },
     "symfony/ux-turbo": {
-        "version": "2.31",
+        "version": "3.7",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "2.20",
-            "ref": "287f7c6eb6e9b65e422d34c00795b360a787380b"
+            "ref": "eaff62fc37864d355804c778309a226ae539831f"
         },
         "files": [
             "config/packages/ux_turbo.yaml"
@@ -292,12 +292,12 @@
         "version": "v3.15.0"
     },
     "vincentlanglet/twig-cs-fixer": {
-        "version": "3.4",
+        "version": "4.1",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "main",
             "version": "3.0",
-            "ref": "d42582ae1bce86fd43491d6264c738b0867f8ffe"
+            "ref": "0a2d420aa6554f632804a3f21624e16314fe8588"
         }
     }
 }

@@ -58,7 +58,7 @@ To achieve that, here is the API between the CORE and the UI.
 
 ## Logging
 
-The core is not aware of the user making the call since it's using a root SSH connection. Set the variable `USER_UUID` after connecting to enable proper logging ; if not set or malformed, logging is disabled.
+The core is not aware of the user making the call since it's using a TCP socket connection. Set the variable `USER_UUID` after connecting to enable proper logging ; if not set or malformed, logging is disabled.
 Only actions causing write operations are logged, namely :
 
 - repo create|rename|delete
