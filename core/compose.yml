@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./dockerfile
-      network: host
+      network: ${CORE_NETWORK_BUILD:-default}
       args:
         CORE_UID: ${CORE_UID:-1000}
         CORE_GID: ${CORE_GID:-1000}
